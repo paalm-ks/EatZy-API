@@ -8,10 +8,6 @@ var knex = require('knex')({
   }
 });
 
-var stringify = require('json-stringify-safe');
-
-
-
 var data;
 
 knex.select().from('Menu').then(function(a){
