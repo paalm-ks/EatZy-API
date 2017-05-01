@@ -18,7 +18,7 @@ module.exports = function(app) {
     });
 
     app.get('/promotion', function(req,res){
-        res.json(promotion.showPromotionu());
+        res.json(promotion.showPromotion());
     });
 
     app.get('/menuSet', function(req,res){
