@@ -1,26 +1,28 @@
  /* Routing */
 var menu = require('./menu');
-
+var menuType = require('./menuType');
+var promotion = require('./promotion');
+var menuSet = require('./menuSet');
 
 module.exports = function(app) {
     app.get('/', function(req, res) {
         res.send('home page /menu to see menulist*');
     });
 
-    app.get('/showMenu', function(req,res){
+    app.get('/menu', function(req,res){
         res.json(menu.showMenu());
     });
 
-    app.get('/showMenuType', function(req,res){
-        res.json(menu.showMenuType());
+    app.get('/menuType', function(req,res){
+        res.json(menuType.showMenuType());
     });
 
-    app.get('/showPromotion', function(req,res){
-        res.json(menu.showPromotionu());
+    app.get('/promotion', function(req,res){
+        res.json(promotion.showPromotionu());
     });
 
-    app.get('/showMenuSet', function(req,res){
-        res.json(menu.showMenuSet());
+    app.get('/menuSet', function(req,res){
+        res.json(menuSet.showMenuSet());
     });
     // app.post('/getSTH/:token', function(req,res){
     //     req.params.sth;
