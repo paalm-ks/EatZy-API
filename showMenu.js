@@ -4,12 +4,11 @@ var data;
 
 // select query by mysql.config
 connect.select().from('Menu').then(function(a){
-            console.log(a);
             data=a;                           // add a to data
 });
 
 //return data when menu.findAll() call
-exports.findAll = function() {
+exports.showMenu = function() {
         return data ;
 }
 

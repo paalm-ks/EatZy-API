@@ -7,7 +7,22 @@ module.exports = function(app) {
         res.send('home page /menu to see menulist*');
     });
 
-    app.get('/menu', function(req,res){
-        res.json(menu.findAll());
+    app.get('/showMenu', function(req,res){
+        res.json(menu.showMenu());
     });
+
+    app.get('/showMenuType', function(req,res){
+        res.json(menu.showMenuType());
+    });
+
+    app.get('/showPromotion', function(req,res){
+        res.json(menu.showPromotionu());
+    });
+
+    app.get('/showMenuSet', function(req,res){
+        res.json(menu.showMenuSet());
+    });
+    // app.post('/getSTH/:token', function(req,res){
+    //     req.params.sth;
+    // })
 }

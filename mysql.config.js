@@ -1,12 +1,12 @@
-var knex ;
+var connect ;
 
-module.exports =    knex = require('knex')({  
+module.exports =    connect = require('knex')({  
                     client: 'mysql',
                     connection: {
                     host: "iambighead.com",
                     user: "biglate09",
                     password: "OEBProject2017",
-                    database: "OEB"
+                    database: "eatzy"
                     }
 });
 
