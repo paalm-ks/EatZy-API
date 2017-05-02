@@ -1,13 +1,39 @@
 var connect = require('./mysql.config');
 
-var data;
+var menu;
+var menuWithType;
+var menuWithSet;
 
 // select query by mysql.config
 connect.select().from('menu').then(function(a){
-            data=a;                           // add a to data
+            menu=a;                           
 });
 
-//return data when menu.findAll() call
+connect.select('*')
+.from('menu')
+.join('menu_menutype', {'menu_menutype.menuNo':'menu.menuNo'})
+.join('menutype',{'menutype.menuTypeNo':'menu_menutype.menuTypeNo'})
+.then(function(a){
+            menuWithType=a;                           
+});
+
+connect.select('*')
+.from('menu')
+.join('menu_menuset', {'menu_menuset.menuNo':'menu.menuNo'})
+.join('menuset',{'menuset.menuSetNo':'menu_menuset.menuSetNo'})
+.then(function(a){
+            menuWithSet=a;                           
+});
+
+//return data when function call
 exports.showMenu = function() {
-        return data ;
+        return menu ;
+}
+
+exports.showMenuWithType = function(){
+        return menuWithType ;
+}
+
+exports.showMenuWithSet = function(){
+        return menuWithSet;
 }

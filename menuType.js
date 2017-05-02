@@ -1,11 +1,11 @@
 var connect = require('./mysql.config');
 
-var data;
+var menuType;
 
 connect.select().from('menutype').then(function(a){
-            data=a;                           // add a to data
+            menuType=a;                          
 });
 
 exports.showMenuType = function() {
-        return data ;
+        return menuType ;
 }

@@ -24,6 +24,15 @@ module.exports = function(app) {
     app.get('/menuSet', function(req,res){
         res.json(menuSet.showMenuSet());
     });
+
+    app.get('/menuWithType',function(req,res){
+        res.json(menu.showMenuWithType());
+    })
+
+    app.get('/menuWithSet',function(req,res){
+        res.json(menu.showMenuWithSet());
+    })
+
     // app.post('/getSTH/:token', function(req,res){
     //     req.params.sth;
     // })

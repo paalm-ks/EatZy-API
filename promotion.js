@@ -1,11 +1,11 @@
 var connect = require('./mysql.config');
 
-var data;
+var promo;
 
 connect.select().from('promotion').then(function(a){
-            data=a;                           // add a to data
+            promo=a;                           
 });
 
 exports.showPromotion = function() {
-        return data ;
+        return promo ;
 }
