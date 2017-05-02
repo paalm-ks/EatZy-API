@@ -25,7 +25,8 @@ module.exports = function(app) {
         res.json(menuSet.showMenuSet());
     });
 
-    app.get('/menuWithType',function(req,res){
+    app.get('/menuWithType/:type',function(req,res){
+        const type = req.params.type;
         res.json(menu.showMenuWithType());
     })
 
