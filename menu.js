@@ -37,7 +37,7 @@ const showMenuWithType = (type) => {
         .from('menu')
         .join('menu_menutype', {'menu_menutype.menuNo':'menu.menuNo'})
         .join('menutype',{'menutype.menuTypeNo':'menu_menutype.menuTypeNo'})
-        .where('menutypeName', type)
+        .where('menuTypeName', type)
         .then(function(a){
             menuWithType=a;                           
         });
