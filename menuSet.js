@@ -7,10 +7,10 @@ const services = {
         },
         getMenuBySet: (set) => {
                 return connect.select('*')
-                        .from('menu')
-                        .join('menu_menuset', { 'menu_menuset.menuNo': 'menu.menuNo' })
-                        .join('menuset', { 'menuset.menuSetNo': 'menu_menuset.menuSetNo' })
-                        .where('menuSetNo',set)
+                        .from('menuset')
+                        .join('menu_menuset', { 'menu_menuset.menuSetNo': 'menuset.menuSetNo' })
+                        .join('menu', { 'menu.menuNo': 'menu_menuset.menuNo' })
+                        .where('menuset.menuSetNo',set)
         }
 }
 
