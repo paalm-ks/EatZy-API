@@ -1,11 +1,33 @@
 var connect = require('./mysql.config');
 
-var menuset;
+const services = {
+        getMenuSet: ()=> {
+                return connect.select('*')
+                        .from('menuset')
+        },
+        getMenuBySet: (set) => {
+                return connect.select('*')
+                        .from('menu')
+                        .join('menu_menuset', { 'menu_menuset.menuNo': 'menu.menuNo' })
+                        .join('menuset', { 'menuset.menuSetNo': 'menu_menuset.menuSetNo' })
+                        .where('menuSetName',set)
+        }
+}
 
-connect.select().from('menuset').then(function(a){
-            menuset=a;                           
-});
+exports.showMenuSet = async () => {
+        try {
+                const response = await services.getMenuSet();
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
 
-exports.showMenuSet = function() {
-        return menuset ;
+exports.showMenuBySet = async (set) => {
+        try {
+                const response = await services.getMenuBySet(set);
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
 }

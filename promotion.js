@@ -1,11 +1,31 @@
 var connect = require('./mysql.config');
 
-var promo;
+const services = {
+        getPromotion: ()=> {
+                return connect.select('*')
+                        .from('promotion')
+        },
+        getPromotionByName: (name) => {
+                return connect.select('*')
+                        .from('promotion')
+                        .where('proNo',name)
+        }
+}
 
-connect.select().from('promotion').then(function(a){
-            promo=a;                           
-});
+exports.showPromotion = async () => {
+        try {
+                const response = await services.getPromotion();
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
 
-exports.showPromotion = function() {
-        return promo ;
+exports.showPromotionByName = async (name) => {
+        try {
+                const response = await services.getPromotionByName(name);
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
 }

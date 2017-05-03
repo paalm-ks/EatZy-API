@@ -1,11 +1,17 @@
 var connect = require('./mysql.config');
 
-var menuType;
+const services = {
+        getMenuType: ()=> {
+                return connect.select('*')
+                        .from('menutype')
+        }
+}
 
-connect.select().from('menutype').then(function(a){
-            menuType=a;                          
-});
-
-exports.showMenuType = function() {
-        return menuType ;
+exports.showMenuType = async () => {
+        try {
+                const response = await services.getMenuType();
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
 }
