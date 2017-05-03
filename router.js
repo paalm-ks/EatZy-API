@@ -12,42 +12,50 @@ module.exports = function (app) {
     });
 
     app.get('/menu', function (req, res) {
-        res.json(menu.showMenu());
+        menu.showMenu().then(rest => {
+            res.json(rest);
+        })
     });
 
     app.get('/menuByType/:type', function (req, res) {
         const type = req.params.type;
         menu.showMenuByType(type)
             .then(rest => {
-                res.json(rest)
+                res.json(rest);
             })
     })
 
     app.get('/menuType', function (req, res) {
-        res.json(menuType.showMenuType());
+        menuType.showMenuType().then(rest => {
+            res.json(rest);
+        })
     });
 
     app.get('/promotion', function (req, res) {
-        res.json(promotion.showPromotion());
+        promotion.showPromotion().then(rest => {
+            res.json(rest);
+        })
     });
 
     app.get('/promoByName/:name', function (req, res) {
         const name = req.params.name;
         promotion.showPromotionByName(name)
             .then(rest => {
-                res.json(rest)
+                res.json(rest);
             })
     })
 
     app.get('/menuSet', function (req, res) {
-        res.json(menuSet.showMenuSet());
+        menuSet.showMenuSet().then(rest => {
+                res.json(rest);
+        })
     });
 
     app.get('/menuBySet/:set', function (req, res) {
         const set = req.params.set;
         menuSet.showMenuBySet(set)
             .then(rest => {
-                res.json(rest)
+                res.json(rest);
             })
     });
 
@@ -55,7 +63,7 @@ module.exports = function (app) {
         const name = req.params.name;
         menuMat.showMaterialByName(name)
             .then(rest => {
-                res.json(rest)
+                res.json(rest);
             })
     });
 

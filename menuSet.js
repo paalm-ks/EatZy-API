@@ -10,7 +10,7 @@ const services = {
                         .from('menu')
                         .join('menu_menuset', { 'menu_menuset.menuNo': 'menu.menuNo' })
                         .join('menuset', { 'menuset.menuSetNo': 'menu_menuset.menuSetNo' })
-                        .where('menuSetName',set)
+                        .where('menuSetNo',set)
         }
 }
 
