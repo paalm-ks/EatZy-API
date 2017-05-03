@@ -37,9 +37,9 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/promoByName/:name', function (req, res) {
-        const name = req.params.name;
-        promotion.showPromotionByName(name)
+    app.get('/promoByNo/:num', function (req, res) {
+        const num = req.params.num;
+        promotion.showPromotionByNo(num)
             .then(rest => {
                 res.json(rest);
             })
@@ -47,7 +47,7 @@ module.exports = function (app) {
 
     app.get('/menuSet', function (req, res) {
         menuSet.showMenuSet().then(rest => {
-                res.json(rest);
+            res.json(rest);
         })
     });
 
@@ -67,7 +67,17 @@ module.exports = function (app) {
             })
     });
 
-    // app.post('/getSTH/:token', function(req,res){
-    //     req.params.sth;
-    // })
+    app.get('/menuBySearch/:data', function (req, res) {
+        const data = req.params.data;
+        const isNum = data * 1 ;
+        if (Number.isInteger(isNum)) {
+            menu.showMenuByNo(data)
+                .then(rest => { res.json(rest); })
+        } else {
+            menu.showMenuByName(data)
+                .then(rest => { res.json(rest); })
+        }
+
+    });
+
 }

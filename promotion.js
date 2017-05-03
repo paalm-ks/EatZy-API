@@ -5,10 +5,10 @@ const services = {
                 return connect.select('*')
                         .from('promotion')
         },
-        getPromotionByName: (name) => {
+        getPromotionByNo: (num) => {
                 return connect.select('*')
                         .from('promotion')
-                        .where('proNo',name)
+                        .where('proNo', 'like' , `%${num}%`)
         }
 }
 
@@ -21,9 +21,9 @@ exports.showPromotion = async () => {
         }
 }
 
-exports.showPromotionByName = async (name) => {
+exports.showPromotionByNo = async (num) => {
         try {
-                const response = await services.getPromotionByName(name);
+                const response = await services.getPromotionByNo(num);
                 return response;
         } catch (err) {
                 console.log(err)
