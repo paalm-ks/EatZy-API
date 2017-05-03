@@ -4,8 +4,8 @@ const services = {
         getMenuMaterialByName: (name) => {
                 return connect.select('*')
                         .from('material')
-                        .join('menu_menumat', { 'menu_menumat.matNo': 'material.matNo' })
-                        .join('menu', { 'menu_menumat.menuNo': 'menu.menuNo' })
+                        .join('menu_material', { 'menu_material.matNo': 'material.matNo' })
+                        .join('menu', { 'menu_material.menuNo': 'menu.menuNo' })
                         .where('menuName',name)
         }
 }
