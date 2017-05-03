@@ -25,26 +25,28 @@ connect.select('*')
             menuWithSet=a;                           
 });
 
+const services = {
+        getTypeByMenu: (type) => { return connect.select('*').from('menu').join('menu_menutype', {'menu_menutype.menuNo':'menu.menuNo'})
+                .join('menutype',{'menutype.menuTypeNo':'menu_menutype.menuTypeNo'})
+                .where('menuTypeName', type) }
+}
+
 //return data when function call
 exports.showMenu = function() {
         return menu ;
 }
 
 
-const showMenuWithType = (type) => {
-        const menuWithType = { }
-        connect.select('*')
-        .from('menu')
-        .join('menu_menutype', {'menu_menutype.menuNo':'menu.menuNo'})
-        .join('menutype',{'menutype.menuTypeNo':'menu_menutype.menuTypeNo'})
-        .where('menuTypeName', type)
-        .then(function(a){
-            menuWithType=a;   
-            return menuWithType ;                       
-        });
+exports.showMenuWithType = async (type) => {
+        try {
+                const response = await services.getTypeByMenu(type);
+                // const data = await JSON.stringify(response);
+                return response;
+        } catch(err) {
+                console.log(err)
+        }
 }
 
-export { showMenuWithType }
 
 // exports.showMenuWithType = function(type){
 //         connect.select('*')
@@ -61,4 +63,3 @@ export { showMenuWithType }
 exports.showMenuWithSet = function(){
         return menuWithSet;
 }
-

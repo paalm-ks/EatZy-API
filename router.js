@@ -4,6 +4,7 @@ var menuType = require('./menuType');
 var promotion = require('./promotion');
 var menuSet = require('./menuSet');
 
+
 module.exports = function(app) {
     app.get('/', function(req, res) {
         res.send('home page /menu to see menulist*');
@@ -27,7 +28,10 @@ module.exports = function(app) {
 
     app.get('/menuWithType/:type',function(req,res){
         const type = req.params.type;
-        res.json(menu.showMenuWithType());
+        menu.showMenuWithType(type)
+            .then(rest => {
+                res.json(rest)
+            })
     })
 
     app.get('/menuWithSet',function(req,res){
