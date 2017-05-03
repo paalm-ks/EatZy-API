@@ -40,9 +40,11 @@ const showMenuWithType = (type) => {
         .where('menuTypeName', type)
         .then(function(a){
             menuWithType=a;   
-            return menuWithType                        
+            return menuWithType ;                       
         });
 }
+
+export { showMenuWithType }
 
 // exports.showMenuWithType = function(type){
 //         connect.select('*')
@@ -60,4 +62,3 @@ exports.showMenuWithSet = function(){
         return menuWithSet;
 }
 
-export { menuWithType }
