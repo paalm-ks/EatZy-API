@@ -9,13 +9,13 @@ connect.select().from('menu').then(function(a){
             menu=a;                           
 });
 
-connect.select('*')
-.from('menu')
-.join('menu_menutype', {'menu_menutype.menuNo':'menu.menuNo'})
-.join('menutype',{'menutype.menuTypeNo':'menu_menutype.menuTypeNo'})
-.then(function(a){
-            menuWithType=a;                           
-});
+// connect.select('*')
+// .from('menu')
+// .join('menu_menutype', {'menu_menutype.menuNo':'menu.menuNo'})
+// .join('menutype',{'menutype.menuTypeNo':'menu_menutype.menuTypeNo'})
+// .then(function(a){
+//             menuWithType=a;                           
+// });
 
 connect.select('*')
 .from('menu')
@@ -30,10 +30,34 @@ exports.showMenu = function() {
         return menu ;
 }
 
-exports.showMenuWithType = function(){
-        return menuWithType ;
+
+const showMenuWithType = (type) => {
+        const menuWithType = { }
+        connect.select('*')
+        .from('menu')
+        .join('menu_menutype', {'menu_menutype.menuNo':'menu.menuNo'})
+        .join('menutype',{'menutype.menuTypeNo':'menu_menutype.menuTypeNo'})
+        .where('menutypeName', type)
+        .then(function(a){
+            menuWithType=a;                           
+        });
+        return menuWithType
 }
+
+// exports.showMenuWithType = function(type){
+//         connect.select('*')
+//         .from('menu')
+//         .join('menu_menutype', {'menu_menutype.menuNo':'menu.menuNo'})
+//         .join('menutype',{'menutype.menuTypeNo':'menu_menutype.menuTypeNo'})
+//         .where('menutypeName', type)
+//         .then(function(a){
+//             menuWithType=a;                           
+//         });
+//         return menuWithType ;
+// }
 
 exports.showMenuWithSet = function(){
         return menuWithSet;
 }
+
+export { menuWithType }
