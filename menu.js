@@ -1,37 +1,39 @@
-var knex = require('knex')({
-  client: 'mysql',
-  connection: {
-    host: "iambighead.com",
-		user: "OrderEatBill",
-		password: "OEBProject2017",
-		database: "OEB"
-  }
-});
+var connect = require('./mysql.config');
 
-var stringify = require('json-stringify-safe');
-
-
-
-var data;
-
-knex.select().from('Menu').then(function(a){
-            data=a;
-});
-
-var b = [ 
-            {  menuNo: 5,
-                menuNameTH: 'กะเพราไก่',
-                menuNameEN: 'Kaprao Kai',
-                menuDesc: 'B2',
-                menuPrice: 45,
-                isOfficialMenu: 0 },
-            {  menuNo: 6,
-                menuNameTH: 'ผัดไทยกุ้งสด',
-                menuNameEN: 'Pud Thai',
-                menuDesc: 'เส้นใหญ่อร่อยมากกกกก',
-                menuPrice: 35,
-                isOfficialMenu: 0 } ];
-
-exports.findAll = function() {
-        return data ;
+const services = {
+        getMenu: () => {
+                return connect.select('*')
+                        .from('menu')
+        },
+        getMenuByType: (type) => {
+                return connect.select('*')
+                        .from('menu')
+                        .join('menu_menutype', { 'menu_menutype.menuNo': 'menu.menuNo' })
+                        .join('menutype', { 'menutype.menuTypeNo': 'menu_menutype.menuTypeNo' })
+                        .where('menuTypeName', type)
+        }
 }
+
+//return data when function call
+exports.showMenu = async () => {
+        try {
+                const response = await services.getMenu();
+                // const data = await JSON.stringify(response);
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
+
+exports.showMenuByType = async (type) => {
+        try {
+                const response = await services.getMenuByType(type);
+                // const data = await JSON.stringify(response);
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
+
+
+
