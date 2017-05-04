@@ -37,9 +37,9 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/promoByName/:name', function (req, res) {
-        const name = req.params.name;
-        promotion.showPromotionByName(name)
+    app.get('/promoByNo/:no', function (req, res) {
+        const no = req.params.no;
+        promotion.showPromotionByNo(no)
             .then(rest => {
                 res.json(rest);
             })
