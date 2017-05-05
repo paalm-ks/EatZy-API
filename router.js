@@ -4,6 +4,7 @@ var menuType = require('./menuType');
 var promotion = require('./promotion');
 var menuSet = require('./menuSet');
 var menuMat = require('./menuMaterial');
+var order = require('./order');
 
 
 module.exports = function (app) {
@@ -86,6 +87,47 @@ module.exports = function (app) {
                 .then(rest => { res.json(rest); })
         }
 
+    });
+
+    app.get('/order/:no', function (req, res) {
+        const no = req.params.no;
+        order.showOrder(no)
+            .then(rest => {
+                res.json(rest);
+            })
+    });
+
+    app.get('/addOrder/add?:a', function (req, res) {
+        var arr = JSON.parse(req.query.a);
+        console.log("arr : "+arr);
+        console.log("arr [0]: "+arr[0]);
+        console.log("arr [1]: "+arr[1]);
+        console.log("arr [0][1]: "+arr[0][1]);
+        console.log("arr [0][2]: "+arr[0][2]);
+        console.log("arr [1][1]: "+arr[1][1]);
+        console.log("arr [1][2]: "+arr[1][2]);
+         order.addOrder(arr)
+             .then(rest => {
+                 res.json(rest);
+             })
+    });
+
+    app.get('/addOrder2/add?:a', function (req, res) {
+        var arr = JSON.parse(req.query.a);
+        console.log("arr : "+arr);
+        console.log("arr [0]: "+arr[0]);
+        console.log("arr [1]: "+arr[1]);
+        console.log("arr [2]: "+arr[2]);
+        console.log("arr [0][1]: "+arr[0][1]);
+        console.log("arr [0][2]: "+arr[0][2]);
+        console.log("arr [1][1]: "+arr[1][1]);
+        console.log("arr [1][2]: "+arr[1][2]);
+        console.log("arr [2][1]: "+arr[2][1]);
+        console.log("arr [2][2]: "+arr[2][2]);
+        //  order.addOrder(arr)
+        //      .then(rest => {
+        //          res.json(rest);
+        //      })
     });
 
 }
