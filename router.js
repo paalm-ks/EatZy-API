@@ -67,9 +67,9 @@ module.exports = function (app) {
             })
     });
 
-    app.get('/menuMaterialByName/:name', function (req, res) {
-        const name = req.params.name;
-        menuMat.showMaterialByName(name)
+    app.get('/menuMaterialByNo/:no', function (req, res) {
+        const no = req.params.no;
+        menuMat.showMaterialByNo(no)
             .then(rest => {
                 res.json(rest);
             })
