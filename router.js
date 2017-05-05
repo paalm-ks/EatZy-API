@@ -4,6 +4,7 @@ var menuType = require('./menuType');
 var promotion = require('./promotion');
 var menuSet = require('./menuSet');
 var menuMat = require('./menuMaterial');
+var order = require('./order');
 
 
 module.exports = function (app) {
@@ -77,7 +78,7 @@ module.exports = function (app) {
 
     app.get('/menuBySearch/:data', function (req, res) {
         const data = req.params.data;
-        const isNum = data * 1 ;
+        const isNum = data * 1;
         if (Number.isInteger(isNum)) {
             menu.showMenuByNo(data)
                 .then(rest => { res.json(rest); })
@@ -86,6 +87,22 @@ module.exports = function (app) {
                 .then(rest => { res.json(rest); })
         }
 
+    });
+
+    app.get('/order/:no', function (req, res) {
+        const no = req.params.no;
+        order.showOrder(no)
+            .then(rest => {
+                res.json(rest);
+            })
+    });
+
+    app.get('/addOrder/add?:a', function (req, res) {
+        var arr = JSON.parse(req.query.a);
+        for (var i in arr) {
+            order.addOrder(arr[i])        
+        }
+        res.json(arr);
     });
 
 }
