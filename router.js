@@ -98,7 +98,7 @@ module.exports = function (app) {
     });
 
     app.get('/addOrder/add?:a', function (req, res) {
-        var arr = JSON.parse(req.query.a);
+        const arr = JSON.parse(req.query.a);
         for (var i in arr) {
             order.addOrder(arr[i])        
         }
