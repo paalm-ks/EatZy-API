@@ -97,8 +97,14 @@ module.exports = function (app) {
             })
     });
 
-    app.get('/addOrder/add?:a', function (req, res) {
-        var arr = JSON.parse(req.query.a);
+    app.get('/addOrder/add', function (req, res) {
+        const arr = req.params.data;
+        const arr2 = req.query.data;
+        const arr3 = req.query.data.menuName;
+
+        console.log(arr)
+        console.log(arr2[0])
+        console.log(arr3)
         for (var i in arr) {
             order.addOrder(arr[i])        
         }
