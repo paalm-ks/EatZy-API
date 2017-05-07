@@ -1,18 +1,18 @@
 var connect = require('./mysql.config');
 
 const services = {
-        getMenuMaterialByName: (name) => {
+        getMenuMaterialByNo: (no) => {
                 return connect.select('*')
                         .from('material')
                         .join('menu_material', { 'menu_material.matNo': 'material.matNo' })
                         .join('menu', { 'menu_material.menuNo': 'menu.menuNo' })
-                        .where('menuNo',name)
+                        .where('menu.menuNo', no)
         }
 }
 
-exports.showMaterialByName = async (name) => {
+exports.showMaterialByNo = async (no) => {
         try {
-                const response = await services.getMenuMaterialByName(name);
+                const response = await services.getMenuMaterialByNo(no);
                 return response;
         } catch (err) {
                 console.log(err)

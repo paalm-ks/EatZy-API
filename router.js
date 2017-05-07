@@ -4,6 +4,7 @@ var menuType = require('./menuType');
 var promotion = require('./promotion');
 var menuSet = require('./menuSet');
 var menuMat = require('./menuMaterial');
+var order = require('./order');
 
 
 module.exports = function (app) {
@@ -25,6 +26,14 @@ module.exports = function (app) {
             })
     })
 
+    app.get('/menuByNo/:no', function (req, res) {
+        const no = req.params.no;
+        menu.showMenuByNo(no)
+            .then(rest => {
+                res.json(rest);
+            })
+    })
+
     app.get('/menuType', function (req, res) {
         menuType.showMenuType().then(rest => {
             res.json(rest);
@@ -37,9 +46,9 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/promoByName/:name', function (req, res) {
-        const name = req.params.name;
-        promotion.showPromotionByName(name)
+    app.get('/promoByNo/:no', function (req, res) {
+        const no = req.params.no;
+        promotion.showPromotionByNo(no)
             .then(rest => {
                 res.json(rest);
             })
@@ -47,7 +56,7 @@ module.exports = function (app) {
 
     app.get('/menuSet', function (req, res) {
         menuSet.showMenuSet().then(rest => {
-                res.json(rest);
+            res.json(rest);
         })
     });
 
@@ -59,15 +68,41 @@ module.exports = function (app) {
             })
     });
 
-    app.get('/menuMaterialByName/:name', function (req, res) {
-        const name = req.params.name;
-        menuMat.showMaterialByName(name)
+    app.get('/menuMaterialByNo/:no', function (req, res) {
+        const no = req.params.no;
+        menuMat.showMaterialByNo(no)
             .then(rest => {
                 res.json(rest);
             })
     });
 
-    // app.post('/getSTH/:token', function(req,res){
-    //     req.params.sth;
-    // })
+    app.get('/menuBySearch/:data', function (req, res) {
+        const data = req.params.data;
+        const isNum = data * 1;
+        if (Number.isInteger(isNum)) {
+            menu.showMenuByNo(data)
+                .then(rest => { res.json(rest); })
+        } else {
+            menu.showMenuByName(data)
+                .then(rest => { res.json(rest); })
+        }
+
+    });
+
+    app.get('/order/:no', function (req, res) {
+        const no = req.params.no;
+        order.showOrder(no)
+            .then(rest => {
+                res.json(rest);
+            })
+    });
+
+    app.get('/addOrder/add?:a', function (req, res) {
+        var arr = JSON.parse(req.query.a);
+        for (var i in arr) {
+            order.addOrder(arr[i])        
+        }
+        res.json(arr);
+    });
+
 }
