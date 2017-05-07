@@ -6,7 +6,7 @@ const services = {
                         .from('material')
                         .join('menu_material', { 'menu_material.matNo': 'material.matNo' })
                         .join('menu', { 'menu_material.menuNo': 'menu.menuNo' })
-                        .where('menuNo','like', `%${no}%`)
+                        .where('menu.menuNo', no)
         }
 }
 
