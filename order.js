@@ -3,13 +3,14 @@ var con = require('./mysql');
 
 const services = {
 
-    addOrder: (add) => {
-        console.log(add[0])
-        console.log(add[0].menuNameEN)
-        con.query('insert into eatzy.order (menuName,quantity,amount) values ("' + `${add[0].menuNameEN}` + '",' + `${1}` + ',' + `${add[0].menuPrice}` + ')');
+    addOrder: (add,i) => {
+        console.log(i);
+        console.log(add.menuNameEN);
+        console.log(add.menuPrice)
+        con.query('insert into eatzy.order (menuName,quantity,amount) values ("' + `${add.menuNameEN}` + '",' + `${1}` + ',' + `${add.menuPrice}` + ')');
     }
     ,
-    getOrder: (no) => { 
+    getOrder: (no) => {
         return connect.select('*')
             .from('order')
             // .join('menu_order', { 'menu_order.orderNo': 'order.orderNo' })
@@ -18,10 +19,9 @@ const services = {
     }
 }
 
-exports.addOrder = (add) => {
+exports.addOrder = (add,i) => {
     try {
-        
-        services.addOrder(add);
+        services.addOrder(add,i);
     } catch (err) {
         console.log(err)
     }

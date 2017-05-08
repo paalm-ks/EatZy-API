@@ -35,7 +35,7 @@ module.exports = function (app) {
 
     app.get('/menuType', function (req, res) {
         menuType.showMenuType().then(rest => {
-            
+
             res.json(rest);
         })
     });
@@ -98,11 +98,13 @@ module.exports = function (app) {
     });
 
     app.get('/addOrder/order?:a', function (req, res) {
-        // const dataArrays = JSON.parse(req.headers.data).orders;
         const dataArr = JSON.parse(req.query.a);
-        
-        order.addOrder(dataArr)
-        res.json('helo')
-    });
+        for (var i in dataArr) { 
+        console.log("i :: " +i);
+        console.log(dataArr[i])
+        order.addOrder(dataArr[i],i);
+        }
+        res.json(dataArr)
+        });
 
 }
