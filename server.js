@@ -5,10 +5,10 @@ var bodyParser = require('body-parser');
 //config express application
 const app = express();
 // parse application/json
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: false
 }));
+app.use(bodyParser.json());
 
 //connect to express api router
 var Router = require('./router');
