@@ -6,7 +6,6 @@ var menuSet = require('./menuSet');
 var menuMat = require('./menuMaterial');
 var order = require('./order');
 
-
 module.exports = function (app) {
     app.get('/', function (req, res) {
         res.send('home page /menu to see menulist*');
@@ -36,6 +35,7 @@ module.exports = function (app) {
 
     app.get('/menuType', function (req, res) {
         menuType.showMenuType().then(rest => {
+            
             res.json(rest);
         })
     });
@@ -97,18 +97,12 @@ module.exports = function (app) {
             })
     });
 
-    app.get('/addOrder/add', function (req, res) {
-        const arr = req.params.data;
-        const arr2 = req.query.data;
-        const arr3 = req.query.data.menuName;
-
-        console.log(arr)
-        console.log(arr2[0])
-        console.log(arr3)
-        for (var i in arr) {
-            order.addOrder(arr[i])        
-        }
-        res.json(arr);
+    app.get('/addOrder/order?:a', function (req, res) {
+        // const dataArrays = JSON.parse(req.headers.data).orders;
+        const dataArr = JSON.parse(req.query.a);
+        
+        order.addOrder(dataArr)
+        res.json('helo')
     });
 
 }
