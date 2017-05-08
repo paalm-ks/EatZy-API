@@ -1,10 +1,13 @@
 var connect = require('./mysql.config');
+var con = require('./mysql');
 
 const services = {
 
-    addOrder: (add) => {
-        return connect.insert({ menuName: add[0], quantity: add[1], amount: add[2] }).into('order')
-
+    addOrder: (add,i) => {
+        console.log(i);
+        console.log(add.menuNameEN);
+        console.log(add.menuPrice)
+        con.query('insert into eatzy.order (menuName,quantity,amount) values ("' + `${add.menuNameEN}` + '",' + `${1}` + ',' + `${add.menuPrice}` + ')');
     }
     ,
     getOrder: (no) => {
@@ -16,10 +19,9 @@ const services = {
     }
 }
 
-exports.addOrder = (add) => {
+exports.addOrder = (add,i) => {
     try {
-        var arr = add.toString().split(",").map(function (val) { return val; });
-        return services.addOrder(arr);
+        services.addOrder(add,i);
     } catch (err) {
         console.log(err)
     }
