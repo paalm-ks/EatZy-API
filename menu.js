@@ -2,13 +2,23 @@ var knex = require('./knex');
 
 const services = {
         getMenu: () => {
-                return knex.select().from('Menu').timeout(1000);      
+                return knex.select().from('Menu').timeout(1000).orderBy('menuNameTH', 'asc');      
+        },
+        getMenuSortByPrice: () => {
+                return knex.select().from('Menu').timeout(1000).orderBy('menuPrice', 'asc');      
+        },
+        getMenuSortByPriceLength: (begin,end) => {
+                return knex.select()
+                .from('Menu')
+                .whereBetween('menuPrice', [begin,end] )
+                .orderBy('menuPrice', 'asc');      
         },
         getMenuByType: (input) => {
                 return knex.select()
                         .from('Menu')
                         .join('MenuType', { 'MenuType.menuTypeNo': 'Menu.menuTypeNo' })
-                        .where('MenuType.MenuTypeNo', 'like', `${input}`)     
+                        .where('MenuType.MenuTypeNo', 'like', `${input}`)
+                        .orderBy('menuNameTH', 'asc')     
         },
         getMenuByNo: (input) => {
                 return knex.select()
@@ -55,6 +65,24 @@ exports.showMenuByNo = async (input) => {
 exports.showMenuByName = async (input) => {
         try {
                 const response = await services.getMenuByName(input);
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
+
+exports.showMenuSortByPrice = async () => {
+        try {
+                const response = await services.getMenuSortByPrice();
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
+
+exports.showMenuSortByPriceLength = async (begin , end) => {
+        try {
+                const response = await services.getMenuSortByPriceLength(begin , end);
                 return response;
         } catch (err) {
                 console.log(err)

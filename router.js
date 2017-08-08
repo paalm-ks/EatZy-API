@@ -17,6 +17,21 @@ module.exports = function (app) {
         })
     });
 
+     app.get('/menuPrice', function (req, res) {
+        menu.showMenuSortByPrice().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/menuPriceLength/:b&:e', function (req, res) {
+        const begin = req.params.b;
+        const end = req.params.e;
+        menu.showMenuSortByPriceLength(begin,end)
+            .then(rest => {
+                res.json(rest);
+            })
+    })
+
     app.get('/menuByType/:type', function (req, res) {
         const type = req.params.type;
         menu.showMenuByType(type)
@@ -27,6 +42,7 @@ module.exports = function (app) {
 
     app.get('/menuByNo/:no', function (req, res) {
         const no = req.params.no;
+        console.log(no);
         menu.showMenuByNo(no)
             .then(rest => {
                 res.json(rest);
