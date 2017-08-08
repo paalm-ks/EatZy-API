@@ -23,9 +23,9 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/menuPriceLength/:b&:e', function (req, res) {
-        const begin = req.params.b;
-        const end = req.params.e;
+    app.get('/menuPriceLength/:begin&:end', function (req, res) {
+        const begin = req.params.begin;
+        const end = req.params.end;
         menu.showMenuSortByPriceLength(begin,end)
             .then(rest => {
                 res.json(rest);
@@ -78,6 +78,21 @@ module.exports = function (app) {
 
     app.get('/MenuSet', function (req, res) {
         menuSet.showMenuSet().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/MenuSetPrice', function (req, res) {
+        menuSet.showMenuSetByPrice().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/MenuSetPriceLength/:begin&:end', function (req, res) {
+        const begin = req.params.begin;
+        const end = req.params.end;
+        menuSet.showMenuSetByPriceLength(begin,end)
+        .then(rest => {
             res.json(rest);
         })
     });
