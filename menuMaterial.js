@@ -1,18 +1,18 @@
-var connect = require('./mysql.config');
+var knex = require('./knex');
 
 const services = {
-        getMenuMaterialByNo: (no) => {
-                return connect.select('*')
-                        .from('material')
-                        .join('menu_material', { 'menu_material.matNo': 'material.matNo' })
-                        .join('menu', { 'menu_material.menuNo': 'menu.menuNo' })
-                        .where('menu.menuNo', no)
+        getMenuMaterialByMenuNo: (no) => {
+                return knex.select('*')
+                        .from('Material')
+                        .join('Menu_Material', { 'Menu_Material.matNo': 'Material.matNo' })
+                        .join('Menu', { 'Menu_Material.menuNo': 'Menu.menuNo' })
+                        .where('Menu.menuNo', no)
         }
 }
 
-exports.showMaterialByNo = async (no) => {
+exports.showMaterialByMenuNo = async (no) => {
         try {
-                const response = await services.getMenuMaterialByNo(no);
+                const response = await services.getMenuMaterialByMenuNo(no);
                 return response;
         } catch (err) {
                 console.log(err)

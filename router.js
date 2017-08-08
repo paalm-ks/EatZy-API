@@ -35,7 +35,13 @@ module.exports = function (app) {
 
     app.get('/menuType', function (req, res) {
         menuType.showMenuType().then(rest => {
+            res.json(rest);
+        })
+    });
 
+    app.get('/menuByName/:name', function (req, res) {
+        const name = req.params.name;
+        menu.showMenuByName(name).then(rest => {
             res.json(rest);
         })
     });
@@ -54,7 +60,7 @@ module.exports = function (app) {
             })
     })
 
-    app.get('/menuSet', function (req, res) {
+    app.get('/MenuSet', function (req, res) {
         menuSet.showMenuSet().then(rest => {
             res.json(rest);
         })
@@ -68,9 +74,9 @@ module.exports = function (app) {
             })
     });
 
-    app.get('/menuMaterialByNo/:no', function (req, res) {
+    app.get('/menuMaterialByMenuNo/:no', function (req, res) {
         const no = req.params.no;
-        menuMat.showMaterialByNo(no)
+        menuMat.showMaterialByMenuNo(no)
             .then(rest => {
                 res.json(rest);
             })

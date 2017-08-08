@@ -1,34 +1,33 @@
-var connect = require('./mysql.config');
+var knex = require('./knex');
 
 const services = {
         getMenu: () => {
-                return connect.select('*')
-                        .from('menu')
+                return knex.select().from('Menu').timeout(1000);      
         },
-        getMenuByType: (type) => {
-                return connect.select('*')
-                        .from('menu')
-                        .join('menu_menutype', { 'menu_menutype.menuNo': 'menu.menuNo' })
-                        .join('menutype', { 'menutype.menuTypeNo': 'menu_menutype.menuTypeNo' })
-                        .where('menuTypeName', 'like', `%${type}%`)
+        getMenuByType: (input) => {
+                return knex.select()
+                        .from('Menu')
+                        .join('MenuType', { 'MenuType.menuTypeNo': 'Menu.menuTypeNo' })
+                        .where('MenuType.MenuTypeNo', 'like', `${input}`)     
         },
         getMenuByNo: (input) => {
-                return connect.select('*')
-                        .from('menu')
-                        .where('menuNo', 'like', `%${input}%`)
+                return knex.select()
+                        .from('Menu')
+                        .where('menuNo', 'like', `${input}`)
         },
+        //Not Finish can't search by TH name
         getMenuByName: (input) => {
-                return connect.select('*')
-                        .from('menu')
-                        .where('menuNameTH', 'like',`%${input}%`)
+                return knex.select()
+                        .from('Menu')
+                        .where('menuNameEN', 'like',`%${input}%`)
         }
+        //res.header("Content-Type", "application/json; charset=utf-8");
 }
 
 //return data when function call
 exports.showMenu = async () => {
         try {
                 const response = await services.getMenu();
-                // const data = await JSON.stringify(response);
                 return response;
         } catch (err) {
                 console.log(err)

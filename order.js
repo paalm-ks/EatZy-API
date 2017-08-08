@@ -1,5 +1,4 @@
-var connect = require('./mysql.config');
-var con = require('./mysql');
+var connect = require('./knex');
 
 const services = {
 

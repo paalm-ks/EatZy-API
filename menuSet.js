@@ -1,16 +1,16 @@
-var connect = require('./mysql.config');
+var knex = require('./knex');
 
 const services = {
         getMenuSet: ()=> {
-                return connect.select('*')
-                        .from('menuset')
+                return knex.select()
+                        .from('MenuSet')
         },
         getMenuBySet: (set) => {
-                return connect.select('*')
-                        .from('menuset')
-                        .join('menu_menuset', { 'menu_menuset.menuSetNo': 'menuset.menuSetNo' })
-                        .join('menu', { 'menu.menuNo': 'menu_menuset.menuNo' })
-                        .where('menuset.menuSetNo', set)
+                return knex.select()
+                        .from('MenuSet')
+                        .join('Menu_MenuSet', { 'Menu_MenuSet.menuSetNo': 'MenuSet.menuSetNo' })
+                        .join('Menu', { 'Menu.menuNo': 'Menu_MenuSet.menuNo' })
+                        .where('MenuSet.menuSetNo', set)
         }
 }
 
