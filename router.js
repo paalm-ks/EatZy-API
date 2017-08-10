@@ -142,14 +142,24 @@ module.exports = function (app) {
             })
     });
 
-    app.get('/addOrder/order?:a', function (req, res) {
-        const dataArr = JSON.parse(req.query.a);
-        for (var i in dataArr) { 
-        console.log("i :: " +i);
-        console.log(dataArr[i])
-        order.addOrder(dataArr[i],i);
-        }
-        res.json(dataArr)
+    app.get('/addOrder/:a', function (req, res) {
+        // const dataArr = JSON.parse(req.params.name);
+        const a = (req.params.a);
+        console.log(a);
+        const b = JSON.parse(a)
+        console.log(b)
+        console.log(b.name)
+        console.log(b.quan)
+        console.log(b.amount)
+        console.log(b.bill)
+        order.addOrder(b,1)
+        res.json(b)
+        // for (var i in dataArr) { 
+        // console.log("i :: " +i);
+        // console.log(dataArr[i])
+        // order.addOrder(dataArr[i],i);
+        // }
+        // res.json(dataArr)
         });
 
 }
