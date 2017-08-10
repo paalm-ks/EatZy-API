@@ -113,6 +113,14 @@ module.exports = function (app) {
             })
     });
 
+    app.get('/menuMaterialOrderByType/:no', function (req, res) {
+        const no = req.params.no;
+        menuMat.showMaterialOrderByType(no)
+            .then(rest => {
+                res.json(rest);
+            })
+    });
+
     app.get('/menuBySearch/:data', function (req, res) {
         const data = req.params.data;
         const isNum = data * 1;
