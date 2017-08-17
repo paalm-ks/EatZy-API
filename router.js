@@ -5,6 +5,7 @@ var promotion = require('./promotion');
 var menuSet = require('./menuSet');
 var menuMat = require('./menuMaterial');
 var order = require('./order');
+var reserve = require('./reserve.js');
 
 module.exports = function (app) {
     app.get('/', function (req, res) {
@@ -162,4 +163,11 @@ module.exports = function (app) {
         // res.json(dataArr)
         });
 
+        app.get('/reserve/:no', function (req, res) {
+        const no = req.params.no;
+        reserve.showReserve(no)
+            .then(rest => {
+                res.json(rest);
+            })
+    });
 }
