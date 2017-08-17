@@ -4,10 +4,10 @@ const services = {
 
     addReserve: (add, i) => {
         console.log(i);
-        console.log(add.name + " : " + add.quan + " : " + add.amount + " : " + add.bill);
-        const a = { menuName: add.name, quantity: add.quan, amount: add.amount, billNo: add.bill };
+        console.log(add.date + " : " + add.time + " : " + add.num + " : " + add.stat+ " : " + add.user+ " : " + add.branch+ " : " + add.code);
+        const a = { date: add.date, time: add.time, numberOfPerson: add.num, status: add.stat, userNo:add.user, branchNo:add.branch,queCode:add.code };
         console.log(a);
-        knex.insert(a).into('OEB.Order').then(function (id) {
+        knex.insert(a).into('EatZy.Reservation').then(function (id) {
             console.log(id)
         });
     },
@@ -16,6 +16,14 @@ const services = {
             .from('Reservation')
             .join('User', { 'User.userNo' : 'Reservation.userNo'})
             .where('Reservation.userNo', 'like', `${no}`)
+    }
+}
+
+exports.addReserve = (add, i) => {
+    try {
+        services.addReserve(add, i);
+    } catch (err) {
+        console.log(err)
     }
 }
 

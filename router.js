@@ -9,7 +9,7 @@ var reserve = require('./reserve.js');
 
 module.exports = function (app) {
     app.get('/', function (req, res) {
-        res.send('home page /menu to see menulist*');
+        res.sendFile(__dirname + '/indes.html');
     });
 
     app.get('/menu', function (req, res) {
@@ -154,6 +154,29 @@ module.exports = function (app) {
         console.log(b.amount)
         console.log(b.bill)
         order.addOrder(b,1)
+        res.json(b)
+        // for (var i in dataArr) { 
+        // console.log("i :: " +i);
+        // console.log(dataArr[i])
+        // order.addOrder(dataArr[i],i);
+        // }
+        // res.json(dataArr)
+        });
+
+    app.get('/addReserve/:a', function (req, res) {
+        // const dataArr = JSON.parse(req.params.name);
+        const a = (req.params.a);
+        console.log(a);
+        const b = JSON.parse(a)
+        console.log(b)
+        console.log(b.date)
+        console.log(b.time)
+        console.log(b.num)
+        console.log(b.stat)
+        console.log(b.user)
+        console.log(b.branch)
+        console.log(b.code)
+        reserve.addReserve(b,1)
         res.json(b)
         // for (var i in dataArr) { 
         // console.log("i :: " +i);
