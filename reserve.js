@@ -2,8 +2,7 @@ var knex = require('./knex');
 
 const services = {
 
-    addReserve: (add, i) => {
-        console.log(i);
+    addReserve: (add) => {
         console.log(add.date + " : " + add.time + " : " + add.num + " : " + add.stat+ " : " + add.user+ " : " + add.branch+ " : " + add.code);
         const a = { date: add.date, time: add.time, numberOfPerson: add.num, status: add.stat, userNo:add.user, branchNo:add.branch,queCode:add.code };
         console.log(a);
@@ -19,9 +18,9 @@ const services = {
     }
 }
 
-exports.addReserve = (add, i) => {
+exports.addReserve = (add) => {
     try {
-        services.addReserve(add, i);
+        services.addReserve(add);
     } catch (err) {
         console.log(err)
     }

@@ -176,7 +176,7 @@ module.exports = function (app) {
         console.log(b.user)
         console.log(b.branch)
         console.log(b.code)
-        reserve.addReserve(b,1)
+        reserve.addReserve(b)
         res.json(b)
         // for (var i in dataArr) { 
         // console.log("i :: " +i);
