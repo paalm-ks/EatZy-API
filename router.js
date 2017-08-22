@@ -245,4 +245,10 @@ module.exports = function (app) {
         })
     });
 
+    app.get('/reserveQueue', function (req, res) {
+        reserve.genQueue().then(rest => {
+            res.json(rest);
+        })
+    });
+
 }
