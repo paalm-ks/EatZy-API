@@ -9,7 +9,31 @@ var reserve = require('./reserve.js');
 
 module.exports = function (app) {
     app.get('/', function (req, res) {
-        res.sendFile(__dirname + '/indes.html');
+        const doc = "index page for Ref <br>"
+            + "/menu <br>"
+            + "/menuPrice <br>"
+            + "/menuPriceLength/:begin&:end <br>"
+            + "/menuByType/:type <br>"
+            + "/menuByNo/:no <br>"
+            + "/menuType <br>"
+            + "/menuByName/:name <br>"
+            + "/promotion <br>"
+            + "/promoByNo/:no <br>"
+            + "/MenuSet <br>"
+            + "/MenuSetPrice <br>"
+            + "/MenuSetPriceLength/:begin&:end <br>"
+            + "/menuBySet/:set <br>"
+            + "/menuMaterialByMenuNo/:no <br>"
+            + "/menuBySearch/:data <br>"
+            + "/order/:no <br>"
+            + "/addOrder/:a <br>"
+            + "/addReserve/ <br>"
+            + "/reserveByUser/:no <br>"
+            + "/reserve/ <br>"
+            + "/reserveCount <br>"
+            + "/reserveBefore <br>"
+            + "/reserveCall/ <br>"
+        res.send(doc)
     });
 
     app.get('/menu', function (req, res) {
@@ -164,22 +188,23 @@ module.exports = function (app) {
     });
 
     app.post('/addReserve/', function (req, res) {
-        // const dataArr = JSON.parse(req.params.name);
-        const a = (req.body.date);
-        console.log("req: "+ req)
-        console.log("a: "+a);
-        // const b = JSON.parse(a)
-        // console.log(b)
-        // console.log(b.date)
-        // console.log(b.time)
-        // console.log(b.num)
-        // console.log(b.stat)
-        // console.log(b.user)
-        // console.log(b.branch)
-        // console.log(b.code)
-        // reserve.addReserve(b)
-        // res.json(req.b)
-        });
+        const date = (req.body.date);
+        console.log("req: " + req)
+        console.log("a: " + time);
+        const time = (req.body.time);
+        console.log("b:" + time)
+        const num = (req.body.num);
+        const stat = (req.body.stat);
+        const user = (req.body.user);
+        const branch = (req.body.branch);
+        const code = (req.body.code);
+        console.log(b.branch)
+        console.log(b.code)
+        reserve.addReserve(b)
+            .then(rest => {
+                res.json(rest)
+            })
+    });
 
     app.get('/reserveByUser/:no', function (req, res) {
         const no = req.params.no;
@@ -209,7 +234,7 @@ module.exports = function (app) {
         console.log(hr)
         console.log(mn)
         console.log(sc)
-        const now = hr+":"+mn+":"+sc
+        const now = hr + ":" + mn + ":" + sc
         console.log(now)
         reserve.countBefore(now).then(rest => {
             res.json(rest);

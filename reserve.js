@@ -2,9 +2,9 @@ var knex = require('./knex');
 
 const services = {
 
-    addReserve: (add) => {
-        console.log(add.date + " : " + add.time + " : " + add.num + " : " + add.stat + " : " + add.user + " : " + add.branch + " : " + add.code);
-        const a = { date: add.date, time: add.time, numberOfPerson: add.num, userNo: add.user, branchNo: add.branch, queCode: add.code };
+    addReserve: (date,time,num,stat,user,branch,code) => {
+        console.log(date + " : " + time + " : " + num + " : " + stat + " : " + user + " : " + branch + " : " + code);
+        const a = { date: date, time: time, numberOfPerson: num, userNo: user, branchNo: branch, queCode: code };
         console.log(a);
         knex.insert(a).into('EatZy.Reservation').then(function (id) {
             console.log(id)
@@ -75,9 +75,9 @@ exports.countBefore = async (now) => {
     }
 }
 
-exports.addReserve = (add) => {
+exports.addReserve = (date,time,num,stat,user,branch,code) => {
     try {
-        services.addReserve(add);
+        services.addReserve(date,time,num,stat,user,branch,code);
     } catch (err) {
         console.log(err)
     }
