@@ -179,12 +179,6 @@ module.exports = function (app) {
         // console.log(b.code)
         // reserve.addReserve(b)
         // res.json(req.b)
-        // for (var i in dataArr) { 
-        // console.log("i :: " +i);
-        // console.log(dataArr[i])
-        // order.addOrder(dataArr[i],i);
-        // }
-        // res.json(dataArr)
         });
 
     app.get('/reserveByUser/:no', function (req, res) {
