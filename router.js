@@ -190,7 +190,7 @@ module.exports = function (app) {
     app.post('/addReserve/', function (req, res) {
         const date = (req.body.date);
         console.log("req: " + req)
-        console.log("a: " + time);
+        console.log("a: " + date);
         const time = (req.body.time);
         console.log("b:" + time)
         const num = (req.body.num);

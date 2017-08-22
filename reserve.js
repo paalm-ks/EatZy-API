@@ -18,7 +18,6 @@ const services = {
             .where('Reservation.userNo', no)
     },
     getReserve:() =>{
-        // return knex('Reservation').count('reserved')
         return knex.select('*')
         .from('Reservation')
         .join('User', { 'User.userNo': 'Reservation.userNo' })
