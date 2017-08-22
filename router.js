@@ -164,19 +164,28 @@ module.exports = function (app) {
     });
 
     app.post('/addReserve/', function (req, res) {
+        // const dataArr = JSON.parse(req.params.name);
         const a = (req.body.date);
-        console.log(a);
-        const b = JSON.parse(a)
-        console.log(b)
-        console.log(b.date)
-        console.log(b.time)
-        console.log(b.num)
-        console.log(b.user)
-        console.log(b.branch)
-        console.log(b.code)
-        reserve.addReserve(b)
-        res.json(b)
-    });
+        console.log("req: "+ req)
+        console.log("a: "+a);
+        // const b = JSON.parse(a)
+        // console.log(b)
+        // console.log(b.date)
+        // console.log(b.time)
+        // console.log(b.num)
+        // console.log(b.stat)
+        // console.log(b.user)
+        // console.log(b.branch)
+        // console.log(b.code)
+        // reserve.addReserve(b)
+        // res.json(req.b)
+        // for (var i in dataArr) { 
+        // console.log("i :: " +i);
+        // console.log(dataArr[i])
+        // order.addOrder(dataArr[i],i);
+        // }
+        // res.json(dataArr)
+        });
 
     app.get('/reserveByUser/:no', function (req, res) {
         const no = req.params.no;
