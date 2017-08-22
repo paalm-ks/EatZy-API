@@ -23,7 +23,7 @@ const services = {
         .join('User', { 'User.userNo': 'Reservation.userNo' })
     },
     getCountReserve:() =>{
-        return knex('Reservation').count('status')
+        return knex('Reservation').count('status as status')
         .where('Reservation.status','reserved')
     },
     getCountBefore:(now) =>{
