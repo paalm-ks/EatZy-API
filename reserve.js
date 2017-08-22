@@ -35,6 +35,19 @@ const services = {
         const sub = knex.min('time as t').from('Reservation')
         .where('Reservation.status','reserved')
         return knex('Reservation').select().where('Reservation.time','in',sub)
+    },
+    genQueue: () =>{
+        return knex('Reservation').max('Reservation.queCode as queCode')
+        .where('Reservation.status','reserved');
+    }
+}
+
+exports.genQueue = async () => {
+    try {
+        const response = await services.genQueue();
+        return response;
+    } catch (err) {
+        console.log(err)
     }
 }
 
