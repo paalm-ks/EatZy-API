@@ -18,7 +18,7 @@ module.exports = function (app) {
         })
     });
 
-     app.get('/menuPrice', function (req, res) {
+    app.get('/menuPrice', function (req, res) {
         menu.showMenuSortByPrice().then(rest => {
             res.json(rest);
         })
@@ -27,7 +27,7 @@ module.exports = function (app) {
     app.get('/menuPriceLength/:begin&:end', function (req, res) {
         const begin = req.params.begin;
         const end = req.params.end;
-        menu.showMenuSortByPriceLength(begin,end)
+        menu.showMenuSortByPriceLength(begin, end)
             .then(rest => {
                 res.json(rest);
             })
@@ -92,10 +92,10 @@ module.exports = function (app) {
     app.get('/MenuSetPriceLength/:begin&:end', function (req, res) {
         const begin = req.params.begin;
         const end = req.params.end;
-        menuSet.showMenuSetByPriceLength(begin,end)
-        .then(rest => {
-            res.json(rest);
-        })
+        menuSet.showMenuSetByPriceLength(begin, end)
+            .then(rest => {
+                res.json(rest);
+            })
     });
 
     app.get('/menuBySet/:set', function (req, res) {
@@ -153,7 +153,7 @@ module.exports = function (app) {
         console.log(b.quan)
         console.log(b.amount)
         console.log(b.bill)
-        order.addOrder(b,1)
+        order.addOrder(b, 1)
         res.json(b)
         // for (var i in dataArr) { 
         // console.log("i :: " +i);
@@ -161,36 +161,62 @@ module.exports = function (app) {
         // order.addOrder(dataArr[i],i);
         // }
         // res.json(dataArr)
-        });
+    });
 
-    app.get('/addReserve/:a', function (req, res) {
-        // const dataArr = JSON.parse(req.params.name);
-        const a = (req.params.a);
+    app.post('/addReserve/', function (req, res) {
+        const a = (req.body.date);
         console.log(a);
         const b = JSON.parse(a)
         console.log(b)
         console.log(b.date)
         console.log(b.time)
         console.log(b.num)
-        console.log(b.stat)
         console.log(b.user)
         console.log(b.branch)
         console.log(b.code)
         reserve.addReserve(b)
         res.json(b)
-        // for (var i in dataArr) { 
-        // console.log("i :: " +i);
-        // console.log(dataArr[i])
-        // order.addOrder(dataArr[i],i);
-        // }
-        // res.json(dataArr)
-        });
+    });
 
-        app.get('/reserve/:no', function (req, res) {
+    app.get('/reserveByUser/:no', function (req, res) {
         const no = req.params.no;
-        reserve.showReserve(no)
+        reserve.showReserveByUser(no)
             .then(rest => {
                 res.json(rest);
             })
     });
+
+    app.get('/reserve', function (req, res) {
+        reserve.showReserve().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/reserveCount', function (req, res) {
+        reserve.countReserve().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/reserveBefore', function (req, res) {
+        const date = new Date();
+        const hr = date.getHours();
+        const mn = date.getMinutes();
+        const sc = date.getSeconds();
+        console.log(hr)
+        console.log(mn)
+        console.log(sc)
+        const now = hr+":"+mn+":"+sc
+        console.log(now)
+        reserve.countBefore(now).then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/reserveCall', function (req, res) {
+        reserve.callReserve().then(rest => {
+            res.json(rest);
+        })
+    });
+
 }

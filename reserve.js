@@ -10,11 +10,68 @@ const services = {
             console.log(id)
         });
     },
-    getReserve: (no) => {
+    getReserveByUser: (no) => {
+        console.log('get : '+no)
         return knex.select('*')
             .from('Reservation')
             .join('User', { 'User.userNo': 'Reservation.userNo' })
-            .where('Reservation.userNo', 'like', `${no}`)
+            .where('Reservation.userNo', no)
+    },
+    getReserve:() =>{
+        // return knex('Reservation').count('reserved')
+        return knex.select('*')
+        .from('Reservation')
+        .join('User', { 'User.userNo': 'Reservation.userNo' })
+    },
+    getCountReserve:() =>{
+        return knex('Reservation').count('status')
+        .where('Reservation.status','reserved')
+    },
+    getCountBefore:(now) =>{
+        return knex('Reservation').count('status')
+        .where('Reservation.status','reserved')
+        .andWhere('Reservation.time','<',now);
+    },
+    callReserve:() =>{
+        const sub = knex.min('time as t').from('Reservation')
+        .where('Reservation.status','reserved')
+        return knex('Reservation').select().where('Reservation.time','in',sub)
+    }
+}
+
+exports.showReserve = async () => {
+    try {
+        const response = await services.getReserve();
+        return response;
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.callReserve = async () => {
+    try {
+        const response = await services.callReserve();
+        return response;
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.countReserve = async () => {
+    try {
+        const response = await services.getCountReserve();
+        return response;
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.countBefore = async (now) => {
+    try {
+        const response = await services.getCountBefore(now);
+        return response;
+    } catch (err) {
+        console.log(err)
     }
 }
 
@@ -26,9 +83,9 @@ exports.addReserve = (add) => {
     }
 }
 
-exports.showReserve = async (no) => {
+exports.showReserveByUser = async (no) => {
     try {
-        const response = await services.getReserve(no);
+        const response = await services.getReserveByUser(no);
         return response;
     } catch (err) {
         console.log(err)
