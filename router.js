@@ -198,9 +198,7 @@ module.exports = function (app) {
         const user = (req.body.user);
         const branch = (req.body.branch);
         const code = (req.body.code);
-        console.log(b.branch)
-        console.log(b.code)
-        reserve.addReserve(b)
+        reserve.addReserve(date,time,num,stat,user,branch,code)
             .then(rest => {
                 res.json(rest)
             })
