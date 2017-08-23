@@ -7,6 +7,7 @@ var menuMat = require('./menuMaterial');
 var order = require('./order');
 var reserve = require('./reserve.js');
 
+
 module.exports = function (app) {
     app.get('/', function (req, res) {
         const doc = "index page for Ref <br>"
@@ -33,7 +34,7 @@ module.exports = function (app) {
             + "/reserveCount <br>"
             + "/reserveBefore <br>"
             + "/reserveCall/ <br>"
-        res.send(doc)
+          res.send(doc)
     });
 
     app.get('/menu', function (req, res) {

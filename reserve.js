@@ -16,6 +16,7 @@ const services = {
             .from('Reservation')
             .join('User', { 'User.userNo': 'Reservation.userNo' })
             .where('Reservation.userNo', no)
+            .andWhere('Reservation.status','reserved')
     },
     getReserve:() =>{
         return knex.select('*')

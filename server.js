@@ -11,26 +11,24 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server)
 
-// io.on('connection', function(socket){
-//   console.log('a user connected : id : '+socket.id);
-//   socket.on('disconnect', function(){
-//     console.log('user disconnected');
-//   });
-//   socket.on('chat message', function(msg){
-//     console.log('message: ' + msg);
-//     io.emit('chat message', msg);
-//   });
-// });
+io.on('connection', function (socket) {
+    socket.on('message', function () { });
+    socket.on('disconnect', function () { });
+  });
 
+  
 //connect to express api router
 var Router = require('./router');
 var router = Router(app);
 /* สั่งให้ server ทำการรัน Web Server ด้วย port ที่เรากำหนด */
-app.listen(port, function() {
+server.listen(port, function() {
+  
     console.log('Starting node.js on port ' + port);
 });
+
+// if port 3000 fuck up use taskkill /im node.exe
 
 
