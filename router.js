@@ -200,9 +200,6 @@ module.exports = function (app) {
         const branch = (req.body.branch);
         const code = (req.body.code);
         reserve.addReserve(date,time,num,stat,user,branch,code)
-            .then(rest => {
-                res.json(rest)
-            })
     });
 
     app.get('/reserveByUser/:no', function (req, res) {
