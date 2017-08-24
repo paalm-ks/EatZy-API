@@ -37,7 +37,7 @@ const services = {
             .where('Reservation.userNo', no)
             .andWhere('Reservation.status', 'reserved')
 
-        return knex('Reservation').count('status')
+        return knex('Reservation').count('status as status')
             .where('Reservation.status', 'reserved')
             .andWhere('Reservation.time', '<', time)
             .andWhere('Reservation.date', '=', date)
