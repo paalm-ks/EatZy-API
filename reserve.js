@@ -43,6 +43,7 @@ const services = {
             .andWhere('Reservation.date', '=', date)
     },
     callReserve: () => {
+        //for call leasteset queue
         const sub = knex.min('time as t').from('Reservation')
             .where('Reservation.status', 'reserved')
         return knex('Reservation').select().where('Reservation.time', 'in', sub)
@@ -51,22 +52,12 @@ const services = {
         return knex('Reservation').max('Reservation.queCode as queCode')
             .where('Reservation.status', 'reserved');
     },
-    updateQueue: (no) => {
-        const date = knex.max('Reservation.date')
-            .from('Reservation')
-            .where('Reservation.userNo', no)
-            .andWhere('Reservation.status', 'reserved')
-        const time = knex.max('Reservation.time')
-            .from('Reservation')
-            .where('Reservation.userNo', no)
-            .andWhere('Reservation.status', 'reserved')
-
+    updateQueue: (no,status) => {
+        //for update status arrive or cancel
         return knex('Reservation')
-            .where('Reservation.userNo', no)
-            .andWhere('Reservation.status', 'reserved')
-            .andWhere('Reservation.time', '=', time)
-            .andWhere('Reservation.date', '=', date)
-            .update('Reservation.status', 'arrived')
+            .where('userNo', no)
+            .andWhere('status', 'reserved')
+            .update('status', status)
     }
 }
 
@@ -79,9 +70,9 @@ exports.genQueue = async () => {
     }
 }
 
-exports.updateQueue = async (no) => {
+exports.updateQueue = async (no,status) => {
     try {
-        const response = await services.updateQueue(no);
+        const response = await services.updateQueue(no,status);
         return response;
     } catch (err) {
         console.log(err)
