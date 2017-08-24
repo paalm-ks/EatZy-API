@@ -2,7 +2,7 @@ var knex = require('./knex');
 
 const services = {
 
-    addReserve: (date,time,num,stat,user,branch,code) => {
+    addReserve: (date, time, num, stat, user, branch, code) => {
         console.log(date + " : " + time + " : " + num + " : " + stat + " : " + user + " : " + branch + " : " + code);
         const a = { date: date, time: time, numberOfPerson: num, userNo: user, branchNo: branch, queCode: code };
         console.log(a);
@@ -11,41 +11,77 @@ const services = {
         });
     },
     getReserveByUser: (no) => {
-        console.log('get : '+no)
+        console.log('get : ' + no)
         return knex.select('*')
             .from('Reservation')
             .join('User', { 'User.userNo': 'Reservation.userNo' })
             .where('Reservation.userNo', no)
-            .andWhere('Reservation.status','reserved')
+            .andWhere('Reservation.status', 'reserved')
     },
-    getReserve:() =>{
+    getReserve: () => {
         return knex.select('*')
-        .from('Reservation')
-        .join('User', { 'User.userNo': 'Reservation.userNo' })
+            .from('Reservation')
+            .join('User', { 'User.userNo': 'Reservation.userNo' })
     },
-    getCountReserve:() =>{
+    getCountReserve: () => {
         return knex('Reservation').count('status as status')
-        .where('Reservation.status','reserved')
+            .where('Reservation.status', 'reserved')
     },
-    getCountBefore:(now) =>{
+    getCountBefore: (no) => {
+        const date = knex.select('Reservation.date')
+            .from('Reservation')
+            .where('Reservation.userNo', no)
+            .andWhere('Reservation.status', 'reserved')
+        const time = knex.select('Reservation.time')
+            .from('Reservation')
+            .where('Reservation.userNo', no)
+            .andWhere('Reservation.status', 'reserved')
+
         return knex('Reservation').count('status')
-        .where('Reservation.status','reserved')
-        .andWhere('Reservation.time','<',now);
+            .where('Reservation.status', 'reserved')
+            .andWhere('Reservation.time', '<', time)
+            .andWhere('Reservation.date', '=', date)
     },
-    callReserve:() =>{
+    callReserve: () => {
         const sub = knex.min('time as t').from('Reservation')
-        .where('Reservation.status','reserved')
-        return knex('Reservation').select().where('Reservation.time','in',sub)
+            .where('Reservation.status', 'reserved')
+        return knex('Reservation').select().where('Reservation.time', 'in', sub)
     },
-    genQueue: () =>{
+    genQueue: () => {
         return knex('Reservation').max('Reservation.queCode as queCode')
-        .where('Reservation.status','reserved');
+            .where('Reservation.status', 'reserved');
+    },
+    updateQueue: (no) => {
+        const date = knex.max('Reservation.date')
+            .from('Reservation')
+            .where('Reservation.userNo', no)
+            .andWhere('Reservation.status', 'reserved')
+        const time = knex.max('Reservation.time')
+            .from('Reservation')
+            .where('Reservation.userNo', no)
+            .andWhere('Reservation.status', 'reserved')
+
+        return knex('Reservation')
+            .where('Reservation.userNo', no)
+            .andWhere('Reservation.status', 'reserved')
+            .andWhere('Reservation.time', '=', time)
+            .andWhere('Reservation.date', '=', date)
+            .update('Reservation.status', 'arrived')
     }
 }
 
 exports.genQueue = async () => {
     try {
         const response = await services.genQueue();
+        return response;
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.updateQueue = async (no) => {
+    try {
+        const response = await services.updateQueue(no);
         return response;
     } catch (err) {
         console.log(err)
@@ -79,18 +115,18 @@ exports.countReserve = async () => {
     }
 }
 
-exports.countBefore = async (now) => {
+exports.countBefore = async (no) => {
     try {
-        const response = await services.getCountBefore(now);
+        const response = await services.getCountBefore(no);
         return response;
     } catch (err) {
         console.log(err)
     }
 }
 
-exports.addReserve = (date,time,num,stat,user,branch,code) => {
+exports.addReserve = (date, time, num, stat, user, branch, code) => {
     try {
-        services.addReserve(date,time,num,stat,user,branch,code);
+        services.addReserve(date, time, num, stat, user, branch, code);
     } catch (err) {
         console.log(err)
     }

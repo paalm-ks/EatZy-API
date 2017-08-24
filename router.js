@@ -222,17 +222,9 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/reserveBefore', function (req, res) {
-        const date = new Date();
-        const hr = date.getHours();
-        const mn = date.getMinutes();
-        const sc = date.getSeconds();
-        console.log(hr)
-        console.log(mn)
-        console.log(sc)
-        const now = hr + ":" + mn + ":" + sc
-        console.log(now)
-        reserve.countBefore(now).then(rest => {
+    app.get('/reserveBefore/:no', function (req, res) {
+        const no = req.params.no;
+        reserve.countBefore(no).then(rest => {
             res.json(rest);
         })
     });
@@ -245,6 +237,13 @@ module.exports = function (app) {
 
     app.get('/reserveQueue', function (req, res) {
         reserve.genQueue().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/updateQueue/:no', function (req, res) {
+        const no = req.params.no;
+        reserve.updateQueue(no).then(rest => {
             res.json(rest);
         })
     });

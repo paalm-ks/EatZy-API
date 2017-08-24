@@ -11,14 +11,16 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server)
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
-    socket.on('message', function () { });
-    socket.on('disconnect', function () { });
-  });
-
+    socket.on('test', function (data) {
+      console.log("from index.html")
+      console.log(data);
+      socket.broadcast.emit('update', 'fetch new page')
+    });
+});
   
 //connect to express api router
 var Router = require('./router');
@@ -29,6 +31,6 @@ server.listen(port, function() {
     console.log('Starting node.js on port ' + port);
 });
 
-// if port 3000 fuck up use taskkill /im node.exe
+// if port 3000 fuck up use " taskkill /im node.exe /F "
 
 
