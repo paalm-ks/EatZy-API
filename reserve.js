@@ -43,8 +43,14 @@ const services = {
             .andWhere('Reservation.date', '=', date)
     },
     callReserve: () => {
-        //for call leasteset queue
+        //for call min time queue
         const sub = knex.min('time as t').from('Reservation')
+            .where('Reservation.status', 'reserved')
+        return knex('Reservation').select().where('Reservation.time', 'in', sub)
+    },
+    callReserveMax: () => {
+        //for call max time queue
+        const sub = knex.max('time as t').from('Reservation')
             .where('Reservation.status', 'reserved')
         return knex('Reservation').select().where('Reservation.time', 'in', sub)
     },
@@ -91,6 +97,15 @@ exports.showReserve = async () => {
 exports.callReserve = async () => {
     try {
         const response = await services.callReserve();
+        return response;
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.callReserve = async () => {
+    try {
+        const response = await services.callReserveMax();
         return response;
     } catch (err) {
         console.log(err)

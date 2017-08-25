@@ -235,6 +235,12 @@ module.exports = function (app) {
         })
     });
 
+    app.get('/reserveCallMax', function (req, res) {
+        reserve.callReserveMax().then(rest => {
+            res.json(rest);
+        })
+    });
+
     app.get('/reserveQueue', function (req, res) {
         reserve.genQueue().then(rest => {
             res.json(rest);
