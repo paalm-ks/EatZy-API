@@ -103,7 +103,7 @@ exports.callReserve = async () => {
     }
 }
 
-exports.callReserve = async () => {
+exports.callReserveMax = async () => {
     try {
         const response = await services.callReserveMax();
         return response;
