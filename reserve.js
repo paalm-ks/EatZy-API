@@ -104,7 +104,7 @@ exports.callReserve = async () => {
 }
 
 exports.callReserveMax = async () => {
-    try {
+    try { 
         const response = await services.callReserveMax();
         return response;
     } catch (err) {
