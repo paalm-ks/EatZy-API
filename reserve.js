@@ -24,8 +24,11 @@ const services = {
             .join('User', { 'User.userNo': 'Reservation.userNo' })
     },
     getCountReserve: () => {
+        const date = new Date()
+        const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex('Reservation').count('status as status')
             .where('Reservation.status', 'reserved')
+            .andWhere('Reservation.date', current)
     },
     getCountBefore: (no) => {
         const date = knex.select('Reservation.date')
@@ -50,15 +53,17 @@ const services = {
     },
     callReserveMax: () => {
         //for call max time queue
+        const date = new Date()
+        const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         const sub = knex.max('time as t').from('Reservation')
-            .where('Reservation.status', 'reserved')
-        return knex('Reservation').select().where('Reservation.time', 'in', sub)
+            .where('Reservation.date', current)
+        return knex('Reservation').select('*').where('Reservation.time', 'in', sub)
     },
     genQueue: () => {
         return knex('Reservation').max('Reservation.queCode as queCode')
             .where('Reservation.status', 'reserved');
     },
-    updateQueue: (no,status) => {
+    updateQueue: (no, status) => {
         //for update status arrive or cancel
         return knex('Reservation')
             .where('userNo', no)
@@ -76,9 +81,9 @@ exports.genQueue = async () => {
     }
 }
 
-exports.updateQueue = async (no,status) => {
+exports.updateQueue = async (no, status) => {
     try {
-        const response = await services.updateQueue(no,status);
+        const response = await services.updateQueue(no, status);
         return response;
     } catch (err) {
         console.log(err)
@@ -104,7 +109,7 @@ exports.callReserve = async () => {
 }
 
 exports.callReserveMax = async () => {
-    try { 
+    try {
         const response = await services.callReserveMax();
         return response;
     } catch (err) {

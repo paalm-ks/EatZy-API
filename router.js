@@ -34,7 +34,8 @@ module.exports = function (app) {
             + "/reserveCount <br>"
             + "/reserveBefore <br>"
             + "/reserveCall/ <br>"
-          res.send(doc)
+        //   res.send(doc)
+        res.sendFile(__dirname+'/index.html')
     });
 
     app.get('/menu', function (req, res) {
