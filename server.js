@@ -23,6 +23,7 @@ io.on('connection', socket => {
         const array = []
         if(data === 'reserving') {
             array.push()
+            socket.emit('fetch', 'fetch')
         }
     })
 })
