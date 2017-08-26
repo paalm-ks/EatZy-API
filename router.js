@@ -256,4 +256,11 @@ module.exports = function (app) {
         })
     });
 
+    app.get('/cancelQueue/:no', function (req, res) {
+        const no = req.params.no;
+        reserve.cancelQueue(no).then(rest => {
+            res.json(rest);
+        })
+    });
+
 }

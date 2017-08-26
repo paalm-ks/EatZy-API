@@ -69,6 +69,16 @@ const services = {
             .where('userNo', no)
             .andWhere('status', 'reserved')
             .update('status', status)
+    },
+    cancelQueue: (no) => {
+        //for update status cancelled
+        const date = new Date()
+        const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+        return knex('Reservation')
+            .where('userNo', no)
+            .andWhere('status', 'reserved')
+            .andWhere('date',current)
+            .update('status', 'cancelled')
     }
 }
 
@@ -84,6 +94,15 @@ exports.genQueue = async () => {
 exports.updateQueue = async (no, status) => {
     try {
         const response = await services.updateQueue(no, status);
+        return response;
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.cancelQueue = async (no, status) => {
+    try {
+        const response = await services.cancelQueue(no);
         return response;
     } catch (err) {
         console.log(err)
