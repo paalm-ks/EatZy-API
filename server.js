@@ -20,9 +20,9 @@ io.on('connection', socket => {
     console.log('socket connection is on port 3000')
     socket.on('queue', data => {
         console.log(`data: ${data}`)
-        const array = []
+        // const array = []
         if(data === 'reserving') {
-            array.push()
+            // array.push()
             socket.broadcast.emit('fetch', 'fetch')
         }
     })
