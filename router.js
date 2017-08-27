@@ -248,10 +248,9 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/updateQueue/:no&:status', function (req, res) {
+    app.get('/acceptQueue/:no', function (req, res) {
         const no = req.params.no;
-        const status = req.params.status;
-        reserve.updateQueue(no,status).then(rest => {
+        reserve.acceptQueue(no).then(rest => {
             res.json(rest);
         })
     });

@@ -9,7 +9,7 @@ const services = {
         console.log(date + " : " + time + " : " + num + " : " + stat + " : " + user + " : " + branch + " : " + code);
         const a = { date: date, time: time, numberOfPerson: num, userNo: user, branchNo: branch, queCode: code };
         console.log(a);
-        knex.insert(a).into('EatZy.Reservation').then(function (id) {
+        knex.insert(a).into('Reservation').then(function (id) {
             console.log(id)
         });
     },
@@ -65,13 +65,13 @@ const services = {
         return knex('Reservation').max('Reservation.queCode as queCode')
             .where('Reservation.status', 'reserved');
     },
-    updateQueue: (no, status) => {
+    acceptQueue: (no,) => {
         //for update status arrive or cancel
         return knex('Reservation')
             .where('userNo', no)
             .andWhere('status', 'reserved')
-            .where('date', current)
-            .update('status', status)
+            .andWhere('date', current)
+            .update('status', 'arrived')
     },
     cancelQueue: (no) => {
         //for update status cancelled
@@ -92,9 +92,9 @@ exports.genQueue = async () => {
     }
 }
 
-exports.updateQueue = async (no, status) => {
+exports.acceptQueue = async (no) => {
     try {
-        const response = await services.updateQueue(no, status);
+        const response = await services.acceptQueue(no);
         return response;
     } catch (err) {
         console.log(err)
