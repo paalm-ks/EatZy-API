@@ -5,10 +5,37 @@ var promotion = require('./promotion');
 var menuSet = require('./menuSet');
 var menuMat = require('./menuMaterial');
 var order = require('./order');
+var reserve = require('./reserve.js');
+
 
 module.exports = function (app) {
     app.get('/', function (req, res) {
-        res.send('home page /menu to see menulist*');
+        const doc = "index page for Ref <br>"
+            + "/menu <br>"
+            + "/menuPrice <br>"
+            + "/menuPriceLength/:begin&:end <br>"
+            + "/menuByType/:type <br>"
+            + "/menuByNo/:no <br>"
+            + "/menuType <br>"
+            + "/menuByName/:name <br>"
+            + "/promotion <br>"
+            + "/promoByNo/:no <br>"
+            + "/MenuSet <br>"
+            + "/MenuSetPrice <br>"
+            + "/MenuSetPriceLength/:begin&:end <br>"
+            + "/menuBySet/:set <br>"
+            + "/menuMaterialByMenuNo/:no <br>"
+            + "/menuBySearch/:data <br>"
+            + "/order/:no <br>"
+            + "/addOrder/:a <br>"
+            + "/addReserve/ <br>"
+            + "/reserveByUser/:no <br>"
+            + "/reserve/ <br>"
+            + "/reserveCount <br>"
+            + "/reserveBefore <br>"
+            + "/reserveCall/ <br>"
+        //   res.send(doc)
+        res.sendFile(__dirname+'/index.html')
     });
 
     app.get('/menu', function (req, res) {
@@ -16,6 +43,21 @@ module.exports = function (app) {
             res.json(rest);
         })
     });
+
+    app.get('/menuPrice', function (req, res) {
+        menu.showMenuSortByPrice().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/menuPriceLength/:begin&:end', function (req, res) {
+        const begin = req.params.begin;
+        const end = req.params.end;
+        menu.showMenuSortByPriceLength(begin, end)
+            .then(rest => {
+                res.json(rest);
+            })
+    })
 
     app.get('/menuByType/:type', function (req, res) {
         const type = req.params.type;
@@ -27,6 +69,7 @@ module.exports = function (app) {
 
     app.get('/menuByNo/:no', function (req, res) {
         const no = req.params.no;
+        console.log(no);
         menu.showMenuByNo(no)
             .then(rest => {
                 res.json(rest);
@@ -35,7 +78,13 @@ module.exports = function (app) {
 
     app.get('/menuType', function (req, res) {
         menuType.showMenuType().then(rest => {
+            res.json(rest);
+        })
+    });
 
+    app.get('/menuByName/:name', function (req, res) {
+        const name = req.params.name;
+        menu.showMenuByName(name).then(rest => {
             res.json(rest);
         })
     });
@@ -54,10 +103,25 @@ module.exports = function (app) {
             })
     })
 
-    app.get('/menuSet', function (req, res) {
+    app.get('/MenuSet', function (req, res) {
         menuSet.showMenuSet().then(rest => {
             res.json(rest);
         })
+    });
+
+    app.get('/MenuSetPrice', function (req, res) {
+        menuSet.showMenuSetByPrice().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/MenuSetPriceLength/:begin&:end', function (req, res) {
+        const begin = req.params.begin;
+        const end = req.params.end;
+        menuSet.showMenuSetByPriceLength(begin, end)
+            .then(rest => {
+                res.json(rest);
+            })
     });
 
     app.get('/menuBySet/:set', function (req, res) {
@@ -68,9 +132,17 @@ module.exports = function (app) {
             })
     });
 
-    app.get('/menuMaterialByNo/:no', function (req, res) {
+    app.get('/menuMaterialByMenuNo/:no', function (req, res) {
         const no = req.params.no;
-        menuMat.showMaterialByNo(no)
+        menuMat.showMaterialByMenuNo(no)
+            .then(rest => {
+                res.json(rest);
+            })
+    });
+
+    app.get('/menuMaterialOrderByType/:no', function (req, res) {
+        const no = req.params.no;
+        menuMat.showMaterialOrderByType(no)
             .then(rest => {
                 res.json(rest);
             })
@@ -97,14 +169,97 @@ module.exports = function (app) {
             })
     });
 
-    app.get('/addOrder/order?:a', function (req, res) {
-        const dataArr = JSON.parse(req.query.a);
-        for (var i in dataArr) { 
-        console.log("i :: " +i);
-        console.log(dataArr[i])
-        order.addOrder(dataArr[i],i);
-        }
-        res.json(dataArr)
-        });
+    app.get('/addOrder/:a', function (req, res) {
+        // const dataArr = JSON.parse(req.params.name);
+        const a = (req.params.a);
+        console.log(a);
+        const b = JSON.parse(a)
+        console.log(b)
+        console.log(b.name)
+        console.log(b.quan)
+        console.log(b.amount)
+        console.log(b.bill)
+        order.addOrder(b, 1)
+        res.json(b)
+        // for (var i in dataArr) { 
+        // console.log("i :: " +i);
+        // console.log(dataArr[i])
+        // order.addOrder(dataArr[i],i);
+        // }
+        // res.json(dataArr)
+    });
+
+    app.post('/addReserve/', function (req, res) {
+        const date = (req.body.date);
+        console.log("req: " + req)
+        console.log("a: " + date);
+        const time = (req.body.time);
+        console.log("b:" + time)
+        const num = (req.body.num);
+        const stat = (req.body.stat);
+        const user = (req.body.user);
+        const branch = (req.body.branch);
+        const code = (req.body.code);
+        reserve.addReserve(date,time,num,stat,user,branch,code)
+    });
+
+    app.get('/reserveByUser/:no', function (req, res) {
+        const no = req.params.no;
+        reserve.showReserveByUser(no)
+            .then(rest => {
+                res.json(rest);
+            })
+    });
+
+    app.get('/reserve', function (req, res) {
+        reserve.showReserve().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/reserveCount', function (req, res) {
+        reserve.countReserve().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/reserveBefore/:no', function (req, res) {
+        const no = req.params.no;
+        reserve.countBefore(no).then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/reserveCall', function (req, res) {
+        reserve.callReserve().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/reserveCallMax', function (req, res) {
+        reserve.callReserveMax().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/reserveQueue', function (req, res) {
+        reserve.genQueue().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/acceptQueue/:no', function (req, res) {
+        const no = req.params.no;
+        reserve.acceptQueue(no).then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/cancelQueue/:no', function (req, res) {
+        const no = req.params.no;
+        reserve.cancelQueue(no).then(rest => {
+            res.json(rest);
+        })
+    });
 
 }

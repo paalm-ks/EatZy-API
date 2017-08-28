@@ -1,13 +1,13 @@
-var connect = require('./mysql.config');
+var knex = require('./knex');
 
 const services = {
         getPromotion: ()=> {
-                return connect.select('*')
-                        .from('promotion')
+                return knex.select()
+                        .from('Promotion')
         },
         getPromotionByNo: (no) => {
-                return connect.select('*')
-                        .from('promotion')
+                return knex.select()
+                        .from('Promotion')
                         .where('proNo',no)
         }
 }

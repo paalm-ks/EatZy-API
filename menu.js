@@ -1,34 +1,43 @@
-var connect = require('./mysql.config');
+var knex = require('./knex');
 
 const services = {
         getMenu: () => {
-                return connect.select('*')
-                        .from('menu')
+                return knex.select().from('Menu').timeout(1000).orderBy('menuNameTH', 'asc');      
         },
-        getMenuByType: (type) => {
-                return connect.select('*')
-                        .from('menu')
-                        .join('menu_menutype', { 'menu_menutype.menuNo': 'menu.menuNo' })
-                        .join('menutype', { 'menutype.menuTypeNo': 'menu_menutype.menuTypeNo' })
-                        .where('menuTypeName', 'like', `%${type}%`)
+        getMenuSortByPrice: () => {
+                return knex.select().from('Menu').timeout(1000).orderBy('menuPrice', 'asc');      
+        },
+        getMenuSortByPriceLength: (begin,end) => {
+                return knex.select()
+                .from('Menu')
+                .whereBetween('menuPrice', [begin,end] )
+                .orderBy('menuPrice', 'asc');      
+        },
+        getMenuByType: (input) => {
+                return knex.select()
+                        .from('Menu')
+                        .join('MenuType', { 'MenuType.menuTypeNo': 'Menu.menuTypeNo' })
+                        .where('MenuType.MenuTypeNo', 'like', `${input}`)
+                        .orderBy('menuNameTH', 'asc')     
         },
         getMenuByNo: (input) => {
-                return connect.select('*')
-                        .from('menu')
-                        .where('menuNo', 'like', `%${input}%`)
+                return knex.select()
+                        .from('Menu')
+                        .where('menuNo', 'like', `${input}`)
         },
+        //Not Finish can't search by TH name
         getMenuByName: (input) => {
-                return connect.select('*')
-                        .from('menu')
-                        .where('menuNameTH', 'like',`%${input}%`)
+                return knex.select()
+                        .from('Menu')
+                        .where('menuNameEN', 'like',`%${input}%`)
         }
+        //res.header("Content-Type", "application/json; charset=utf-8");
 }
 
 //return data when function call
 exports.showMenu = async () => {
         try {
                 const response = await services.getMenu();
-                // const data = await JSON.stringify(response);
                 return response;
         } catch (err) {
                 console.log(err)
@@ -56,6 +65,24 @@ exports.showMenuByNo = async (input) => {
 exports.showMenuByName = async (input) => {
         try {
                 const response = await services.getMenuByName(input);
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
+
+exports.showMenuSortByPrice = async () => {
+        try {
+                const response = await services.getMenuSortByPrice();
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
+
+exports.showMenuSortByPriceLength = async (begin , end) => {
+        try {
+                const response = await services.getMenuSortByPriceLength(begin , end);
                 return response;
         } catch (err) {
                 console.log(err)

@@ -1,9 +1,9 @@
-var connect = require('./mysql.config');
+var knex = require('./knex');
 
 const services = {
         getMenuType: ()=> {
-                return connect.select('*')
-                        .from('menutype')
+                return knex.select()
+                        .from('MenuType')
         }
 }
 
