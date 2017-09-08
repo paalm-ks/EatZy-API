@@ -169,7 +169,7 @@ module.exports = function (app) {
             })
     });
 
-    app.get('/addOrder/:a', function (req, res) {
+    app.post('/addOrder/', function (req, res) {
         // const dataArr = JSON.parse(req.params.name);
         const a = (req.params.a);
         console.log(a);
