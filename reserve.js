@@ -34,14 +34,15 @@ const services = {
             .andWhere('Reservation.date', current)
     },
     getCountBefore: (no) => {
-        const date = knex.select('Reservation.date')
-            .from('Reservation')
-            .where('Reservation.userNo', no)
-            .andWhere('Reservation.status', 'reserved')
+        // const date = knex.select('Reservation.date')
+        //     .from('Reservation')
+        //     .where('Reservation.userNo', no)
+        //     .andWhere('Reservation.status', 'reserved')
         const reservNo = knex.select('Reservation.reservNo')
             .from('Reservation')
             .where('Reservation.userNo', no)
             .andWhere('Reservation.status', 'reserved')
+            .andWhere('Reservation.date', '=', current)
 
         return knex('Reservation').count('status as status')
             .where('Reservation.status', 'reserved')
