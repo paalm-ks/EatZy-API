@@ -39,4 +39,26 @@ socket.on('update', (s) => {
 
 // คิวล่าสุด , คิวก่อนหน้า , เรียกคิวใกล้สุด
 
+//----------------------------------------------------------------------------------------------------
 
+// how to get data out of promise example 
+
+// getOrder: async (no) => {
+    //     let amount = await knex.select('*')
+    //         .from('Order')
+    //         // .join('menu_order', { 'menu_order.orderNo': 'order.orderNo' })
+    //         // .join('menu', { 'menu.menuNo': 'menu_order.menuNo' })
+    //         .where('Order.orderNo', 'like', `%${no}%`)
+    //         .then(function (a) {
+    //             console.log(a[0].amount);
+    //             g[a[0].amount];
+    //             // return 
+    //             return a[0].amount
+    //         });
+    //         let orders = await knex.select('*')
+    //             .from('Order')
+    //             .where('Order.amount', amount);
+    //     return orders
+    // }    
+
+//----------------------------------------------------------------------------------------------------

@@ -2,10 +2,14 @@ var knex = require('./knex');
 
 const services = {
         getMenu: () => {
-                return knex.select().from('Menu').timeout(1000).orderBy('menuNameTH', 'asc');      
+                return knex.select().from('Menu')
+                .join('Addon',{'Addon.menuNo' : 'Menu.menuNo'})
+                .join('Menu_Material',{'Menu_Material.menuNo': 'Menu.menuNo'})
+                .join('Material',{'Material.matNo':'Menu_Material.matNo'})        
+                .orderBy('menuNameTH', 'asc');      
         },
         getMenuSortByPrice: () => {
-                return knex.select().from('Menu').timeout(1000).orderBy('menuPrice', 'asc');      
+                return knex.select().from('Menu').orderBy('menuPrice', 'asc');      
         },
         getMenuSortByPriceLength: (begin,end) => {
                 return knex.select()

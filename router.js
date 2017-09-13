@@ -6,6 +6,8 @@ var menuSet = require('./menuSet');
 var menuMat = require('./menuMaterial');
 var order = require('./order');
 var reserve = require('./reserve.js');
+var bill = require('./bill');
+var addon = require('./addon');
 
 
 module.exports = function (app) {
@@ -258,6 +260,23 @@ module.exports = function (app) {
     app.get('/cancelQueue/:no', function (req, res) {
         const no = req.params.no;
         reserve.cancelQueue(no).then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/showBill/:no', function (req, res) {
+        const no = req.params.no;
+        bill.showBill(no).then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.post('/addAddOn/', function (req, res) {
+        const menuNo = req.body.menuNo;
+        const matNo = req.body.matNo;
+        const qty = req.body.qty;
+        const price = req.body.price;
+        addon.addAddon(menuNo,matNo,qty,price).then(rest => {
             res.json(rest);
         })
     });
