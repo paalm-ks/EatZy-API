@@ -2,10 +2,7 @@ var knex = require('./knex');
 
 const services = {
         getMenu: () => {
-                return knex.select().from('Menu')
-                .join('Addon',{'Addon.menuNo' : 'Menu.menuNo'})
-                .join('Menu_Material',{'Menu_Material.menuNo': 'Menu.menuNo'})
-                .join('Material',{'Material.matNo':'Menu_Material.matNo'})        
+                return knex.select().from('Menu')       
                 .orderBy('menuNameTH', 'asc');      
         },
         getMenuSortByPrice: () => {
@@ -21,19 +18,22 @@ const services = {
                 return knex.select()
                         .from('Menu')
                         .join('MenuType', { 'MenuType.menuTypeNo': 'Menu.menuTypeNo' })
-                        .where('MenuType.MenuTypeNo', 'like', `${input}`)
+                        .where('MenuType.MenuTypeNo', input)
                         .orderBy('menuNameTH', 'asc')     
         },
         getMenuByNo: (input) => {
                 return knex.select()
                         .from('Menu')
-                        .where('menuNo', 'like', `${input}`)
+                        .join('Addon',{'Addon.menuNo' : 'Menu.menuNo'})
+                        .join('Menu_Material',{'Menu_Material.menuNo': 'Menu.menuNo'})
+                        .join('Material',{'Material.matNo':'Menu_Material.matNo'}) 
+                        .where('menuNo',input)
         },
         //Not Finish can't search by TH name
         getMenuByName: (input) => {
                 return knex.select()
                         .from('Menu')
-                        .where('menuNameEN', 'like',`%${input}%`)
+                        .where('menuNameEN', 'like',input)
         }
         //res.header("Content-Type", "application/json; charset=utf-8");
 }
