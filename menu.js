@@ -24,9 +24,9 @@ const services = {
         getMenuByNo: (input) => {
                 return knex.select()
                         .from('Menu')
-                        .join('Addon',{'Addon.menuNo' : 'Menu.menuNo'})
-                        .join('Menu_Material',{'Menu_Material.menuNo': 'Menu.menuNo'})
-                        .join('Material',{'Material.matNo':'Menu_Material.matNo'}) 
+                        // .join('Addon',{'Addon.menuNo' : 'Menu.menuNo'})
+                        // .join('Menu_Material',{'Menu_Material.menuNo': 'Menu.menuNo'})
+                        // .join('Material',{'Material.matNo':'Menu_Material.matNo'}) 
                         .where('menuNo',input)
         },
         //Not Finish can't search by TH name
