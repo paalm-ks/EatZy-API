@@ -173,20 +173,8 @@ module.exports = function (app) {
 
     app.post('/addOrder/', function (req, res) {
         const no = (req.body.no);
-        var a = JSON.parse(req.body.orders);
-        console.log(a);
-        //{ orders: [ 'Ford', 'BMW', 'Fiat' ] } 
-        console.log(a.orders[0])
-        // Ford
-
-
-        // for(var i = 0 ;  i <= Object.keys(req.body).length-2 ; i++){
-        //     console.log("lap : "+i)
-        //     console.log("loop : "+req.body.order`${i}}`);
-        // } 
-
-
-        // order.addOrder(no)
+        const orders = (req.body.orders)
+        order.addOrder(no,orders)
         // finish get reserveNo to create bill
         // doing order[] in post methods like ex.{ "orders": ["Ford", "BMW", "Fiat"]}
     });

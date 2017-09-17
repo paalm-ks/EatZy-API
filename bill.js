@@ -24,7 +24,8 @@ const services = {
             .then(function (id) {
                 console.log(id)
             });
-        }
+        },
+        // addTableBill
 }
 
 //return data when function call

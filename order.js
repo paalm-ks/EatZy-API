@@ -22,21 +22,32 @@ const services = {
 
 }
 
-exports.addOrder = async (no) => {
+exports.addOrder = async (no,orders) => {
     try {
-        console.log("no : "+no)
-        const code = await reserve.showReserveByUser(no)
-        console.log(code);
-        JSON.stringify(code)
-        console.log("reserveNo : "+code[0].reserveNo);  
-        const reserveNo =  code[0].reserveNo ;
-        const date = new Date()
-        const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-        const time = `${date.toTimeString().substring(0,8)}`;
-        console.log("date : "+current);
-        console.log("time : "+time);
-        const response = bill.addBill(current,time,reserveNo);
-        // services.addOrder(add, i);
+        console.log("User : "+no);
+        var all = JSON.parse(orders);
+        console.log(all);
+        console.log(all.orders[0])
+
+        // for(var i = 0 ;  i <= Object.keys(req.body).length-2 ; i++){
+        //     console.log("lap : "+i)
+        //     console.log("loop : "+req.body.order`${i}}`);
+        // }
+
+        // // Get reserveNo
+        // const code = await reserve.showReserveByUser(no)
+        // console.log(code);
+        // JSON.stringify(code)
+        // console.log("reserveNo : "+code[0].reserveNo);  
+        // // Create Bill
+        // const reserveNo =  code[0].reserveNo ;
+        // const date = new Date()
+        // const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+        // const time = `${date.toTimeString().substring(0,8)}`;
+        // console.log("date : "+current);
+        // console.log("time : "+time);
+        // const response = bill.addBill(current,time,reserveNo);
+        // // services.addOrder(add, i);
     } catch (err) {
         console.log(err)
     }
