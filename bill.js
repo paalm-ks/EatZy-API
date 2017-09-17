@@ -6,9 +6,9 @@ const services = {
                 .where('Bill.reserveNo',no); 
         // get from reserveNo
         },
-        addBill: (date,time,table,reserveNo) => {
-            console.log(date + " : " + time + " : " + table + " : " + reserveNo );
-            const a = { billDate: date, billTime: time , tableNo: table , reserveNo : reserveNo};
+        addBill: (date,time,reserveNo) => {
+            console.log(date + " : " + time + " : " + reserveNo );
+            const a = { billDate: date, billTime: time , reserveNo : reserveNo};
             console.log(a);
             knex.insert(a).into('Bill').then(function (id) {
                 console.log(id)

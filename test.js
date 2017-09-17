@@ -23,17 +23,17 @@
 
 //----------------------------------------------------------------------------------------------------
 
-const io = require('socket.io-client')
+// const io = require('socket.io-client')
 
-const socket = io('http://localhost:3000')
+// const socket = io('http://localhost:3000')
 
-socket.emit('test', 'index update')
-// forsend
+// socket.emit('test', 'index update')
+// // forsend
 
-socket.on('update', (s) => {
-    //for listen 
-    console.log(s)
-})
+// socket.on('update', (s) => {
+//     //for listen 
+//     console.log(s)
+// })
 
 //----------------------------------------------------------------------------------------------------
 
@@ -44,21 +44,31 @@ socket.on('update', (s) => {
 // how to get data out of promise example 
 
 // getOrder: async (no) => {
-    //     let amount = await knex.select('*')
-    //         .from('Order')
-    //         // .join('menu_order', { 'menu_order.orderNo': 'order.orderNo' })
-    //         // .join('menu', { 'menu.menuNo': 'menu_order.menuNo' })
-    //         .where('Order.orderNo', 'like', `%${no}%`)
-    //         .then(function (a) {
-    //             console.log(a[0].amount);
-    //             g[a[0].amount];
-    //             // return 
-    //             return a[0].amount
-    //         });
-    //         let orders = await knex.select('*')
-    //             .from('Order')
-    //             .where('Order.amount', amount);
-    //     return orders
-    // }    
+//     let amount = await knex.select('*')
+//         .from('Order')
+//         // .join('menu_order', { 'menu_order.orderNo': 'order.orderNo' })
+//         // .join('menu', { 'menu.menuNo': 'menu_order.menuNo' })
+//         .where('Order.orderNo', 'like', `%${no}%`)
+//         .then(function (a) {
+//             console.log(a[0].amount);
+//             g[a[0].amount];
+//             // return 
+//             return a[0].amount
+//         });
+//         let orders = await knex.select('*')
+//             .from('Order')
+//             .where('Order.amount', amount);
+//     return orders
+// }    
 
 //----------------------------------------------------------------------------------------------------
+
+var order = {
+    "orders": ["Ford", "BMW", "Fiat"]
+}
+
+
+JSON.stringify(order);
+console.log("Coordinates string: ", order);
+console.log(order.orders[0])
+

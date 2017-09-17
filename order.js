@@ -1,4 +1,6 @@
 var knex = require('./knex');
+var bill = require('./bill');
+var reserve = require('./reserve');
 
 const services = {
 
@@ -20,9 +22,21 @@ const services = {
 
 }
 
-exports.addOrder = (add, i) => {
+exports.addOrder = async (no) => {
     try {
-        services.addOrder(add, i);
+        console.log("no : "+no)
+        const code = await reserve.showReserveByUser(no)
+        console.log(code);
+        JSON.stringify(code)
+        console.log("reserveNo : "+code[0].reserveNo);  
+        const reserveNo =  code[0].reserveNo ;
+        const date = new Date()
+        const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+        const time = `${date.toTimeString().substring(0,8)}`;
+        console.log("date : "+current);
+        console.log("time : "+time);
+        const response = bill.addBill(current,time,reserveNo);
+        // services.addOrder(add, i);
     } catch (err) {
         console.log(err)
     }

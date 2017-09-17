@@ -172,23 +172,23 @@ module.exports = function (app) {
     });
 
     app.post('/addOrder/', function (req, res) {
-        // const dataArr = JSON.parse(req.params.name);
-        const a = (req.params.a);
+        const no = (req.body.no);
+        var a = JSON.parse(req.body.orders);
         console.log(a);
-        const b = JSON.parse(a)
-        console.log(b)
-        console.log(b.name)
-        console.log(b.quan)
-        console.log(b.amount)
-        console.log(b.bill)
-        order.addOrder(b, 1)
-        res.json(b)
-        // for (var i in dataArr) { 
-        // console.log("i :: " +i);
-        // console.log(dataArr[i])
-        // order.addOrder(dataArr[i],i);
-        // }
-        // res.json(dataArr)
+        //{ orders: [ 'Ford', 'BMW', 'Fiat' ] } 
+        console.log(a.orders[0])
+        // Ford
+
+
+        // for(var i = 0 ;  i <= Object.keys(req.body).length-2 ; i++){
+        //     console.log("lap : "+i)
+        //     console.log("loop : "+req.body.order`${i}}`);
+        // } 
+
+
+        // order.addOrder(no)
+        // finish get reserveNo to create bill
+        // doing order[] in post methods like ex.{ "orders": ["Ford", "BMW", "Fiat"]}
     });
 
     app.post('/addReserve/', function (req, res) {

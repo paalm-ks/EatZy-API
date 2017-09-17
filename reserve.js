@@ -14,12 +14,11 @@ const services = {
         });
     },
     getReserveByUser: (no) => {
-        console.log('get : ' + no)
-        return knex.select('*')
+        return knex.select('reserveNo')
             .from('Reservation')
             .join('User', { 'User.userNo': 'Reservation.userNo' })
             .where('Reservation.userNo', no)
-            .andWhere('Reservation.date', current)
+            // .andWhere('Reservation.date', current)
             .andWhere('Reservation.status', 'reserved')
     },
     getReserve: () => {
