@@ -8,8 +8,16 @@ const services = {
             knex.insert(a).into('Addon').then(function (id) {
                 console.log(id)
             });
-        }
+        },
+        getAddonByNo: (input) => {
+            return knex.select('Material.matName','Material.matPicPath')
+                    .from('Addon')
+                    .join('Material',{'Material.matNo':'Addon.matNo'}) 
+                    .where('Addon.menuNo',input)
+
+    }
 }
+
 
 //return data when function call
 
@@ -22,6 +30,14 @@ exports.addAddon = async (menuNo,matNo,qty,price) => {
     }
 }
 
+exports.getAddonByNo = async (no) => {
+    try {
+            const response = await services.getAddonByNo(no);
+            return response;
+    } catch (err) {
+            console.log(err)
+    }
+}
 
 
 

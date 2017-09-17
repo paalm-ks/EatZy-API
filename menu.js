@@ -1,4 +1,5 @@
 var knex = require('./knex');
+var addon = require('./addon')
 
 const services = {
         getMenu: () => {
@@ -24,10 +25,8 @@ const services = {
         getMenuByNo: (input) => {
                 return knex.select()
                         .from('Menu')
-                        .join('Addon',{'Addon.menuNo' : 'Menu.menuNo'})
-                        .join('Menu_Material',{'Menu_Material.menuNo': 'Menu.menuNo'})
-                        .join('Material',{'Material.matNo':'Menu_Material.matNo'}) 
-                        .where('menuNo',input)
+                        .where('Menu.menuNo',input)
+                        
         },
         //Not Finish can't search by TH name
         getMenuByName: (input) => {
@@ -60,7 +59,13 @@ exports.showMenuByType = async (type) => {
 exports.showMenuByNo = async (input) => {
         try {
                 const response = await services.getMenuByNo(input);
-                return response;
+                const response2 = await addon.getAddonByNo(input);
+                //console.log(response);
+                //console.log(response2);
+                return {
+                        Menu : response,
+                        addOn : response2
+                }
         } catch (err) {
                 console.log(err)
         }
