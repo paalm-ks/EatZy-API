@@ -62,10 +62,10 @@ exports.showMenuByNo = async (input) => {
                 const response2 = await addon.getAddonByNo(input);
                 //console.log(response);
                 //console.log(response2);
-                return {
+                return [{
                         Menu : response,
                         addOn : response2
-                }
+                }]
         } catch (err) {
                 console.log(err)
         }
