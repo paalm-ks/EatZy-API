@@ -175,8 +175,6 @@ module.exports = function (app) {
         const no = (req.body.no);
         const orders = (req.body.orders)
         order.addOrder(no,orders)
-        // finish get reserveNo to create bill
-        // doing order[] in post methods like ex.{ "orders": ["Ford", "BMW", "Fiat"]}
     });
 
     app.post('/addReserve/', function (req, res) {
