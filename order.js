@@ -6,21 +6,11 @@ const services = {
 
     addOrder: (all, billNo) => {
         console.log(all);
-        // console.log("all length : " + Object.keys(all).length)
-        // console.log("all length : " + Object.keys(all[0].Menu).length)
-        // console.log("all length : " + Object.keys(all[0].Addon[0]).length)
-        // console.log(all[0].Addon[0].addOnNo[0])
-        // console.log(all[0].Addon[0].addOnNo[1])
-        // console.log(all[0].Addon[1].addOnNo[0])
         for (i in all[0].Menu) {
-            // console.log("loop MenuNo : "+all[0].Menu[i].menuNo)
-            // console.log("loop Price : "+all[0].Menu[i].menuPrice)
-            // console.log("loop Quan : "+all[0].Menu[i].quantity)
             const a = { menuNo: all[0].Menu[i].menuNo, quantity: all[0].Menu[i].quantity, amount: all[0].Menu[i].menuPrice, billNo: billNo };
             console.log(a);
             console.log("AddOn")
-            for (x in all[0].Addon[i].addOnNo) {
-                
+            for (x in all[0].Addon[i].addOnNo) { 
                 console.log("add on : "+all[0].Addon[i].addOnNo[x])
                 // const b = { orderNo : orderNo , addOnNo :all[0].Addon[i]};
                 // knex.insert(a).into('Order').then(function (id) {
@@ -28,8 +18,6 @@ const services = {
                 // });
             }
         }
-
-        // order_addon
     },
     getOrder: (no) => {
         return knex.select('*')
