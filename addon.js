@@ -10,7 +10,7 @@ const services = {
             });
         },
         getAddonByNo: (input) => {
-            return knex.select('Material.matNo','Material.matName','Material.matPicPath')
+            return knex.select('Material.matNo','Material.matName','Material.matPicPath','Addon.AddOnNo','Addon.price')
                     .from('Addon')
                     .join('Material',{'Material.matNo':'Addon.matNo'}) 
                     .where('Addon.menuNo',input)
