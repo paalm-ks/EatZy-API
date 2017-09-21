@@ -178,17 +178,11 @@ module.exports = function (app) {
     });
 
     app.post('/addReserve/', function (req, res) {
-        const date = (req.body.date);
-        console.log("req: " + req)
-        console.log("a: " + date);
-        const time = (req.body.time);
-        console.log("b:" + time)
         const num = (req.body.num);
-        const stat = (req.body.stat);
         const user = (req.body.user);
         const branch = (req.body.branch);
         const code = (req.body.code);
-        reserve.addReserve(date,time,num,stat,user,branch,code)
+        reserve.addReserve(num,user,branch,code)
     });
 
     app.get('/reserveByUser/:no', function (req, res) {

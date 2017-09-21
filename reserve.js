@@ -2,23 +2,23 @@ var knex = require('./knex');
 
 const date = new Date()
 const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+const time = `${date.toTimeString().substring(0, 8)}`;
 
 const services = {    
 
-    addReserve: (date, time, num, stat, user, branch, code) => {
-        console.log(date + " : " + time + " : " + num + " : " + stat + " : " + user + " : " + branch + " : " + code);
-        const a = { date: date, time: time, numberOfPerson: num, userNo: user, branchNo: branch, queCode: code };
+    addReserve: (num,user,branch,code) => {
+        const a = { date: current, time: time, numberOfPerson: num, userNo: user, branchNo: branch, queCode: code };
         console.log(a);
         knex.insert(a).into('Reservation').then(function (id) {
             console.log(id)
         });
     },
     getReserveByUser: (no) => {
-        return knex.select('reserveNo')
+        return knex.select()
             .from('Reservation')
             .join('User', { 'User.userNo': 'Reservation.userNo' })
             .where('Reservation.userNo', no)
-            // .andWhere('Reservation.date', current)
+            .andWhere('Reservation.date', current)
             .andWhere('Reservation.status', 'reserved')
     },
     getReserve: () => {
@@ -33,20 +33,16 @@ const services = {
             .andWhere('Reservation.date', current)
     },
     getCountBefore: (no) => {
-        // const date = knex.select('Reservation.date')
-        //     .from('Reservation')
-        //     .where('Reservation.userNo', no)
-        //     .andWhere('Reservation.status', 'reserved')
-        const reservNo = knex.select('Reservation.reservNo')
+        const reserveNo = knex.select('Reservation.reserveNo')
             .from('Reservation')
             .where('Reservation.userNo', no)
             .andWhere('Reservation.status', 'reserved')
-            .andWhere('Reservation.date', '=', current)
+            .andWhere('Reservation.date', current)
 
         return knex('Reservation').count('status as status')
             .where('Reservation.status', 'reserved')
-            .andWhere('Reservation.reservNo', '<', reservNo)
-            .andWhere('Reservation.date', '=', current)
+            .andWhere('Reservation.reserveNo', '<', reserveNo)
+            .andWhere('Reservation.date', current)
     },
     callReserve: () => {
         //for call min time queue
@@ -62,10 +58,11 @@ const services = {
         return knex('Reservation').select('*').where('Reservation.time', 'in', sub)
     },
     genQueue: () => {
-        return knex('Reservation').max('Reservation.queCode as queCode')
+        return knex('Reservation').min('Reservation.queCode as queCode')
             .where('Reservation.status', 'reserved');
+            //what this for ??
     },
-    acceptQueue: (no,) => {
+    acceptQueue: (no) => {
         //for update status arrive or cancel
         return knex('Reservation')
             .where('userNo', no)
@@ -80,6 +77,12 @@ const services = {
             .andWhere('status', 'reserved')
             .andWhere('date',current)
             .update('status', 'cancelled')
+    },addBillNoToReserve: (no,reserveNo) => {
+        //for update billNo to reserve
+        console.log(billNo)
+        return knex('Reservation')
+        .where('Reservation.reserveNo',reserveNo)
+        .update('billNo',no);
     }
 }
 
@@ -155,9 +158,9 @@ exports.countBefore = async (no) => {
     }
 }
 
-exports.addReserve = (date, time, num, stat, user, branch, code) => {
+exports.addReserve = (num,user,branch,code) => {
     try {
-        services.addReserve(date, time, num, stat, user, branch, code);
+        services.addReserve(num,user,branch,code);
     } catch (err) {
         console.log(err)
     }
@@ -166,6 +169,15 @@ exports.addReserve = (date, time, num, stat, user, branch, code) => {
 exports.showReserveByUser = async (no) => {
     try {
         const response = await services.getReserveByUser(no);
+        return response;
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.addBillNoToReserve = async (no,reserveNo) => {
+    try {
+        const response = await services.addBillNoToReserve(no,reserveNo);
         return response;
     } catch (err) {
         console.log(err)

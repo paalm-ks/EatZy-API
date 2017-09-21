@@ -35,6 +35,7 @@ exports.addOrder = async (no, orders) => {
 
         // Get reserveNo Only Reserve User
         const code = await reserve.showReserveByUser(no)
+        console.log("Get Reserve ")
         console.log(code);
         if (code[0] != null) {
             const reserveNo = code[0].reserveNo;
@@ -43,7 +44,9 @@ exports.addOrder = async (no, orders) => {
             // Check Bill Exist
             const oldBill = await bill.showBill(reserveNo);
             console.log("Bill No : "+oldBill[0].billNo);
+            reserve.addBillNoToReserve(oldBill[0].billNo,reserveNo);
             services.addOrder(all, oldBill[0].billNo);
+            
             if (oldBill[0] == null) {
                 // Create Bill
                 console.log("Create Bill")
@@ -53,6 +56,7 @@ exports.addOrder = async (no, orders) => {
                 bill.addBill(current, time, reserveNo);
                 const newBill = await bill.showBill(reserveNo);
                 console.log("newBill : " + newBill[0].billNo);
+                reserve.addBillNoToReserve(newBill[0].billNo,reserveNo);
                 services.addOrder(all, newBill[0].billNo);
             }
         }
