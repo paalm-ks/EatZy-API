@@ -8,6 +8,7 @@ var order = require('./order');
 var reserve = require('./reserve.js');
 var bill = require('./bill');
 var addon = require('./addon');
+var myOrder = require('./myOrder');
 
 
 module.exports = function (app) {
@@ -261,4 +262,10 @@ module.exports = function (app) {
         })
     });
 
+    app.get('/myOrder/:no', function (req, res) {
+        const no = req.params.no;
+        myOrder.showMyOrder(no).then(rest => {
+            res.json(rest);
+        })
+    });
 }
