@@ -174,7 +174,7 @@ module.exports = function (app) {
 
     app.post('/addOrder/', function (req, res) {
         const no = (req.body.no);
-        const order = (req.body.order)
+        const orders = (req.body.order)
         const total = (req.body.total)
         order.addOrder(no,orders,total)
     });

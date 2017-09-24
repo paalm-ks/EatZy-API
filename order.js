@@ -27,12 +27,12 @@ const services = {
 
 }
 
-exports.addOrder = async (userNo, order,total) => {
+exports.addOrder = async (userNo, orders,total) => {
     try {
         console.log("User : " + userNo);
-        console.log("Order : "+order);
+        console.log("Order : "+orders);
         console.log("Total : "+total)
-        var all = JSON.parse(order);
+        var all = JSON.parse(orders);
 
         // Select userNo in bill 
         const getBill = await bill.showBill(userNo);
@@ -50,15 +50,14 @@ exports.addOrder = async (userNo, order,total) => {
             //add userNo to new BillNo
             bill.addUserNoToBill(userNo,newBill[0].billNo);
             bill.updateTotalAmount(newBill[0].billNo,total)
-            // services.addOrder(all, newBill[0].billNo);
+            services.addOrder(all, newBill[0].billNo);
         }else if (getBill[0] != null) {
-            console.log("Already has Bill")
-            // Check Bill Exist
+            console.log("Bill Exist")
             const oldBill = await bill.showBill(userNo);
             console.log("Bill No : "+oldBill[0].billNo);
-            bill.updateTotalAmount(userNo,oldBill[0].billNo);
-            console.log("update");
-            // services.addOrder(all, oldBill[0].billNo);
+            bill.updateTotalAmount(oldBill[0].billNo,total);
+            console.log("update : "+total+" To Bill "+oldBill[0].billNo);
+            services.addOrder(all, oldBill[0].billNo);
         } 
         
 

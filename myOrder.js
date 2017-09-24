@@ -1,4 +1,5 @@
 var knex = require('./knex');
+var bill = require('./bill');
 
 const services = {
     getMyOrder: (userNo) => {
@@ -11,10 +12,10 @@ const services = {
 
 exports.showMyOrder = async (billNo) => {
         try {
-                const billNo = await services.getMenuByNo(input);
-                const order = await addon.getAddonByNo(input);
+                const billDetail = await bill.getBillByNo(billNo);
+                const order = ""
                 const addOn = ""
-                return 
+                return billDetail 
         } catch (err) {
                 console.log(err)
         }

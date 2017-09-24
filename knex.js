@@ -1,9 +1,9 @@
 var knex = require('knex')({  
                     client: 'mysql',
                     connection: {
-                    host: "52.34.28.87",
-                    user: "root",
-                    password: "root",
+                    host: "54.148.45.155",
+                    user: "eatzy",
+                    password: "eatzyapi@2017",
 		            database: "EATZY",
                     }
                 });
