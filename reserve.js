@@ -77,12 +77,6 @@ const services = {
             .andWhere('status', 'reserved')
             .andWhere('date',current)
             .update('status', 'cancelled')
-    },addBillNoToReserve: (no,reserveNo) => {
-        //for update billNo to reserve
-        console.log(billNo)
-        return knex('Reservation')
-        .where('Reservation.reserveNo',reserveNo)
-        .update('billNo',no);
     }
 }
 
@@ -169,15 +163,6 @@ exports.addReserve = (num,user,branch,code) => {
 exports.showReserveByUser = async (no) => {
     try {
         const response = await services.getReserveByUser(no);
-        return response;
-    } catch (err) {
-        console.log(err)
-    }
-}
-
-exports.addBillNoToReserve = async (no,reserveNo) => {
-    try {
-        const response = await services.addBillNoToReserve(no,reserveNo);
         return response;
     } catch (err) {
         console.log(err)

@@ -174,8 +174,9 @@ module.exports = function (app) {
 
     app.post('/addOrder/', function (req, res) {
         const no = (req.body.no);
-        const orders = (req.body.orders)
-        order.addOrder(no,orders)
+        const order = (req.body.order)
+        const total = (req.body.total)
+        order.addOrder(no,orders,total)
     });
 
     app.post('/addReserve/', function (req, res) {
@@ -245,11 +246,16 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/showBill/:no', function (req, res) {
-        const no = req.params.no;
+    app.post('/showBill', function (req, res) {
+        const no = req.body.no;
         bill.showBill(no).then(rest => {
             res.json(rest);
         })
+    });
+
+    app.post('/updateBillStatus', function (req, res) {
+        const no = req.body.no;
+        bill.updateBillStatus(no)
     });
 
     app.post('/addAddOn/', function (req, res) {

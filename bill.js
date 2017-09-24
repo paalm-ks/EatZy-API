@@ -2,30 +2,43 @@ var knex = require('./knex');
 
 const services = {
         getBill: (no) => {
-                return knex.select().from('Bill')
-                .where('Bill.reserveNo',no); 
-        // get from reserveNo
+                return knex.select()
+                .from('Bill')
+                .where('Bill.userNo',no)
+        // get from userNo
         },
-        addBill: (date,time,reserveNo) => {
-            console.log(date + " : " + time + " : " + reserveNo );
-            const a = { billDate: date, billTime: time , reserveNo : reserveNo};
+        addBill: (date,time,userNo) => {
+            console.log(date + " : " + time + " : " + userNo );
+            const a = { billDate: date, billTime: time , userNo : userNo};
             console.log(a);
             knex.insert(a).into('Bill').then(function (id) {
                 console.log(id)
             });
         },
-        updateBill: (No) => {
+        updateBillStatus: (No) => {
             console.log(No);
             const a = { status : 'paid'};
             console.log(a);
             knex('Bill')
             .update(a)
             .where('Bill.billNo',no)
-            .then(function (id) {
-                console.log(id)
-            });
+        },
+        updateTableToBill: (No,tableNo) => {
+                console.log(No);
+                knex('Bill')
+                .update('tableNo',tableNo)
+                .where('Bill.billNo',no)
+        },
+        addUserNoToBill: (billNo,userNo) => {
+                return knex('Bill')
+                .where('Bill.billNo',billNo)
+                .update('Bill.userNo',userNo);
+        },
+        updateTotalAmount: (billNo,total) =>{
+                return knex('Bill')
+                .where('Bill.billNo',billNo)
+                .update('Bill.totalAmount',total);
         }
-        // updateTableToBill
 }
 
 //return data when function call
@@ -47,13 +60,31 @@ exports.addBill = async (total,date,time,table) => {
     }
 }
 
-exports.updateBill = async (no) => {
+exports.updateBillStatus = async (no) => {
     try {
-            const response = await services.updateBill(no);
+            const response = await services.updateBillStatus(no);
             return response;
     } catch (err) {
             console.log(err)
     }
+}
+
+exports.addUserNoToBill = async (billNo,userNo) => {
+        try {
+            const response = await services.addUserNoToBill(billNo,userNo);
+            return response;
+        } catch (err) {
+            console.log(err)
+        }
+}
+
+exports.updateTotalAmount = async (billNo,total) => {
+        try {
+            const response = await services.updateTotalAmount(billNo,total);
+            return response;
+        } catch (err) {
+            console.log(err)
+        }
 }
 
 

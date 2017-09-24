@@ -1,19 +1,21 @@
 var knex = require('./knex');
 
 const services = {
-    getMyOrder: (input) => {
+    getMyOrder: (userNo) => {
             return knex.select().from('Bill')
             .join('Order', 'Bill.billNo', 'Order.billNo')   
-            .where('Bill.billNo', input)
+            .where('Bill.billNo', userNo)
             .andWhere('Bill.status','unpaid');      
     },
 }
 
 exports.showMyOrder = async (billNo) => {
-    try {
-        const response = await services.getMyOrder(billNo);
-        return response;
-    } catch (err) {
-        console.log(err)
-    }
+        try {
+                const billNo = await services.getMenuByNo(input);
+                const order = await addon.getAddonByNo(input);
+                const addOn = ""
+                return 
+        } catch (err) {
+                console.log(err)
+        }
 }
