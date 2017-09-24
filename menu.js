@@ -60,6 +60,8 @@ exports.showMenuByNo = async (input) => {
         try {
                 const response = await services.getMenuByNo(input);
                 const response2 = await addon.getAddonByNo(input);
+                console.log(response)
+                console.log(response2)
                 return [{
                         Menu : response,
                         addOn : response2
