@@ -5,15 +5,6 @@ var reserve = require('./reserve');
 const services = {
 
     addOrder: async (all, billNo) => {
-        console.log(all)
-        console.log(all[0].Menu)
-        console.log(all[0].Menu[0].menuNo);
-        console.log(all[0].Menu[0].quantity);
-        console.log(all[0].Menu[0].menuPrice);
-        console.log(all[0].AddOn[0].length);
-        console.log(all[0].AddOn[1].length);
-        console.log(all[0].AddOn[1][1].AddOnNo);
-        console.log(all[0].AddOn[1][2]);
         for (i in all[0].Menu) {
             const a = { menuNo: all[0].Menu[i].menuNo, quantity: all[0].Menu[i].quantity, amount: all[0].Menu[i].menuPrice, billNo: billNo };
             console.log("a")
@@ -48,7 +39,6 @@ exports.addOrder = async (userNo, orders, total) => {
         console.log("Order : " + orders);
         console.log("Total : " + total)
         var all = JSON.parse(orders);
-        console.log("all ");
         // Select userNo in bill 
         const getBill = await bill.showBill(userNo);
         console.log(getBill[0]);

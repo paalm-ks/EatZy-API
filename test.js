@@ -55,11 +55,11 @@ getOrder: async (no) => {
             // return 
             return a[0].amount
         });
-        let orders = await knex.select('*')
-            .from('Order')
-            .where('Order.amount', amount);
+    let orders = await knex.select('*')
+        .from('Order')
+        .where('Order.amount', amount);
     return orders
-}    
+}
 
 //----------------------------------------------------------------------------------------------------
 
@@ -72,3 +72,32 @@ JSON.stringify(order);
 console.log("Coordinates string: ", order);
 console.log(order.orders[0])
 
+Order: [{
+    "Menu": [
+        { "menuNo": 4, "menuName": "Fried Red Pork Bun", "menuPrice": 20, "quantity": 2 },
+        { "menuNo": 56, "menuName": "Chong Fun Noodle (Scallop)", "menuPrice": 150, "quantity": 1 },
+        { "menuNo": 55, "menuName": "Chong Fun Noodle", "menuPrice": 145, "quantity": 2 }
+    ],
+    "AddOn": [
+        [],
+        [{ "AddOnNo": 18, "matName": "หอยเชลล์", "price": 10 }, { "AddOnNo": 21, "matName": "ต้นหอม", "price": 0 }, { "AddOnNo": 24, "matName": "เส้นใหญ่", "price": 5 }],
+        [{ "AddOnNo": 15, "matName": "เส้นบะหมี่", "price": 5 }]
+    ]
+}]
+
+Order: [{
+    "Menu": [
+        { "menuNo": 4, "menuName": "Fried Red Pork Bun", "menuPrice": 20, "quantity": 3 },
+        { "menuNo": 5, "menuName": "Spring Rolls", "menuPrice": 25, "quantity": 2 },
+        { "menuNo": 56, "menuName": "Chong Fun Noodle (Scallop)", "menuPrice": 150, "quantity": 3 },
+        { "menuNo": 9, "menuName": "Chinese Buns Steamed with Pandan Custard", "menuPrice": 25, "quantity": 1 },
+        { "menuNo": 75, "menuName": "Hot Pan \"Egg & Ham\"", "menuPrice": 115, "quantity": 2 }
+    ],
+    "AddOn": [
+        [],
+        [],
+        [{ "AddOnNo": 18, "matName": "หอยเชลล์", "price": 10 }, { "AddOnNo": 21, "matName": "ต้นหอม", "price": 0 }, { "AddOnNo": 23, "matName": "เส้นบะหมี่", "price": 5 }],
+        [],
+        [{ "AddOnNo": 80, "matName": "เนื้อหมู", "price": 10 }]
+    ]
+}]

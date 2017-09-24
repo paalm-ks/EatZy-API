@@ -72,7 +72,6 @@ module.exports = function (app) {
 
     app.get('/menuByNo/:no', function (req, res) {
         const no = req.params.no;
-        console.log(no);
         menu.showMenuByNo(no)
             .then(rest => {
                 res.json(rest);
