@@ -5,6 +5,7 @@ const services = {
                 return knex.select()
                 .from('Bill')
                 .where('Bill.userNo',no)
+                .andWhere('Bill.status', 'unpaid')
         // get from userNo
         },
         getBillByNo: (billNo) => {
@@ -50,6 +51,7 @@ const services = {
 exports.showBill = async (no) => {
         try {
                 const response = await services.getBill(no);
+                console.log(response)
                 return response;
         } catch (err) {
                 console.log(err)

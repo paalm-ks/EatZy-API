@@ -245,8 +245,8 @@ module.exports = function (app) {
         })
     });
 
-    app.post('/showBill', function (req, res) {
-        const no = req.body.no;
+    app.get('/showBill/:no', function (req, res) {
+        const no = req.params.no;
         bill.showBill(no).then(rest => {
             res.json(rest);
         })
