@@ -274,4 +274,11 @@ module.exports = function (app) {
         })
     });
 
+    app.get('/userOrder/:no', function (req, res) {
+        const no = req.params.no;
+        myOrder.showUserOrder(no).then(rest => {
+            res.json(rest);
+        })
+    });
+
 }

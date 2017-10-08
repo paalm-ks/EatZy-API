@@ -37,3 +37,27 @@ exports.showMyOrder = async (billNo) => {
                 console.log(err)
         }
 }
+
+exports.showUserOrder = async (userNo) => {
+        try {   
+                const billNoArr = await bill.showBill(userNo);
+                const billNo = billNoArr[0].billNo;
+                const billDetail = await bill.getBillByNo(billNo);
+                const order = await services.getMyOrder(billNo);
+                const addonss = [];
+                for(i in order){
+                console.log(order[i].orderNo);
+                const addon = await services.getMyAddon(order[i].orderNo);
+                console.log(addon)
+                addonss.push(addon) ;
+                }
+                console.log(addonss)
+                return [{ 
+                    bill : billDetail ,
+                    orders  : order ,
+                    addons : addonss
+                }] 
+        } catch (err) {
+                console.log(err)
+        }
+}
