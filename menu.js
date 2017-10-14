@@ -59,11 +59,9 @@ exports.showMenuByType = async (type) => {
 exports.showMenuByNo = async (input) => {
         try {
                 const response = await services.getMenuByNo(input);
-                const response2 = await addon.getAddonByNo(input);
-                return [{
-                        Menu : response,
-                        addOn : response2
-                }]
+                const addOn = await addon.getAddonByNo(input);
+                response[0].addOn = addOn;
+                return response;
         } catch (err) {
                 console.log(err)
         }

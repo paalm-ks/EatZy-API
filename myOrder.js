@@ -3,7 +3,7 @@ var bill = require('./bill');
 
 const services = {
         getMyOrder: (billNo) => {
-                return knex.select('Order.orderNo', 'Menu.menuNo', 'Menu.menuPrice', 'Menu.menuPicPath', 'Menu.menuNameTH', 'Order.quantity', 'Order.amount','Order.status as orderStatus').from('Bill')
+                return knex.select('Order.orderNo', 'Menu.menuNo', 'Menu.menuPrice', 'Menu.menuPicPath', 'Menu.menuNameTH', 'Order.quantity', 'Order.amount', 'Order.status as orderStatus').from('Bill')
                         .join('Order', 'Bill.billNo', 'Order.billNo')
                         .join('Menu', 'Menu.menuNo', 'Order.menuNo')
                         .where('Bill.billNo', billNo)
@@ -41,18 +41,21 @@ exports.showMyOrder = async (billNo) => {
 exports.showUserOrder = async (userNo) => {
         try {
                 const billNoArr = await bill.showBill(userNo);
-                const billNo = billNoArr[0].billNo;
-                const billDetail = await bill.getBillByNo(billNo);
-                const order = await services.getMyOrder(billNo);
-                for (i in order) {
-                        console.log(order[i].orderNo);
-                        const addon = await services.getMyAddon(order[i].orderNo);
-                        console.log(addon)
-                        order[i].addon = addon
+                console.log(billNoArr)
+                if (billNoArr.length === 0) {
+                        return []
+                } else {
+                        const billNo = billNoArr[0].billNo;
+                        const billDetail = await bill.getBillByNo(billNo);
+                        const order = await services.getMyOrder(billNo);
+                        for (i in order) {
+                                console.log(order[i].orderNo);
+                                const addon = await services.getMyAddon(order[i].orderNo);
+                                console.log(addon)
+                                order[i].addon = addon
+                        }
+                        return order
                 }
-                
-                
-                return order
         } catch (err) {
                 console.log(err)
         }

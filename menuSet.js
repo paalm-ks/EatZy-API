@@ -1,27 +1,28 @@
 var knex = require('./knex');
 
 const services = {
-        getMenuSet: ()=> {
-                return knex.select()
-                        .from('MenuSet')
-                        .orderBy('menuSetNameTH','asc');
+        getMenuSet: () => {
+                return knex.distinct('set.menuSetNo', 'Menu.menuNameTH as menuSetName')                       
+                        .from('Menu')
+                        .join('Menu_MenuSet as set', { 'set.menuSetNo': 'Menu.menuNo' })
+                        .orderBy('set.menuSetNo', 'asc');
         },
         getMenuBySet: (set) => {
-                return knex.select()
-                        .from('MenuSet')
-                        .join('Menu_MenuSet', { 'Menu_MenuSet.menuSetNo': 'MenuSet.menuSetNo' })
-                        .join('Menu', { 'Menu.menuNo': 'Menu_MenuSet.menuNo' })
-                        .where('MenuSet.menuSetNo', set)
+                return knex.select('Menu.menuNameTH as menuSetName', 'set.*', 'm.*')
+                        .from('Menu')
+                        .join('Menu_MenuSet as set', { 'set.menuSetNo': 'Menu.menuNo' })
+                        .join('Menu as m', { 'm.menuNo': 'set.menuNo' })
+                        .where('Menu.menuNo', set)
         },
         getMenuSetByPrice: () => {
                 return knex.select()
                         .from('MenuSet')
-                        .orderBy('MenuSetPrice','asc')
-        },getMenuSetByPriceLength: (begin,end) => {
+                        .orderBy('MenuSetPrice', 'asc')
+        }, getMenuSetByPriceLength: (begin, end) => {
                 return knex.select()
                         .from('MenuSet')
-                        .whereBetween('MenuSetPrice',[begin,end])
-                        .orderBy('MenuSetPrice','asc');
+                        .whereBetween('MenuSetPrice', [begin, end])
+                        .orderBy('MenuSetPrice', 'asc');
         }
 
 }
@@ -44,9 +45,9 @@ exports.showMenuSetByPrice = async () => {
         }
 }
 
-exports.showMenuSetByPriceLength = async (begin ,end) => {
+exports.showMenuSetByPriceLength = async (begin, end) => {
         try {
-                const response = await services.getMenuSetByPriceLength(begin ,end);
+                const response = await services.getMenuSetByPriceLength(begin, end);
                 return response;
         } catch (err) {
                 console.log(err)
