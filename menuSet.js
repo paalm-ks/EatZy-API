@@ -2,13 +2,13 @@ var knex = require('./knex');
 
 const services = {
         getMenuSet: () => {
-                return knex.distinct('set.menuSetNo', 'Menu.menuNameTH as menuSetName')                       
+                return knex.distinct('set.menuSetNo', 'Menu.menuNameTH as menuSetName', 'Menu.menuPrice')                       
                         .from('Menu')
                         .join('Menu_MenuSet as set', { 'set.menuSetNo': 'Menu.menuNo' })
                         .orderBy('set.menuSetNo', 'asc');
         },
         getMenuBySet: (set) => {
-                return knex.select('Menu.menuNameTH as menuSetName', 'set.*', 'm.*')
+                return knex.select('m.*')
                         .from('Menu')
                         .join('Menu_MenuSet as set', { 'set.menuSetNo': 'Menu.menuNo' })
                         .join('Menu as m', { 'm.menuNo': 'set.menuNo' })

@@ -1,5 +1,6 @@
 var knex = require('./knex');
 var addon = require('./addon')
+var set = require('./menuSet');
 
 const services = {
         getMenu: () => {
@@ -60,7 +61,9 @@ exports.showMenuByNo = async (input) => {
         try {
                 const response = await services.getMenuByNo(input);
                 const addOn = await addon.getAddonByNo(input);
+                const setList = await set.showMenuBySet(input);
                 response[0].addOn = addOn;
+                response[0].setList = setList;
                 return response;
         } catch (err) {
                 console.log(err)
