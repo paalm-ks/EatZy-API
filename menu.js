@@ -1,11 +1,11 @@
 var knex = require('./knex');
-var addon = require('./addon')
-var set = require('./menuSet');
+var addon = require('./addon');
 
 const services = {
         getMenu: () => {
                 return knex.select().from('Menu')       
-                .orderBy('menuNameTH', 'asc');      
+                .orderBy('menuNameTH', 'asc');     
+                 
         },
         getMenuSortByPrice: () => {
                 return knex.select().from('Menu').orderBy('menuPrice', 'asc');      
@@ -60,11 +60,11 @@ exports.showMenuByType = async (type) => {
 exports.showMenuByNo = async (input) => {
         try {
                 const response = await services.getMenuByNo(input);
-                const addOn = await addon.getAddonByNo(input);
-                const setList = await set.showMenuBySet(input);
-                response[0].addOn = addOn;
-                response[0].setList = setList;
-                return response;
+                const response2 = await addon.getAddonByNo(input);
+                return [{
+                        Menu : response,
+                        addOn : response2
+                }]
         } catch (err) {
                 console.log(err)
         }
