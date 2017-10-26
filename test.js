@@ -26,8 +26,7 @@
 // const io = require('socket.io-client')
 
 // const socket = io('http://localhost:3000')
-
-// socket.emit('test', 'index update')
+// socket.boardcast.emit('test', 'index update')
 // // forsend
 
 // socket.on('update', (s) => {
