@@ -1,5 +1,8 @@
 var knex = require('./knex');
 
+const date = new Date()
+const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+
 const services = {
         getPromotion: ()=> {
                 return knex.select()
@@ -9,6 +12,14 @@ const services = {
                 return knex.select()
                         .from('Promotion')
                         .where('proNo',no)
+        },
+        getPromotionToday: (restNo) => {
+                return knex.select()
+                        .from('Promotion')
+                        .where('proFromDate' , '<=', current)
+                        .andWhere('proToDate' , '>=' ,current)
+                        .andWhere('restNo',restNo)
+                        
         }
 }
 
@@ -25,6 +36,15 @@ exports.showPromotionByNo = async (no) => {
         try {
                 const response = await services.getPromotionByNo(no);
                 return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
+
+exports.showPromotionToday = async (restNo) => {
+        try {
+                const response = await services.getPromotionToday(restNo);
+                return response
         } catch (err) {
                 console.log(err)
         }

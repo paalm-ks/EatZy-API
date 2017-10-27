@@ -78,8 +78,17 @@ module.exports = function (app) {
             })
     })
 
-    app.get('/menuType', function (req, res) {
-        menuType.showMenuType().then(rest => {
+    app.get('/menuType/:restNo', function (req, res) {
+        const restNo = req.params.restNo
+        menuType.showMenuType(restNo).then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/menuGroup/:restNo&:typeNo', function (req, res) {
+        const restNo = req.params.restNo
+        const typeNo = req.params.typeNo
+        menuType.showMenuGroup(restNo,typeNo).then(rest => {
             res.json(rest);
         })
     });
@@ -100,6 +109,14 @@ module.exports = function (app) {
     app.get('/promoByNo/:no', function (req, res) {
         const no = req.params.no;
         promotion.showPromotionByNo(no)
+            .then(rest => {
+                res.json(rest);
+            })
+    })
+
+    app.get('/promotionToday/:restNo', function (req, res) {
+        const restNo = req.params.restNo;
+        promotion.showPromotionToday(restNo)
             .then(rest => {
                 res.json(rest);
             })
@@ -252,9 +269,9 @@ module.exports = function (app) {
         })
     });
 
-    app.post('/updateBillStatus', function (req, res) {
-        const no = req.body.no;
-        bill.updateBillStatus(no)
+    app.get('/updateBillStatus/:billNo', function (req, res) {
+        const billNo = req.params.billNo;
+        bill.updateBillStatus(billNo)
     });
 
     app.post('/addAddOn/', function (req, res) {

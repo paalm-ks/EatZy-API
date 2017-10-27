@@ -21,16 +21,13 @@ const services = {
                         console.log(id)
                 });
         },
-        updateBillStatus: (No) => {
-                console.log(No);
+        updateBillStatus: (billNo) => {
                 const a = { status: 'paid' };
-                console.log(a);
                 knex('Bill')
                         .update(a)
                         .where('Bill.billNo', no)
         },
         updateTableToBill: (No, tableNo) => {
-                console.log(No);
                 knex('Bill')
                         .update('tableNo', tableNo)
                         .where('Bill.billNo', no)
@@ -89,9 +86,9 @@ exports.addBill = async (total, date, time, table) => {
         }
 }
 
-exports.updateBillStatus = async (no) => {
+exports.updateBillStatus = async (billNo) => {
         try {
-                const response = await services.updateBillStatus(no);
+                const response = await services.updateBillStatus(billNo);
                 return response;
         } catch (err) {
                 console.log(err)
