@@ -17,7 +17,7 @@ var Router = require('./router');
 var router = Router(app);
 
 io.on('connection', socket => {
-    console.log('socket connection is on port 3100')
+    console.log('socket connection is on port 3000')
     socket.on('queue', data => {
         console.log(`data: ${data}`)
         // const array = []

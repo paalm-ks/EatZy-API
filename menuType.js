@@ -6,11 +6,10 @@ const services = {
                         .from('MenuType')
                         .where('restNo',restNo)
         },
-        getMenuGroup: (restNo,typeNo) => {
+        getMenuGroup: (typeNo) => {
                 return knex.select()
                         .from('MenuGroup')
                         .where('menuTypeNo',typeNo)
-                        .andWhere('restNo',restNo)
         }
 }
 
@@ -23,9 +22,9 @@ exports.showMenuType = async (restNo) => {
         }
 }
 
-exports.showMenuGroup = async (restNo,typeNo) => {
+exports.showMenuGroup = async (typeNo) => {
         try {
-                const response = await services.getMenuGroup(restNo,typeNo);
+                const response = await services.getMenuGroup(typeNo);
                 return response;
         } catch (err) {
                 console.log(err)

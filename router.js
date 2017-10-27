@@ -70,6 +70,14 @@ module.exports = function (app) {
             })
     })
 
+    app.get('/menuByType/:typeNo', function (req, res) {
+        const typeNo = req.params.typeNo;
+        menu.showMenuByType(typeNo)
+            .then(rest => {
+                res.json(rest);
+            })
+    })
+
     app.get('/menuByNo/:no', function (req, res) {
         const no = req.params.no;
         menu.showMenuByNo(no)
@@ -85,10 +93,9 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/menuGroup/:restNo&:typeNo', function (req, res) {
-        const restNo = req.params.restNo
+    app.get('/menuGroup/:typeNo', function (req, res) {
         const typeNo = req.params.typeNo
-        menuType.showMenuGroup(restNo,typeNo).then(rest => {
+        menuType.showMenuGroup(typeNo).then(rest => {
             res.json(rest);
         })
     });

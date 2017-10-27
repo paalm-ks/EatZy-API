@@ -25,6 +25,15 @@ const services = {
                         .andWhere('Menu.menuFlag','M')
                         .orderBy('menuNameTH', 'asc')     
         },
+        getMenuByType: (typeNo) => {
+                return knex.select()
+                        .from('Menu')
+                        .join('MenuGroup', { 'MenuGroup.menuGroupNo': 'Menu.menuGroupNo' })
+                        .join('MenuType', { 'MenuType.menuTypeNo': 'MenuGroup.menuTypeNo' })
+                        .where('MenuType.MenuTypeNo', typeNo)
+                        .andWhere('Menu.menuFlag','M')
+                        .orderBy('menuNameTH', 'asc')     
+        },
         getMenuByNo: (input) => {
                 return knex.select()
                         .from('Menu')
@@ -53,6 +62,15 @@ exports.showMenu = async () => {
 exports.showMenuByGroup = async (groupNo) => {
         try {
                 const response = await services.getMenuByGroup(groupNo);
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
+
+exports.showMenuByType = async (typeNo) => {
+        try {
+                const response = await services.getMenuByType(typeNo);
                 return response;
         } catch (err) {
                 console.log(err)
