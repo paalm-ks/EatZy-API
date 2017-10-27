@@ -248,23 +248,17 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/acceptQueue/:no', function (req, res) {
-        const no = req.params.no;
-        reserve.acceptQueue(no).then(rest => {
+    app.get('/updateQueue/:userNo&:value', function (req, res) {
+        const userNo = req.params.userNo;
+        const value = req.params.value;
+        reserve.acceptQueue(userNo,value).then(rest => {
             res.json(rest);
         })
     });
 
-    app.get('/cancelQueue/:no', function (req, res) {
-        const no = req.params.no;
-        reserve.cancelQueue(no).then(rest => {
-            res.json(rest);
-        })
-    });
-
-    app.get('/showBill/:no', function (req, res) {
-        const no = req.params.no;
-        bill.showBill(no).then(rest => {
+    app.get('/showBill/:billNo', function (req, res) {
+        const billNo = req.params.billNo;
+        bill.showBill(billNo).then(rest => {
             res.json(rest);
         })
     });
@@ -280,6 +274,14 @@ module.exports = function (app) {
         const qty = req.body.qty;
         const price = req.body.price;
         addon.addAddon(menuNo,matNo,qty,price).then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/updateOrderStatus/:orderNo&:value', function (req, res) {
+        const orderNo = req.params.orderNo;
+        const value = req.params.value;
+        order.updateOrderStatus(orderNo,value).then(rest => {
             res.json(rest);
         })
     });

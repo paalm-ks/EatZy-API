@@ -19,7 +19,7 @@ const services = {
             .join('User', { 'User.userNo': 'Reservation.userNo' })
             .where('Reservation.userNo', no)
             .andWhere('Reservation.date', current)
-            .andWhere('Reservation.status', 'reserved')
+            .andWhere('Reservation.reserveStatus', 'reserved')
     },
     getReserve: () => {
         return knex.select('*')
@@ -29,14 +29,14 @@ const services = {
     },
     getCountReserve: () => {
         return knex('Reservation').count('status as status')
-            .where('Reservation.status', 'reserved')
+            .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
     },
     getCountBefore: (no) => {
         const reserveNo = knex.select('Reservation.reserveNo')
             .from('Reservation')
             .where('Reservation.userNo', no)
-            .andWhere('Reservation.status', 'reserved')
+            .andWhere('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
 
         return knex('Reservation').count('status as status')
@@ -47,7 +47,7 @@ const services = {
     callReserve: () => {
         //for call min time queue
         const sub = knex.min('time as t').from('Reservation')
-            .where('Reservation.status', 'reserved')
+            .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
         return knex('Reservation').select().where('Reservation.time', 'in', sub)
     },
@@ -59,24 +59,16 @@ const services = {
     },
     genQueue: () => {
         return knex('Reservation').min('Reservation.queCode as queCode')
-            .where('Reservation.status', 'reserved');
+            .where('Reservation.reserveStatus', 'reserved');
             //what this for ??
     },
-    acceptQueue: (no) => {
+    updateQueue: (userNo,value) => {
         //for update status arrive or cancel
         return knex('Reservation')
-            .where('userNo', no)
-            .andWhere('status', 'reserved')
+            .where('userNo', userNo)
+            .andWhere('reserveStatus', 'reserved')
             .andWhere('date', current)
-            .update('status', 'arrived')
-    },
-    cancelQueue: (no) => {
-        //for update status cancelled
-        return knex('Reservation')
-            .where('userNo', no)
-            .andWhere('status', 'reserved')
-            .andWhere('date',current)
-            .update('status', 'cancelled')
+            .update('reserveStatus', value)
     }
 }
 
@@ -89,18 +81,9 @@ exports.genQueue = async () => {
     }
 }
 
-exports.acceptQueue = async (no) => {
+exports.updateQueue = async (userNo,value) => {
     try {
-        const response = await services.acceptQueue(no);
-        return response;
-    } catch (err) {
-        console.log(err)
-    }
-}
-
-exports.cancelQueue = async (no, status) => {
-    try {
-        const response = await services.cancelQueue(no);
+        const response = await services.updateQueue(userNo,value);
         return response;
     } catch (err) {
         console.log(err)

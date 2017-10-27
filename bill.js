@@ -5,7 +5,7 @@ const services = {
                 return knex.select()
                         .from('Bill')
                         .where('Bill.userNo', no)
-                        .andWhere('Bill.status', 'unpaid')
+                        .andWhere('Bill.billStatus', 'unpaid')
                 // get from userNo
         },
         getBillByNo: (billNo) => {
@@ -22,7 +22,7 @@ const services = {
                 });
         },
         updateBillStatus: (billNo) => {
-                const a = { status: 'paid' };
+                const a = { billStatus: 'paid' };
                 knex('Bill')
                         .update(a)
                         .where('Bill.billNo', no)

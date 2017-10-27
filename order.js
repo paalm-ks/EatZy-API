@@ -29,6 +29,12 @@ const services = {
         return knex.select('*')
             .from('Order')
             .where('Order.orderNo', no);
+    },
+    updateOrderStatus: (orderNo,value) => {
+            const a = { orderStatus : value };
+            knex('Order')
+            .update(a)
+            .where('Order.orderNo', orderNo)
     }
 
 }
@@ -84,6 +90,15 @@ exports.addOrder = async (userNo, orders, total) => {
 exports.showOrder = async (no) => {
     try {
         const response = await services.getOrder(no);
+        return response;
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.updateOrderStatus = async (orderNo,value) => {
+    try {
+        const response = await services.updateOrderStatus(orderNo,value);
         return response;
     } catch (err) {
         console.log(err)
