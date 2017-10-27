@@ -1,18 +1,17 @@
 var knex = require('./knex');
 
 const services = {
-        getMenuType: (restNo)=> {
+        getMenuType: (restNo) => {
                 return knex.select()
                         .from('MenuType')
                         .where('restNo',restNo)
         },
-        getMenuGroup: (restNo,typeNo)=> {
+        getMenuGroup: (restNo,typeNo) => {
                 return knex.select()
                         .from('MenuGroup')
                         .where('menuTypeNo',typeNo)
                         .andWhere('restNo',restNo)
-        },
-
+        }
 }
 
 exports.showMenuType = async (restNo) => {

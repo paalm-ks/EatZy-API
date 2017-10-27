@@ -3,24 +3,26 @@ var addon = require('./addon');
 
 const services = {
         getMenu: () => {
-                return knex.select().from('Menu')       
-                .orderBy('menuNameTH', 'asc');     
-                 
+                return knex.select().from('Menu')
+                .where('Menu.menuFlag','M')     
+                .orderBy('menuNameTH', 'asc');              
         },
         getMenuSortByPrice: () => {
-                return knex.select().from('Menu').orderBy('menuPrice', 'asc');      
+                return knex.select().from('Menu')
+                .orderBy('menuPrice', 'asc');      
         },
         getMenuSortByPriceLength: (begin,end) => {
                 return knex.select()
                 .from('Menu')
-                .whereBetween('menuPrice', [begin,end] )
+                .whereBetween('menuPrice', [begin,end])
                 .orderBy('menuPrice', 'asc');      
         },
-        getMenuByType: (input) => {
+        getMenuByGroup: (groupNo) => {
                 return knex.select()
                         .from('Menu')
-                        .join('MenuType', { 'MenuType.menuTypeNo': 'Menu.menuTypeNo' })
-                        .where('MenuType.MenuTypeNo', input)
+                        .join('MenuGroup', { 'MenuGroup.menuGroupNo': 'Menu.menuGroupNo' })
+                        .where('MenuGroup.MenuGroupNo', groupNo)
+                        .andWhere('Menu.menuFlag','M')
                         .orderBy('menuNameTH', 'asc')     
         },
         getMenuByNo: (input) => {
@@ -30,11 +32,11 @@ const services = {
                         
         },
         //Not Finish can't search by TH name
-        getMenuByName: (input) => {
-                return knex.select()
-                        .from('Menu')
-                        .where('menuNameEN', 'like',input)
-        }
+        // getMenuByName: (input) => {
+        //         return knex.select()
+        //                 .from('Menu')
+        //                 .where('menuNameEN', 'like',input)
+        // }
         //res.header("Content-Type", "application/json; charset=utf-8");
 }
 
@@ -48,9 +50,9 @@ exports.showMenu = async () => {
         }
 }
 
-exports.showMenuByType = async (type) => {
+exports.showMenuByGroup = async (groupNo) => {
         try {
-                const response = await services.getMenuByType(type);
+                const response = await services.getMenuByGroup(groupNo);
                 return response;
         } catch (err) {
                 console.log(err)

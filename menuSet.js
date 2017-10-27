@@ -5,7 +5,8 @@ const services = {
                 return knex.distinct('set.menuSetNo', 'Menu.menuNameTH as menuSetName', 'Menu.menuPrice')                       
                         .from('Menu')
                         .join('Menu_MenuSet as set', { 'set.menuSetNo': 'Menu.menuNo' })
-                        .orderBy('set.menuSetNo', 'asc');
+                        .orderBy('set.menuSetNo', 'asc')
+                        .andWhere('Menu.menuFlag','S');
         },
         getMenuBySet: (set) => {
                 return knex.select('*')
@@ -13,6 +14,7 @@ const services = {
                         .join('Menu_MenuSet as set', { 'set.menuSetNo': 'Menu.menuNo' })
                         .join('Menu as m', { 'm.menuNo': 'set.menuNo' })
                         .where('Menu.menuNo', set)
+                        .andWhere('Menu.menuFlag','S');
         },
         getMenuSetDetail: (set) => {
                 return knex.select('*')

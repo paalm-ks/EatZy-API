@@ -4,7 +4,7 @@ const date = new Date()
 const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
 
 const services = {
-        getPromotion: ()=> {
+        getPromotion: () => {
                 return knex.select()
                         .from('Promotion')
         },
@@ -19,7 +19,6 @@ const services = {
                         .where('proFromDate' , '<=', current)
                         .andWhere('proToDate' , '>=' ,current)
                         .andWhere('restNo',restNo)
-                        
         }
 }
 

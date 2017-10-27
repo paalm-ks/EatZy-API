@@ -62,9 +62,9 @@ module.exports = function (app) {
             })
     })
 
-    app.get('/menuByType/:type', function (req, res) {
-        const type = req.params.type;
-        menu.showMenuByType(type)
+    app.get('/menuByGroup/:groupNo', function (req, res) {
+        const groupNo = req.params.groupNo;
+        menu.showMenuByGroup(groupNo)
             .then(rest => {
                 res.json(rest);
             })
