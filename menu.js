@@ -31,7 +31,7 @@ const services = {
                         .join('MenuGroup', { 'MenuGroup.menuGroupNo': 'Menu.menuGroupNo' })
                         .join('MenuType', { 'MenuType.menuTypeNo': 'MenuGroup.menuTypeNo' })
                         .where('MenuType.MenuTypeNo', typeNo)
-                        .andWhere('Menu.menuFlag','M')
+                        // .andWhere('Menu.menuFlag','M')
                         .orderBy('menuNameTH', 'asc')     
         },
         getMenuByNo: (input) => {
@@ -80,11 +80,9 @@ exports.showMenuByType = async (typeNo) => {
 exports.showMenuByNo = async (input) => {
         try {
                 const response = await services.getMenuByNo(input);
-                const response2 = await addon.getAddonByNo(input);
-                return [{
-                        Menu : response,
-                        addOn : response2
-                }]
+                const addOn = await addon.getAddonByNo(input);
+                response[0].addOn = addOn
+                return response
         } catch (err) {
                 console.log(err)
         }
