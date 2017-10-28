@@ -62,14 +62,22 @@ const services = {
             .where('Reservation.reserveStatus', 'reserved');
             //what this for ??
     },
-    updateQueue: (userNo,value) => {
-        //for update status arrive or cancel
-        return knex('Reservation')
-            .where('userNo', userNo)
-            .andWhere('reserveStatus', 'reserved')
-            .andWhere('date', current)
-            .update('reserveStatus', value)
-    }
+    acceptQueue: (no) => { 
+        //for update status arrive or cancel 
+        return knex('Reservation') 
+        .where('userNo', userNo) 
+        .andWhere('reserveStatus', 'reserved') 
+        .andWhere('date', current) 
+        .update('status', 'arrived') 
+    }, 
+    cancelQueue: (no) => { 
+        //for update status cancelled 
+        return knex('Reservation') 
+            .where('userNo', no) 
+            .andWhere('reserveStatus', 'reserved') 
+            .andWhere('date',current) 
+            .update('status', 'cancelled') 
+    }  
 }
 
 exports.genQueue = async () => {
@@ -81,14 +89,23 @@ exports.genQueue = async () => {
     }
 }
 
-exports.updateQueue = async (userNo,value) => {
-    try {
-        const response = await services.updateQueue(userNo,value);
-        return response;
-    } catch (err) {
-        console.log(err)
-    }
-}
+exports.acceptQueue = async (no) => { 
+    try { 
+        const response = await services.acceptQueue(no); 
+        return response; 
+    } catch (err) { 
+        console.log(err) 
+    } 
+} 
+ 
+exports.cancelQueue = async (no, status) => { 
+    try { 
+        const response = await services.cancelQueue(no); 
+        return response; 
+    } catch (err) { 
+        console.log(err) 
+    } 
+} 
 
 exports.showReserve = async () => {
     try {
