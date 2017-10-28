@@ -255,13 +255,19 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/updateQueue/:userNo&:value', function (req, res) {
-        const userNo = req.params.userNo;
-        const value = req.params.value;
-        reserve.acceptQueue(userNo,value).then(rest => {
-            res.json(rest);
-        })
-    });
+    app.get('/acceptQueue/:no', function (req, res) { 
+        const no = req.params.no; 
+        reserve.acceptQueue(no).then(rest => { 
+            res.json(rest); 
+        }) 
+    }); 
+ 
+    app.get('/cancelQueue/:no', function (req, res) { 
+        const no = req.params.no; 
+        reserve.cancelQueue(no).then(rest => { 
+            res.json(rest); 
+        }) 
+    }); 
 
     app.get('/showBill/:billNo', function (req, res) {
         const billNo = req.params.billNo;

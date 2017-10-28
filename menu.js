@@ -31,7 +31,6 @@ const services = {
                         .join('MenuGroup', { 'MenuGroup.menuGroupNo': 'Menu.menuGroupNo' })
                         .join('MenuType', { 'MenuType.menuTypeNo': 'MenuGroup.menuTypeNo' })
                         .where('MenuType.MenuTypeNo', typeNo)
-                        // .andWhere('Menu.menuFlag','M')
                         .orderBy('menuNameTH', 'asc')     
         },
         getMenuByNo: (input) => {
