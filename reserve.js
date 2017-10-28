@@ -28,7 +28,7 @@ const services = {
             .where('Reservation.date', current)
     },
     getCountReserve: () => {
-        return knex('Reservation').count('status as status')
+        return knex('Reservation').count('reserveStatus as status')
             .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
     },
@@ -39,8 +39,8 @@ const services = {
             .andWhere('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
 
-        return knex('Reservation').count('status as status')
-            .where('Reservation.status', 'reserved')
+        return knex('Reservation').count('reserveStatus as status')
+            .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.reserveNo', '<', reserveNo)
             .andWhere('Reservation.date', current)
     },
