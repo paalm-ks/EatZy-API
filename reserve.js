@@ -68,7 +68,7 @@ const services = {
         .where('userNo', userNo) 
         .andWhere('reserveStatus', 'reserved') 
         .andWhere('date', current) 
-        .update('status', 'arrived') 
+        .update('reserveStatus', 'arrived') 
     }, 
     cancelQueue: (no) => { 
         //for update status cancelled 
@@ -76,7 +76,7 @@ const services = {
             .where('userNo', no) 
             .andWhere('reserveStatus', 'reserved') 
             .andWhere('date',current) 
-            .update('status', 'cancelled') 
+            .update('reserveStatus', 'cancelled') 
     }  
 }
 
@@ -98,7 +98,7 @@ exports.acceptQueue = async (no) => {
     } 
 } 
  
-exports.cancelQueue = async (no, status) => { 
+exports.cancelQueue = async (no) => { 
     try { 
         const response = await services.cancelQueue(no); 
         return response; 
