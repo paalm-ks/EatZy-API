@@ -3,10 +3,16 @@ var bill = require('./bill');
 
 const services = {
         getMyOrder: (billNo) => {
-                return knex.select('Order.orderNo', 'Menu.menuNo', 'Menu.menuPrice', 'Menu.menuPicPath', 'Menu.menuNameTH', 'Order.quantity', 'Order.amount', 'Order.orderStatus').from('Bill')
-                        .join('Order', 'Bill.billNo', 'Order.billNo')
-                        .join('Menu', 'Menu.menuNo', 'Order.menuNo')
+                return knex.select('CustomerOrder.orderNo', 'Menu.menuNo', 'Menu.menuPrice', 'Menu.menuPicPath', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.amount', 'CustomerOrder.orderStatus').from('Bill')
+                        .join('CustomerOrder', 'Bill.billNo', 'CustomerOrder.billNo')
+                        .join('Menu', 'Menu.menuNo', 'CustomerOrder.menuNo')
                         .where('Bill.billNo', billNo)
+        },
+        getMyOrderTable: (tableNo) => {
+                return knex.select('CustomerOrder.orderNo', 'Menu.menuNo', 'Menu.menuPrice', 'Menu.menuPicPath', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.amount', 'CustomerOrder.orderStatus').from('Bill')
+                        .join('CustomerOrder', 'Bill.billNo', 'CustomerOrder.billNo')
+                        .join('Menu', 'Menu.menuNo', 'CustomerOrder.menuNo')
+                        .where('Bill.tableNo', tableNo)
         },
         getMyAddon: (orderNo) => {
                 return knex.select('Material.matName', 'Addon.price').from('Addon')
@@ -19,18 +25,18 @@ const services = {
 exports.showMyOrder = async (billNo) => {
         try {
                 const billDetail = await bill.getBillByNo(billNo);
-                const order = await services.getMyOrder(billNo);
+                const CustomerOrder = await services.getMyOrder(billNo);
                 const addonss = [];
-                for (i in order) {
-                        console.log(order[i].orderNo);
-                        const addon = await services.getMyAddon(order[i].orderNo);
+                for (i in CustomerOrder) {
+                        console.log(CustomerOrder[i].orderNo);
+                        const addon = await services.getMyAddon(CustomerOrder[i].orderNo);
                         console.log(addon)
                         addonss.push(addon);
                 }
                 console.log(addonss)
                 return [{
                         bill: billDetail,
-                        orders: order,
+                        orders: CustomerOrder,
                         addons: addonss
                 }]
         } catch (err) {
@@ -41,20 +47,43 @@ exports.showMyOrder = async (billNo) => {
 exports.showUserOrder = async (userNo) => {
         try {
                 const billNoArr = await bill.showBill(userNo);
+                console.log("billNoArr : "+billNoArr)
+                if (billNoArr.length === 0) {
+                        return []
+                } else {
+                        const billNo = billNoArr[0].billNo;
+                        const billDetail = await bill.getBillByNo(billNo);
+                        const CustomerOrder = await services.getMyOrder(billNo);
+                        for (i in CustomerOrder) {
+                                console.log(CustomerOrder[i].orderNo);
+                                const addon = await services.getMyAddon(CustomerOrder[i].orderNo);
+                                console.log(addon)
+                                CustomerOrder[i].addon = addon
+                        }
+                        return CustomerOrder
+                }
+        } catch (err) {
+                console.log(err)
+        }
+}
+
+exports.showTableOrder = async (tableNo) => {
+        try {
+                const billNoArr = await bill.getBillByTableNo(tableNo);
                 console.log(billNoArr)
                 if (billNoArr.length === 0) {
                         return []
                 } else {
                         const billNo = billNoArr[0].billNo;
                         const billDetail = await bill.getBillByNo(billNo);
-                        const order = await services.getMyOrder(billNo);
-                        for (i in order) {
-                                console.log(order[i].orderNo);
-                                const addon = await services.getMyAddon(order[i].orderNo);
+                        const CustomerOrder = await services.getMyOrderTable(tableNo);
+                        for (i in CustomerOrder) {
+                                console.log(CustomerOrder[i].orderNo);
+                                const addon = await services.getMyAddon(CustomerOrder[i].orderNo);
                                 console.log(addon)
-                                order[i].addon = addon
+                                CustomerOrder[i].addon = addon
                         }
-                        return order
+                        return CustomerOrder
                 }
         } catch (err) {
                 console.log(err)

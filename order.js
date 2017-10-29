@@ -9,7 +9,7 @@ const services = {
             const a = { menuNo: all[0].Menu[i].menuNo, quantity: all[0].Menu[i].quantity, amount: all[0].Menu[i].menuPrice, billNo: billNo };
             console.log("a")
             console.log(a);
-            const id = await knex.insert(a).into('Order').then(function (orderNo) {
+            const id = await knex.insert(a).into('CustomerOrder').then(function (orderNo) {
                 return orderNo;
             });
             console.log("i : "+i)
@@ -27,14 +27,14 @@ const services = {
     },
     getOrder: (no) => {
         return knex.select('*')
-            .from('Order')
-            .where('Order.orderNo', no);
+            .from('CustomerOrder')
+            .where('CustomerOrder.orderNo', no);
     },
     updateOrderStatus: (orderNo,value) => {
             const a = { orderStatus : value };
-            knex('Order')
+            knex('CustomerOrder')
             .update(a)
-            .where('Order.orderNo', orderNo)
+            .where('CustomerOrder.orderNo', orderNo)
     }
 
 }
@@ -42,7 +42,7 @@ const services = {
 exports.addOrder = async (userNo, orders, total) => {
     try {
         console.log("User : " + userNo);
-        console.log("Order : " + orders);
+        console.log("CustomerOrder : " + orders);
         console.log("Total : " + total)
         var all = JSON.parse(orders);
         // Select userNo in bill 

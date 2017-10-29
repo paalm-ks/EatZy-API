@@ -13,6 +13,11 @@ const services = {
                         .from('Bill')
                         .where('Bill.billNo', billNo)
         },
+        getBillByTableNo: (tableNo) => {
+                return knex.select()
+                        .from('Bill')
+                        .where('Bill.tableNo', tableNo)
+        },
         addBill: (date, time, userNo) => {
                 console.log(date + " : " + time + " : " + userNo);
                 const a = { billDate: date, billTime: time, userNo: userNo };
@@ -71,6 +76,15 @@ exports.showBill = async (no) => {
 exports.getBillByNo = async (no) => {
         try {
                 const response = await services.getBillByNo(no);
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
+
+exports.getBillByTableNo = async (no) => {
+        try {
+                const response = await services.getBillByTableNo(no);
                 return response;
         } catch (err) {
                 console.log(err)

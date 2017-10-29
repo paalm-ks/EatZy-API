@@ -306,6 +306,13 @@ module.exports = function (app) {
         })
     });
 
+    app.get('/tableOrder/:no', function (req, res) {
+        const no = req.params.no;
+        myOrder.showTableOrder(no).then(rest => {
+            res.json(rest);
+        })
+    });
+
     app.get('/userOrder/:no', function (req, res) {
         const no = req.params.no;
         myOrder.showUserOrder(no).then(rest => {
