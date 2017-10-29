@@ -1,14 +1,10 @@
 var knex = require('./knex');
-
-const date = new Date()
-const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-const time = `${date.toTimeString().substring(0, 8)}`;
-
 const services = {    
-
     addReserve: (num,user,branch,code) => {
+        let date = new Date()
+        let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+        const time = `${date.toTimeString().substring(0, 8)}`;
         const a = { date: current, time: time, numberOfPerson: num, userNo: user, branchNo: branch, queCode: code };
-        console.log(a);
         knex.insert(a).into('Reservation').then(function (id) {
             console.log(id)
         });

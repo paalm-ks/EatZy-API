@@ -3,7 +3,7 @@ var bill = require('./bill');
 
 const services = {
         getMyOrder: (billNo) => {
-                return knex.select('Order.orderNo', 'Menu.menuNo', 'Menu.menuPrice', 'Menu.menuPicPath', 'Menu.menuNameTH', 'Order.quantity', 'Order.amount', 'Order.status as orderStatus').from('Bill')
+                return knex.select('Order.orderNo', 'Menu.menuNo', 'Menu.menuPrice', 'Menu.menuPicPath', 'Menu.menuNameTH', 'Order.quantity', 'Order.amount', 'Order.orderStatus').from('Bill')
                         .join('Order', 'Bill.billNo', 'Order.billNo')
                         .join('Menu', 'Menu.menuNo', 'Order.menuNo')
                         .where('Bill.billNo', billNo)
