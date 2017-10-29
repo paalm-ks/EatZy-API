@@ -1,5 +1,6 @@
 var knex = require('./knex');
 var addon = require('./addon');
+var menuGroup = require('./menuType')
 
 const services = {
         getMenu: () => {
@@ -22,7 +23,6 @@ const services = {
                         .from('Menu')
                         .join('MenuGroup', { 'MenuGroup.menuGroupNo': 'Menu.menuGroupNo' })
                         .where('MenuGroup.MenuGroupNo', groupNo)
-                        .andWhere('Menu.menuFlag','M')
                         .orderBy('menuNameTH', 'asc')     
         },
         getMenuByType: (typeNo) => {
@@ -69,8 +69,14 @@ exports.showMenuByGroup = async (groupNo) => {
 
 exports.showMenuByType = async (typeNo) => {
         try {
-                const response = await services.getMenuByType(typeNo);
-                return response;
+                const group = await menuGroup.showMenuGroup(typeNo);
+                for (i in group) {
+                        console.log(group[i].menuGroupNo);
+                        const menuG = await services.getMenuByGroup(group[i].menuGroupNo);
+                        console.log(menuG)
+                        group[i].menuG = menuG
+                }
+                return group;
         } catch (err) {
                 console.log(err)
         }
