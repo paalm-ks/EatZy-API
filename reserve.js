@@ -1,15 +1,17 @@
 var knex = require('./knex');
 const services = {    
     addReserve: (num,user,branch,code) => {
-        let date = new Date()
+        let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-        const time = `${date.toTimeString().substring(0, 8)}`;
+        let time = `${date.toTimeString().substring(0, 8)}`;
         const a = { date: current, time: time, numberOfPerson: num, userNo: user, branchNo: branch, queCode: code };
         knex.insert(a).into('Reservation').then(function (id) {
             console.log(id)
         });
     },
     getReserveByUser: (no) => {
+        let date = new Date();
+        let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex.select()
             .from('Reservation')
             .join('User', { 'User.userNo': 'Reservation.userNo' })
@@ -18,17 +20,23 @@ const services = {
             .andWhere('Reservation.reserveStatus', 'reserved')
     },
     getReserve: () => {
+        let date = new Date();
+        let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex.select('*')
             .from('Reservation')
             .join('User', { 'User.userNo': 'Reservation.userNo' })
             .where('Reservation.date', current)
     },
     getCountReserve: () => {
+        let date = new Date();
+        let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex('Reservation').count('reserveStatus as status')
             .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
     },
     getCountBefore: (no) => {
+        let date = new Date();
+        let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         const reserveNo = knex.select('Reservation.reserveNo')
             .from('Reservation')
             .where('Reservation.userNo', no)
@@ -41,6 +49,8 @@ const services = {
             .andWhere('Reservation.date', current)
     },
     callReserve: () => {
+        let date = new Date();
+        let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         //for call min time queue
         const sub = knex.min('time as t').from('Reservation')
             .where('Reservation.reserveStatus', 'reserved')
@@ -48,6 +58,8 @@ const services = {
         return knex('Reservation').select().where('Reservation.time', 'in', sub)
     },
     callReserveMax: () => {
+        let date = new Date();
+        let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         //for call max time queue
         const sub = knex.max('time as t').from('Reservation')
             .where('Reservation.date', current)
@@ -58,7 +70,9 @@ const services = {
             .where('Reservation.reserveStatus', 'reserved');
             //what this for ??
     },
-    acceptQueue: (no) => { 
+    acceptQueue: (userNo) => { 
+        let date = new Date();
+        let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         //for update status arrive or cancel 
         return knex('Reservation') 
         .where('userNo', userNo) 
@@ -66,10 +80,12 @@ const services = {
         .andWhere('date', current) 
         .update('reserveStatus', 'arrived') 
     }, 
-    cancelQueue: (no) => { 
+    cancelQueue: (userNo) => { 
+        let date = new Date();
+        let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         //for update status cancelled 
         return knex('Reservation') 
-            .where('userNo', no) 
+            .where('userNo', userNo) 
             .andWhere('reserveStatus', 'reserved') 
             .andWhere('date',current) 
             .update('reserveStatus', 'cancelled') 
