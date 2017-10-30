@@ -71,9 +71,7 @@ exports.showMenuByType = async (typeNo) => {
         try {
                 const group = await menuGroup.showMenuGroup(typeNo);
                 for (i in group) {
-                        console.log(group[i].menuGroupNo);
                         const menuG = await services.getMenuByGroup(group[i].menuGroupNo);
-                        console.log(menuG)
                         group[i].menuG = menuG
                 }
                 return group;
