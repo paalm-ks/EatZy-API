@@ -321,9 +321,8 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/restaurant/:no', function (req, res) {
-        const no = req.params.no;
-        restaurant.showRestaurant(no).then(rest => {
+    app.get('/restaurant', function (req, res) {
+        restaurant.showRestaurant().then(rest => {
             res.json(rest);
         })
     });

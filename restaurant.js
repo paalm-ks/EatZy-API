@@ -4,6 +4,7 @@ const services = {
         getRestaurant: () => {
                 return knex.select()
                         .from('Restaurant')
+                        .join('Branch', { 'Restaurant.restNo': 'Branch.restNo' })
         }
 }
 
