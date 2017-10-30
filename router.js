@@ -9,6 +9,7 @@ var reserve = require('./reserve.js');
 var bill = require('./bill');
 var addon = require('./addon');
 var myOrder = require('./myOrder');
+var restaurant = require('./restaurant');
 
 
 module.exports = function (app) {
@@ -319,5 +320,14 @@ module.exports = function (app) {
             res.json(rest);
         })
     });
+
+    app.get('/restaurant/:no', function (req, res) {
+        const no = req.params.no;
+        restaurant.showRestaurant(no).then(rest => {
+            res.json(rest);
+        })
+    });
+
+        
 
 }
