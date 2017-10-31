@@ -338,6 +338,12 @@ module.exports = function (app) {
             res.json(rest);
         })
     });
+
+    app.get('/group', function (req, res) {
+        menuType.menuGroup().then(rest => {
+            res.json(rest);
+        })
+    });
         
 
 }

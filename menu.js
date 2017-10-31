@@ -5,7 +5,7 @@ var menuGroup = require('./menuType')
 const services = {
         getMenu: () => {
                 return knex.select().from('Menu')
-                .where('Menu.menuFlag','M')     
+                .whereNotNull('menuGroupNo')     
                 .orderBy('menuNameTH', 'asc');              
         },
         getMenuSortByPrice: () => {

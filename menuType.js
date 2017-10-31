@@ -4,12 +4,16 @@ const services = {
         getMenuType: (restNo) => {
                 return knex.select()
                         .from('MenuType')
-                        .where('restNo',restNo)
+                        .where('restNo', restNo)
         },
         getMenuGroup: (typeNo) => {
                 return knex.select()
                         .from('MenuGroup')
-                        .where('menuTypeNo',typeNo)
+                        .where('menuTypeNo', typeNo)
+        },
+        getGroup: () => {
+                return knex.select()
+                        .from('MenuGroup')
         }
 }
 
@@ -29,4 +33,13 @@ exports.showMenuGroup = async (typeNo) => {
         } catch (err) {
                 console.log(err)
         }
+}
+
+exports.menuGroup = async () => {
+        try {
+                const response = await services.getGroup();
+                return response;
+        } catch (err) {
+                console.log(err)
+        } 
 }
