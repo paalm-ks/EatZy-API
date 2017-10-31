@@ -5,8 +5,16 @@ var reserve = require('./reserve');
 const services = {
 
     addOrder: async (all, billNo) => {
+        const billa = await bill.getBillByNo(billNo);
+        const status = "waiting"
+        if(billa[0].tableNo == null){
+            const statusNew = "reserve"
+            statusNew.replace(status)
+            return status
+        }
+        console.log(status)
         for (i in all[0].Menu) {
-            const a = { menuNo: all[0].Menu[i].menuNo, quantity: all[0].Menu[i].quantity, amount: all[0].Menu[i].menuPrice, billNo: billNo };
+            const a = { menuNo: all[0].Menu[i].menuNo, quantity: all[0].Menu[i].quantity, amount: all[0].Menu[i].menuPrice, billNo: billNo ,orderStatus : status };
             console.log("a")
             console.log(a);
             const id = await knex.insert(a).into('CustomerOrder').then(function (orderNo) {
