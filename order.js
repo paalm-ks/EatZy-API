@@ -12,8 +12,8 @@ const services = {
             const id = await knex.insert(a).into('CustomerOrder').then(function (orderNo) {
                 return orderNo;
             });
-            console.log("i : "+i)
-            console.log("id : "+id[0])
+            console.log("i : " + i)
+            console.log("id : " + id[0])
             if (all[0].AddOn[i].length != 0) {
                 for (x in all[0].AddOn[i]) {
                     console.log(all[0].AddOn[i][x].AddOnNo)
@@ -26,34 +26,36 @@ const services = {
         }
     },
     getOrder: (no) => {
-        return knex.select('*')
+        return knex.select('CustomerOrder.orderNo')
             .from('CustomerOrder')
-            .where('CustomerOrder.orderNo', no);
+            .join('Bill', { 'CustomerOrder.billNo': 'Bill.billNo' })
+            .where('Bill.userNo', no);
     },
-    updateOrderStatus: (orderNo,value) => {
-            const a = { orderStatus : value };
-            knex('CustomerOrder')
-            .update(a)
+
+    updateOrderStatus: (orderNo, value) => {
+        knex('CustomerOrder')
             .where('CustomerOrder.orderNo', orderNo)
+            .update('orderStatus', value);
     },
+
     getAllOrder: () => {
         return knex.select('CustomerTable.branchNo', 'Bill.tableNo',
-        'CustomerOrder.orderNo', 
-        'Menu.menuNo', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.orderStatus' )
+            'CustomerOrder.orderNo',
+            'Menu.menuNo', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.orderStatus')
             .from('CustomerOrder')
-            .join('Bill', {'CustomerOrder.billNo': 'Bill.billNo'})
-            .join('CustomerTable', {'Bill.tableNo': 'CustomerTable.tableNo'})
+            .join('Bill', { 'CustomerOrder.billNo': 'Bill.billNo' })
+            .join('CustomerTable', { 'Bill.tableNo': 'CustomerTable.tableNo' })
             .join('Branch', { 'CustomerTable.branchNo': 'Branch.branchNo' })
             .join('Menu', 'Menu.menuNo', 'CustomerOrder.menuNo')
-            // .whereNotNull('Bill.tableNo')
-            // .andWhere()
+        // .whereNotNull('Bill.tableNo')
+        // .andWhere()
     },
     getAllOrderAddon: (orderNo) => {
         return knex.select('Material.matName', 'Addon.price').from('Addon')
-                .join('Order_Addon', 'Addon.addOnNo', 'Order_Addon.addOnNo')
-                .join('Material', 'Addon.matNo', 'Material.matNo')
-                .where('Order_Addon.orderNo', orderNo)
-}
+            .join('Order_Addon', 'Addon.addOnNo', 'Order_Addon.addOnNo')
+            .join('Material', 'Addon.matNo', 'Material.matNo')
+            .where('Order_Addon.orderNo', orderNo)
+    }
 
 }
 
@@ -102,10 +104,11 @@ exports.showOrder = async (no) => {
     }
 }
 
-exports.updateOrderStatus = async (orderNo,value) => {
+exports.updateOrderStatus = async (orderNo, value) => {
     try {
-        const response = await services.updateOrderStatus(orderNo,value);
-        return response;
+        console.log('value', value)
+        const response = await services.updateOrderStatus(orderNo, value);
+
     } catch (err) {
         console.log(err)
     }
@@ -119,8 +122,8 @@ exports.showAllOrder = async () => {
             const addon = await services.getAllOrderAddon(response[i].orderNo);
             console.log(addon)
             response[i].addon = addon
-    }
-    return response;
+        }
+        return response;
     } catch (err) {
         console.log(err)
     }

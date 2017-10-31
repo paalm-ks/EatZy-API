@@ -185,7 +185,6 @@ module.exports = function (app) {
             menu.showMenuByName(data)
                 .then(rest => { res.json(rest); })
         }
-
     });
 
     app.get('/order/:no', function (req, res) {
@@ -256,16 +255,16 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/acceptQueue/:no', function (req, res) { 
-        const no = req.params.no; 
-        reserve.acceptQueue(no).then(rest => { 
+    app.get('/acceptQueue/:code', function (req, res) { 
+        const code = req.params.code; 
+        reserve.acceptQueue(code).then(rest => { 
             res.json(rest); 
         }) 
     }); 
  
-    app.get('/cancelQueue/:no', function (req, res) { 
-        const no = req.params.no; 
-        reserve.cancelQueue(no).then(rest => { 
+    app.get('/cancelQueue/:code', function (req, res) { 
+        const code = req.params.code; 
+        reserve.cancelQueue(code).then(rest => { 
             res.json(rest); 
         }) 
     }); 
@@ -329,6 +328,13 @@ module.exports = function (app) {
 
     app.get('/allOrder', function (req, res) {
         order.showAllOrder().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/getUserNobyQueCode/:code', function (req, res) {
+        const code = req.params.code;
+        reserve.getUserNobyQueCode(code).then(rest => {
             res.json(rest);
         })
     });

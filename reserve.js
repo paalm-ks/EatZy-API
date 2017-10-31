@@ -72,25 +72,33 @@ const services = {
             .where('Reservation.reserveStatus', 'reserved');
         //what this for ??
     },
-    acceptQueue: (userNo) => {
+    acceptQueue: (code) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         //for update status arrive or cancel 
         return knex('Reservation')
-            .where('userNo', userNo)
+            .where('queCode', code)
             .andWhere('reserveStatus', 'reserved')
             .andWhere('date', current)
             .update('reserveStatus', 'arrived')
     },
-    cancelQueue: (userNo) => {
+    cancelQueue: (code) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         //for update status cancelled 
         return knex('Reservation')
-            .where('userNo', userNo)
+            .where('queCode', code)
             .andWhere('reserveStatus', 'reserved')
             .andWhere('date', current)
             .update('reserveStatus', 'cancelled')
+    },
+    getUserNobyQueCode: (code) => {
+        let date = new Date();
+        let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+        return knex.select('userNo')
+            .from('Reservation')
+            .where('Reservation.date', current)
+            .andWhere('queCode', code)
     }
 }
 
@@ -103,19 +111,40 @@ exports.genQueue = async () => {
     }
 }
 
-exports.acceptQueue = async (no) => {
+exports.getUserNobyQueCode = async (code) => {
     try {
-        const response = await services.acceptQueue(no);
-        const update = await order.updateOrderStatus(no, 'waiting')
+        const response = await services.getUserNobyQueCode(code);
         return response;
     } catch (err) {
         console.log(err)
     }
 }
 
-exports.cancelQueue = async (no) => {
+exports.acceptQueue = async (code) => {
     try {
-        const response = await services.cancelQueue(no);
+        const response = await services.acceptQueue(code);
+        const user = await services.getUserNobyQueCode(code);
+        const userNo = user[0].userNo;
+        console.log('userNo',userNo)
+        const orderNo = await order.showOrder(userNo)
+        console.log('orderNo',orderNo)
+        if (orderNo.length === 0) {
+            return response;
+        } else {
+            for (i in orderNo) {
+                const update = await order.updateOrderStatus(orderNo[i].orderNo, 'reserved' )
+                console.log('each update',orderNo[i].orderNo)
+            }
+            return response;
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.cancelQueue = async (queCode) => {
+    try {
+        const response = await services.cancelQueue(queCode);
         return response;
     } catch (err) {
         console.log(err)
