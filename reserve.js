@@ -21,13 +21,13 @@ const services = {
             .andWhere('Reservation.date', current)
             .andWhere('Reservation.reserveStatus', 'reserved')
     },
-    getReserve: () => {
+    getReserve: (no) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex.select('*')
             .from('Reservation')
-            .join('User', { 'User.userNo': 'Reservation.userNo' })
             .where('Reservation.date', current)
+            .andWhere('Reservation.reserveNo', '>', no)
     },
     getCountReserve: () => {
         let date = new Date();
@@ -66,11 +66,6 @@ const services = {
         const sub = knex.max('time as t').from('Reservation')
             .where('Reservation.date', current)
         return knex('Reservation').select('*').where('Reservation.time', 'in', sub)
-    },
-    genQueue: () => {
-        return knex('Reservation').min('Reservation.queCode as queCode')
-            .where('Reservation.reserveStatus', 'reserved');
-        //what this for ??
     },
     acceptQueue: (code) => {
         let date = new Date();
@@ -151,9 +146,9 @@ exports.cancelQueue = async (queCode) => {
     }
 }
 
-exports.showReserve = async () => {
+exports.showReserve = async (no) => {
     try {
-        const response = await services.getReserve();
+        const response = await services.getReserve(no);
         return response;
     } catch (err) {
         console.log(err)
@@ -163,7 +158,10 @@ exports.showReserve = async () => {
 exports.callReserve = async () => {
     try {
         const response = await services.callReserve();
-        return response;
+        const reserve = response[0].reserveNo
+        const Next = await this.showReserve(reserve);
+        response[0].Next = Next;
+        return response
     } catch (err) {
         console.log(err)
     }

@@ -199,7 +199,8 @@ module.exports = function (app) {
         const no = (req.body.no);
         const orders = (req.body.order)
         const total = (req.body.total)
-        order.addOrder(no,orders,total)
+        const tableNo = (req.body.tableNo)
+        order.addOrder(no,orders,total,tableNo)
     });
 
     app.post('/addReserve/', function (req, res) {
