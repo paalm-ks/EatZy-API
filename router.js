@@ -327,6 +327,11 @@ module.exports = function (app) {
         })
     });
 
+    app.get('/allOrder', function (req, res) {
+        order.showAllOrder().then(rest => {
+            res.json(rest);
+        })
+    });
         
 
 }

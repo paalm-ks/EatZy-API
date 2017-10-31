@@ -35,7 +35,25 @@ const services = {
             knex('CustomerOrder')
             .update(a)
             .where('CustomerOrder.orderNo', orderNo)
-    }
+    },
+    getAllOrder: () => {
+        return knex.select('CustomerTable.branchNo', 'Bill.tableNo',
+        'CustomerOrder.orderNo', 
+        'Menu.menuNo', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.orderStatus' )
+            .from('CustomerOrder')
+            .join('Bill', {'CustomerOrder.billNo': 'Bill.billNo'})
+            .join('CustomerTable', {'Bill.tableNo': 'CustomerTable.tableNo'})
+            .join('Branch', { 'CustomerTable.branchNo': 'Branch.branchNo' })
+            .join('Menu', 'Menu.menuNo', 'CustomerOrder.menuNo')
+            // .whereNotNull('Bill.tableNo')
+            // .andWhere()
+    },
+    getAllOrderAddon: (orderNo) => {
+        return knex.select('Material.matName', 'Addon.price').from('Addon')
+                .join('Order_Addon', 'Addon.addOnNo', 'Order_Addon.addOnNo')
+                .join('Material', 'Addon.matNo', 'Material.matNo')
+                .where('Order_Addon.orderNo', orderNo)
+}
 
 }
 
@@ -70,18 +88,6 @@ exports.addOrder = async (userNo, orders, total) => {
             console.log("update : " + total + " To Bill " + oldBill[0].billNo);
             services.addOrder(all, oldBill[0].billNo);
         }
-
-
-        // [{ "Menu": 
-        // [{ "menuNo": 70, "menuPrice": 165, "quantity": 2 },
-        // { "menuNo": 71, "menuPrice": 49, "quantity": 3 }],
-        // "Addon":
-        // [{"addOnNo":[53,54]},
-        // {"addOnNo":[55]}] 
-        // }]
-
-
-
     } catch (err) {
         console.log(err)
     }
@@ -105,3 +111,17 @@ exports.updateOrderStatus = async (orderNo,value) => {
     }
 }
 
+exports.showAllOrder = async () => {
+    try {
+        const response = await services.getAllOrder();
+        for (i in response) {
+            console.log(response[i].orderNo);
+            const addon = await services.getAllOrderAddon(response[i].orderNo);
+            console.log(addon)
+            response[i].addon = addon
+    }
+    return response;
+    } catch (err) {
+        console.log(err)
+    }
+}
