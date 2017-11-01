@@ -1,5 +1,6 @@
 var knex = require('./knex');
 var order = require('./order');
+var bill = require('./bill');
 
 const services = {
     addReserve: (num, user, branch, code) => {
@@ -148,6 +149,10 @@ exports.cancelQueue = async (code) => {
         if (orderNo.length === 0) {
             return response;
         } else {
+            const billed = await bill.showBill(userNo);
+            const billNo = billed[0].billNo
+            console.log('bill', billNo)
+            const billCancel = await bill.updateBillStatus(billNo)
             for (i in orderNo) {
                 const update = await order.updateOrderStatus(orderNo[i].orderNo, 'cancelled')
                 console.log('each update', orderNo[i].orderNo)
