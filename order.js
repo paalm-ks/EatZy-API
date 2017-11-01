@@ -41,9 +41,12 @@ const services = {
     },
 
     updateOrderStatus: (orderNo, value) => {
-        knex('CustomerOrder')
+        
+        const status = value ;
+        console.log("status : "+status)
+        return  knex('CustomerOrder')
             .where('CustomerOrder.orderNo', orderNo)
-            .update('orderStatus', value);
+            .update('orderStatus', status);
     },
 
     getAllOrder: () => {
