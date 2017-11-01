@@ -119,7 +119,7 @@ exports.updateOrderStatus = async (orderNo, value) => {
     try {
         console.log('value', value)
         const response = await services.updateOrderStatus(orderNo, value);
-
+        
     } catch (err) {
         console.log(err)
     }
