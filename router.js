@@ -39,7 +39,7 @@ module.exports = function (app) {
             + "/reserveBefore <br>"
             + "/reserveCall/ <br>"
         //   res.send(doc)
-        res.sendFile(__dirname+'/index.html')
+        res.sendFile(__dirname + '/index.html')
     });
 
     app.get('/menu', function (req, res) {
@@ -200,7 +200,7 @@ module.exports = function (app) {
         const orders = (req.body.order)
         const total = (req.body.total)
         const tableNo = (req.body.tableNo)
-        order.addOrder(no,orders,total,tableNo)
+        order.addOrder(no, orders, total, tableNo)
     });
 
     app.post('/addReserve/', function (req, res) {
@@ -209,7 +209,7 @@ module.exports = function (app) {
         const branch = (req.body.branch);
         const code = (req.body.code);
         const role = (req.body.role);
-        reserve.addReserve(num,user,branch,code,role);
+        reserve.addReserve(num, user, branch, code, role);
     });
 
     app.get('/reserveByUser/:no', function (req, res) {
@@ -257,19 +257,21 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/acceptQueue/:code', function (req, res) { 
-        const code = req.params.code; 
-        reserve.acceptQueue(code).then(rest => { 
-            res.json(rest); 
-        }) 
-    }); 
- 
-    app.get('/cancelQueue/:code', function (req, res) { 
-        const code = req.params.code; 
-        reserve.cancelQueue(code).then(rest => { 
-            res.json(rest); 
-        }) 
-    }); 
+    app.get('/acceptQueue/:code&:role', function (req, res) {
+        const code = req.params.code;
+        const role = req.params.role;
+        reserve.acceptQueue(code, role).then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/cancelQueue/:code&:role', function (req, res) {
+        const code = req.params.code;
+        const role = req.params.role;
+        reserve.cancelQueue(code, role).then(rest => {
+            res.json(rest);
+        })
+    });
 
     app.get('/showBill/:billNo', function (req, res) {
         const billNo = req.params.billNo;
@@ -288,7 +290,7 @@ module.exports = function (app) {
         const matNo = req.body.matNo;
         const qty = req.body.qty;
         const price = req.body.price;
-        addon.addAddon(menuNo,matNo,qty,price).then(rest => {
+        addon.addAddon(menuNo, matNo, qty, price).then(rest => {
             res.json(rest);
         })
     });
@@ -296,7 +298,7 @@ module.exports = function (app) {
     app.get('/updateOrderStatus/:orderNo&:value', function (req, res) {
         const orderNo = req.params.orderNo;
         const value = req.params.value;
-        order.updateOrderStatus(orderNo,value).then(rest => {
+        order.updateOrderStatus(orderNo, value).then(rest => {
             res.json(rest);
         })
     });
@@ -346,6 +348,6 @@ module.exports = function (app) {
             res.json(rest);
         })
     });
-        
+
 
 }

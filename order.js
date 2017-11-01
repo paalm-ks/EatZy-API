@@ -37,7 +37,7 @@ const services = {
         return knex.select('CustomerOrder.orderNo')
             .from('CustomerOrder')
             .join('Bill', { 'CustomerOrder.billNo': 'Bill.billNo' })
-            .where('Bill.userNo', no);
+            .where('Bill.billNo', no);
     },
 
     updateOrderStatus: (orderNo, value) => {

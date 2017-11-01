@@ -3,11 +3,11 @@ var order = require('./order');
 var bill = require('./bill');
 
 const services = {
-    addReserve: (num, user, branch, code,role) => {
+    addReserve: (num, user, branch, code, role) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         let time = `${date.toTimeString().substring(0, 8)}`;
-        const a = { date: current, time: time, numberOfPerson: num, userNo: user, branchNo: branch, queCode: code , reserveRole: role};
+        const a = { date: current, time: time, numberOfPerson: num, userNo: user, branchNo: branch, queCode: code, reserveRole: role };
         knex.insert(a).into('Reservation').then(function (id) {
             console.log(id)
         });
@@ -68,7 +68,7 @@ const services = {
             .where('Reservation.date', current)
         return knex('Reservation').select('*').where('Reservation.time', 'in', sub)
     },
-    acceptQueue: (code) => {
+    acceptQueue: (code, role) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         //for update status arrive or cancel 
@@ -76,9 +76,10 @@ const services = {
             .where('queCode', code)
             .andWhere('reserveStatus', 'reserved')
             .andWhere('date', current)
+            .andWhere('reserveRole', role)
             .update('reserveStatus', 'arrived')
     },
-    cancelQueue: (code) => {
+    cancelQueue: (code, role) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         //for update status cancelled 
@@ -86,15 +87,17 @@ const services = {
             .where('queCode', code)
             .andWhere('reserveStatus', 'reserved')
             .andWhere('date', current)
+            .andWhere('reserveRole', role)
             .update('reserveStatus', 'cancelled')
     },
-    getUserNobyQueCode: (code) => {
+    getUserNobyQueCode: (code, role) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex.select('userNo')
             .from('Reservation')
             .where('Reservation.date', current)
             .andWhere('queCode', code)
+            .andWhere('reserveRole', role)
     }
 }
 
@@ -116,48 +119,56 @@ exports.getUserNobyQueCode = async (code) => {
     }
 }
 
-exports.acceptQueue = async (code) => {
+exports.acceptQueue = async (code, role) => {
     try {
-        const response = await services.acceptQueue(code);
-        const user = await services.getUserNobyQueCode(code);
+        const response = await services.acceptQueue(code, role);
+        const user = await services.getUserNobyQueCode(code, role);
         const userNo = user[0].userNo;
         console.log('userNo', userNo)
-        const orderNo = await order.showOrder(userNo)
-        console.log('orderNo', orderNo)
-        if (orderNo.length === 0) {
-            return response;
-        } else {
-            for (i in orderNo) {
-                const update = await order.updateOrderStatus(orderNo[i].orderNo, 'waiting')
-                console.log('each update', orderNo[i].orderNo)
+        const billed = await bill.showBill(userNo);
+        if (billed.length !== 0) {
+            const billNo = billed[0].billNo
+            console.log('bill', billNo)
+            const billCancel = await bill.updateBillStatus(billNo)
+            const orderNo = await order.showOrder(billNo)
+            console.log('orderNo', orderNo)
+            if (orderNo.length !== 0) {
+                for (i in orderNo) {
+                    const update = await order.updateOrderStatus(orderNo[i].orderNo, 'waiting')
+                    console.log('each update', orderNo[i].orderNo)
+                }
+                return response;
             }
-            return response;
+            return response
         }
+        return response;
     } catch (err) {
         console.log(err)
     }
 }
 
-exports.cancelQueue = async (code) => {
+exports.cancelQueue = async (code, role) => {
     try {
-        const response = await services.cancelQueue(code);
-        const user = await services.getUserNobyQueCode(code);
+        console.log('code', code, role)
+        const response = await services.cancelQueue(code, role);
+        const user = await services.getUserNobyQueCode(code, role);
         const userNo = user[0].userNo;
         console.log('userNo', userNo)
-        const orderNo = await order.showOrder(userNo)
-        console.log('orderNo', orderNo)
-        if (orderNo.length === 0) {
-            return response;
-        } else {
-            const billed = await bill.showBill(userNo);
+        const billed = await bill.showBill(userNo);
+        if (billed.length !== 0) {
             const billNo = billed[0].billNo
             console.log('bill', billNo)
             const billCancel = await bill.updateBillStatus(billNo)
-            for (i in orderNo) {
-                const update = await order.updateOrderStatus(orderNo[i].orderNo, 'cancelled')
-                console.log('each update', orderNo[i].orderNo)
+            const orderNo = await order.showOrder(billNo)
+            console.log('orderNo', orderNo)
+            if (orderNo.length !== 0) {
+                for (i in orderNo) {
+                    const update = await order.updateOrderStatus(orderNo[i].orderNo, 'cancelled')
+                    console.log('each update', orderNo[i].orderNo)
+                }
+                return response;
             }
-            return response;
+            return response
         }
         return response;
     } catch (err) {
@@ -220,9 +231,9 @@ exports.countBefore = async (no) => {
     }
 }
 
-exports.addReserve = (num, user, branch, code,role) => {
+exports.addReserve = (num, user, branch, code, role) => {
     try {
-        services.addReserve(num, user, branch, code,role);
+        services.addReserve(num, user, branch, code, role);
     } catch (err) {
         console.log(err)
     }
