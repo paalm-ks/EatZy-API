@@ -121,6 +121,7 @@ exports.getUserNobyQueCode = async (code) => {
 
 exports.acceptQueue = async (code, role) => {
     try {
+        console.log('code', code, role)
         const response = await services.acceptQueue(code, role);
         const user = await services.getUserNobyQueCode(code, role);
         const userNo = user[0].userNo;
@@ -134,7 +135,7 @@ exports.acceptQueue = async (code, role) => {
             console.log('orderNo', orderNo)
             if (orderNo.length !== 0) {
                 for (i in orderNo) {
-                    const update = await order.updateOrderStatus(orderNo[i].orderNo, 'waiting')
+                    const update = await order.updateOrderStatus(orderNo[i].orderNo, 'cancelled')
                     console.log('each update', orderNo[i].orderNo)
                 }
                 return response;
