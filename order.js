@@ -49,7 +49,7 @@ const services = {
     },
 
     getAllOrder: () => {
-        return knex.select('CustomerTable.branchNo', 'Bill.tableNo',
+        return knex.select('CustomerTable.branchNo', 'Bill.tableNo','Bill.billNo',
             'CustomerOrder.orderNo',
             'Menu.menuNo', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.orderStatus')
             .from('CustomerOrder')
@@ -57,8 +57,9 @@ const services = {
             .join('CustomerTable', { 'Bill.tableNo': 'CustomerTable.tableNo' })
             .join('Branch', { 'CustomerTable.branchNo': 'Branch.branchNo' })
             .join('Menu', 'Menu.menuNo', 'CustomerOrder.menuNo')
-        // .whereNotNull('Bill.tableNo')
-        // .andWhere()
+            .where('Bill.billStatus', 'unpaid')
+            .andWhereNot('CustomerOrder.orderStatus', 'cancelled')
+            .andWhereNot('CustomerOrder.orderStatus', 'reserved') 
     },
     getAllOrderAddon: (orderNo) => {
         return knex.select('Material.matName', 'Addon.price').from('Addon')
