@@ -21,6 +21,7 @@ const services = {
             .where('Reservation.userNo', no)
             .andWhere('Reservation.date', current)
             .andWhere('Reservation.reserveStatus', 'reserved')
+            .andWhere('reserveRole', 'U')
     },
     getReserve: (no) => {
         let date = new Date();
@@ -43,6 +44,7 @@ const services = {
         const reserveNo = knex.select('Reservation.reserveNo')
             .from('Reservation')
             .where('Reservation.userNo', no)
+            .andWhere('reserveRole', 'U')
             .andWhere('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
 
@@ -54,7 +56,6 @@ const services = {
     callReserve: () => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-        //for call min time queue
         const sub = knex.min('time as t').from('Reservation')
             .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
@@ -63,7 +64,6 @@ const services = {
     callReserveMax: () => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-        //for call max time queue
         const sub = knex.max('time as t').from('Reservation')
             .where('Reservation.date', current)
         return knex('Reservation').select('*').where('Reservation.time', 'in', sub)
@@ -71,7 +71,6 @@ const services = {
     acceptQueue: (code, role) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-        //for update status arrive or cancel 
         return knex('Reservation')
             .where('queCode', code)
             .andWhere('reserveStatus', 'reserved')
@@ -82,7 +81,6 @@ const services = {
     cancelQueue: (code, role) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-        //for update status cancelled 
         return knex('Reservation')
             .where('queCode', code)
             .andWhere('reserveStatus', 'reserved')
@@ -121,22 +119,17 @@ exports.getUserNobyQueCode = async (code) => {
 
 exports.acceptQueue = async (code, role) => {
     try {
-        console.log('code', code, role)
         const response = await services.acceptQueue(code, role);
         const user = await services.getUserNobyQueCode(code, role);
         const userNo = user[0].userNo;
-        console.log('userNo', userNo)
         const billed = await bill.showBill(userNo);
         if (billed.length !== 0) {
             const billNo = billed[0].billNo
-            console.log('bill', billNo)
             const billCancel = await bill.updateBillStatus(billNo)
             const orderNo = await order.showOrder(billNo)
-            console.log('orderNo', orderNo)
             if (orderNo.length !== 0) {
                 for (i in orderNo) {
                     const update = await order.updateOrderStatus(orderNo[i].orderNo, 'cancelled')
-                    console.log('each update', orderNo[i].orderNo)
                 }
                 return response;
             }
@@ -150,22 +143,17 @@ exports.acceptQueue = async (code, role) => {
 
 exports.cancelQueue = async (code, role) => {
     try {
-        console.log('code', code, role)
         const response = await services.cancelQueue(code, role);
         const user = await services.getUserNobyQueCode(code, role);
         const userNo = user[0].userNo;
-        console.log('userNo', userNo)
         const billed = await bill.showBill(userNo);
         if (billed.length !== 0) {
             const billNo = billed[0].billNo
-            console.log('bill', billNo)
             const billCancel = await bill.updateBillStatus(billNo)
             const orderNo = await order.showOrder(billNo)
-            console.log('orderNo', orderNo)
             if (orderNo.length !== 0) {
                 for (i in orderNo) {
                     const update = await order.updateOrderStatus(orderNo[i].orderNo, 'cancelled')
-                    console.log('each update', orderNo[i].orderNo)
                 }
                 return response;
             }
