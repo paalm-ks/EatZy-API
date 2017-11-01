@@ -1,5 +1,6 @@
 var knex = require('./knex');
 var order = require('./order');
+var bill = require('./bill');
 
 const services = {
     addReserve: (num, user, branch, code,role) => {
@@ -120,15 +121,15 @@ exports.acceptQueue = async (code) => {
         const response = await services.acceptQueue(code);
         const user = await services.getUserNobyQueCode(code);
         const userNo = user[0].userNo;
-        console.log('userNo',userNo)
+        console.log('userNo', userNo)
         const orderNo = await order.showOrder(userNo)
-        console.log('orderNo',orderNo)
+        console.log('orderNo', orderNo)
         if (orderNo.length === 0) {
             return response;
         } else {
             for (i in orderNo) {
-                const update = await order.updateOrderStatus(orderNo[i].orderNo, 'reserved' )
-                console.log('each update',orderNo[i].orderNo)
+                const update = await order.updateOrderStatus(orderNo[i].orderNo, 'waiting')
+                console.log('each update', orderNo[i].orderNo)
             }
             return response;
         }
@@ -137,9 +138,27 @@ exports.acceptQueue = async (code) => {
     }
 }
 
-exports.cancelQueue = async (queCode) => {
+exports.cancelQueue = async (code) => {
     try {
-        const response = await services.cancelQueue(queCode);
+        const response = await services.cancelQueue(code);
+        const user = await services.getUserNobyQueCode(code);
+        const userNo = user[0].userNo;
+        console.log('userNo', userNo)
+        const orderNo = await order.showOrder(userNo)
+        console.log('orderNo', orderNo)
+        if (orderNo.length === 0) {
+            return response;
+        } else {
+            const billed = await bill.showBill(userNo);
+            const billNo = billed[0].billNo
+            console.log('bill', billNo)
+            const billCancel = await bill.updateBillStatus(billNo)
+            for (i in orderNo) {
+                const update = await order.updateOrderStatus(orderNo[i].orderNo, 'cancelled')
+                console.log('each update', orderNo[i].orderNo)
+            }
+            return response;
+        }
         return response;
     } catch (err) {
         console.log(err)
@@ -158,9 +177,16 @@ exports.showReserve = async (no) => {
 exports.callReserve = async () => {
     try {
         const response = await services.callReserve();
-        const reserve = response[0].reserveNo
-        const Next = await this.showReserve(reserve);
-        response[0].Next = Next;
+        if (response.length !== 0) {
+            const reserve = response[0].reserveNo
+            if (reserve !== null) {
+                const Next = await this.showReserve(reserve);
+                response[0].Next = Next;
+                return response
+            } else {
+                return response
+            }
+        }
         return response
     } catch (err) {
         console.log(err)

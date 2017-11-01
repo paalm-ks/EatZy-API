@@ -27,11 +27,11 @@ const services = {
                 });
         },
         updateBillStatus: (billNo) => {
-                console.log(billNo)
-                const a = { billStatus: 'paid' };
+                const status = 'cancelled' ;
+                console.log('billNo', billNo)
                 return knex('Bill')
                         .where('Bill.billNo', billNo)
-                        .update(a)                        
+                        .update('billStatus', status);
         },
         updateTableToBill: (No, tableNo) => {
                 knex('Bill')
