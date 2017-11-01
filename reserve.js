@@ -2,11 +2,11 @@ var knex = require('./knex');
 var order = require('./order');
 
 const services = {
-    addReserve: (num, user, branch, code) => {
+    addReserve: (num, user, branch, code,role) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         let time = `${date.toTimeString().substring(0, 8)}`;
-        const a = { date: current, time: time, numberOfPerson: num, userNo: user, branchNo: branch, queCode: code };
+        const a = { date: current, time: time, numberOfPerson: num, userNo: user, branchNo: branch, queCode: code , reserveRole: role};
         knex.insert(a).into('Reservation').then(function (id) {
             console.log(id)
         });
@@ -194,9 +194,9 @@ exports.countBefore = async (no) => {
     }
 }
 
-exports.addReserve = (num, user, branch, code) => {
+exports.addReserve = (num, user, branch, code,role) => {
     try {
-        services.addReserve(num, user, branch, code);
+        services.addReserve(num, user, branch, code,role);
     } catch (err) {
         console.log(err)
     }

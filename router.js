@@ -208,7 +208,8 @@ module.exports = function (app) {
         const user = (req.body.user);
         const branch = (req.body.branch);
         const code = (req.body.code);
-        reserve.addReserve(num,user,branch,code)
+        const role = (req.body.role);
+        reserve.addReserve(num,user,branch,code,role);
     });
 
     app.get('/reserveByUser/:no', function (req, res) {

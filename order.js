@@ -41,7 +41,6 @@ const services = {
     },
 
     updateOrderStatus: (orderNo, value) => {
-        
         const status = value ;
         console.log("status : "+status)
         return  knex('CustomerOrder')

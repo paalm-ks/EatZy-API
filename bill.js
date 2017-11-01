@@ -27,10 +27,11 @@ const services = {
                 });
         },
         updateBillStatus: (billNo) => {
+                console.log(billNo)
                 const a = { billStatus: 'paid' };
-                knex('Bill')
-                        .update(a)
-                        .where('Bill.billNo', no)
+                return knex('Bill')
+                        .where('Bill.billNo', billNo)
+                        .update(a)                        
         },
         updateTableToBill: (No, tableNo) => {
                 knex('Bill')
