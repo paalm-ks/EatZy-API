@@ -69,7 +69,7 @@ const services = {
 
 }
 
-exports.addOrder = async (userNo, orders, total, tableNo) => {
+exports.addOrder = async (userNo, orders, total, tableNo,role) => {
     try {
         console.log("User : " + userNo);
         console.log("CustomerOrder : " + orders);
@@ -85,7 +85,7 @@ exports.addOrder = async (userNo, orders, total, tableNo) => {
             const date = new Date()
             const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
             const time = `${date.toTimeString().substring(0, 8)}`;
-            bill.addBill(current, time, userNo, tableNo);
+            bill.addBill(current, time, userNo, tableNo,role);
             const newBill = await bill.showBill(userNo);
             console.log("newBill : " + newBill[0].billNo);
             //add userNo to new BillNo

@@ -18,9 +18,9 @@ const services = {
                         .from('Bill')
                         .where('Bill.tableNo', tableNo)
         },
-        addBill: (date, time, userNo, tableNo) => {
+        addBill: (date, time, userNo, tableNo,role) => {
                 console.log(date + " : " + time + " : " + userNo);
-                const a = { billDate: date, billTime: time, userNo: userNo, tableNo: tableNo };
+                const a = { billDate: date, billTime: time, userNo: userNo, tableNo: tableNo , billRole: role };
                 console.log(a);
                 knex.insert(a).into('Bill').then(function (id) {
                         console.log(id)
@@ -92,9 +92,9 @@ exports.getBillByTableNo = async (no) => {
         }
 }
 
-exports.addBill = async (total, date, time, table) => {
+exports.addBill = async (total, date, time, table,role) => {
         try {
-                const response = await services.addBill(total, date, time, table);
+                const response = await services.addBill(total, date, time, table,role);
                 return response;
         } catch (err) {
                 console.log(err)
