@@ -2,22 +2,32 @@ var knex = require('./knex');
 
 const services = {
         getBill: (no, role) => {
+                let date = new Date();
+                let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
                 return knex.select()
                         .from('Bill')
                         .where('Bill.userNo', no)
                         .andWhere('Bill.billStatus', 'unpaid')
                         .andWhere('Bill.billRole', role)
+                        .andWhere('Bill.billDate', current)
                 // get from userNo
         },
         getBillByNo: (billNo) => {
+                let date = new Date();
+                let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
                 return knex.select()
                         .from('Bill')
                         .where('Bill.billNo', billNo)
+                        .andWhere('Bill.billDate', current)
         },
         getBillByTableNo: (tableNo) => {
+                let date = new Date();
+                let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
                 return knex.select()
                         .from('Bill')
                         .where('Bill.tableNo', tableNo)
+                        .andWhere('Bill.billStatus', 'unpaid')
+                        .andWhere('Bill.billDate', current)
         },
         addBill: (date, time, userNo, tableNo, role) => {
                 console.log(date + " : " + time + " : " + userNo);

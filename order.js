@@ -60,7 +60,7 @@ const services = {
             .join('Menu', 'Menu.menuNo', 'CustomerOrder.menuNo')
             .where('Bill.billStatus', 'unpaid')
             .andWhereNot('CustomerOrder.orderStatus', 'cancelled')
-            .andWhereNot('CustomerOrder.orderStatus', 'reserved')
+        // .andWhereNot('CustomerOrder.orderStatus', 'reserved')
     },
     getAllOrderAddon: (orderNo) => {
         return knex.select('Material.matName', 'Addon.price').from('Addon')
@@ -76,10 +76,16 @@ exports.addOrder = async (userNo, orders, total, tableNo, role) => {
         console.log("User : " + userNo);
         console.log("CustomerOrder : " + orders);
         console.log("Total : " + total)
+        console.log('tableNo', tableNo)
         var all = JSON.parse(orders);
         const URole = JSON.parse(role)
-        // Select userNo in bill 
-        const getBill = await bill.showBill(userNo, URole);
+        let getBill = []
+        if (tableNo !== null) {
+            getBill = await bill.getBillByTableNo(tableNo);
+        } else {
+            // Select userNo in bill 
+            getBill = await bill.showBill(userNo, URole);
+        }
         console.log(getBill[0]);
         // got null create
         if (getBill[0] == null) {
@@ -121,10 +127,10 @@ exports.updateOrderStatus = async (orderNo, value, billNo, amount) => {
     try {
         console.log('orderNo', orderNo)
         console.log('value', value)
-        console.log('decrease',  billNo+' '+amount)
+        console.log('decrease', billNo + ' ' + amount)
         const response = await services.updateOrderStatus(orderNo, value);
-        if(value === 'cancelled'){
-           const decrease = await bill.decreaseTotalAmount(billNo, amount)
+        if (value === 'cancelled') {
+            const decrease = await bill.decreaseTotalAmount(billNo, amount)
         }
 
     } catch (err) {
