@@ -77,8 +77,9 @@ exports.addOrder = async (userNo, orders, total, tableNo, role) => {
         console.log("CustomerOrder : " + orders);
         console.log("Total : " + total)
         var all = JSON.parse(orders);
+        const URole = JSON.parse(role)
         // Select userNo in bill 
-        const getBill = await bill.showBill(userNo);
+        const getBill = await bill.showBill(userNo, URole);
         console.log(getBill[0]);
         // got null create
         if (getBill[0] == null) {
@@ -87,9 +88,8 @@ exports.addOrder = async (userNo, orders, total, tableNo, role) => {
             const date = new Date()
             const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
             const time = `${date.toTimeString().substring(0, 8)}`;
-            const URole = JSON.parse(role)
             bill.addBill(current, time, userNo, tableNo, URole);
-            const newBill = await bill.showBill(userNo);
+            const newBill = await bill.showBill(userNo, URole);
             console.log("newBill : " + newBill[0].billNo);
             //add userNo to new BillNo
             bill.addUserNoToBill(userNo, newBill[0].billNo);
@@ -97,7 +97,7 @@ exports.addOrder = async (userNo, orders, total, tableNo, role) => {
             services.addOrder(all, newBill[0].billNo);
         } else if (getBill[0] != null) {
             console.log("Bill Exist")
-            const oldBill = await bill.showBill(userNo);
+            const oldBill = await bill.showBill(userNo, URole);
             console.log("Bill No : " + oldBill[0].billNo);
             bill.updateTotalAmount(oldBill[0].billNo, total);
             console.log("update : " + total + " To Bill " + oldBill[0].billNo);

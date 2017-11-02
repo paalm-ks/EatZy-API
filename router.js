@@ -274,9 +274,10 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/showBill/:billNo', function (req, res) {
-        const billNo = req.params.billNo;
-        bill.showBill(billNo).then(rest => {
+    app.get('/showBill/:userNo&:role', function (req, res) {
+        const userNo = req.params.userNo;
+        const role = req.params.role;
+        bill.showBill(userNo, role).then(rest => {
             res.json(rest);
         })
     });
@@ -318,9 +319,10 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/userOrder/:no', function (req, res) {
+    app.get('/userOrder/:no&:role', function (req, res) {
         const no = req.params.no;
-        myOrder.showUserOrder(no).then(rest => {
+        const role = req.params.role;
+        myOrder.showUserOrder(no, role).then(rest => {
             res.json(rest);
         })
     });

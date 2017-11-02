@@ -1,11 +1,12 @@
 var knex = require('./knex');
 
 const services = {
-        getBill: (no) => {
+        getBill: (no, role) => {
                 return knex.select()
                         .from('Bill')
                         .where('Bill.userNo', no)
                         .andWhere('Bill.billStatus', 'unpaid')
+                        .andWhere('Bill.billRole', role)
                 // get from userNo
         },
         getBillByNo: (billNo) => {
@@ -64,9 +65,9 @@ exports.getLastTotal = async (no) => {
         }
 }
 
-exports.showBill = async (no) => {
+exports.showBill = async (no, role) => {
         try {
-                const response = await services.getBill(no);
+                const response = await services.getBill(no, role);
                 console.log(response)
                 return response;
         } catch (err) {
