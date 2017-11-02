@@ -18,16 +18,16 @@ const services = {
                         .from('Bill')
                         .where('Bill.tableNo', tableNo)
         },
-        addBill: (date, time, userNo, tableNo,role) => {
+        addBill: (date, time, userNo, tableNo, role) => {
                 console.log(date + " : " + time + " : " + userNo);
-                const a = { billDate: date, billTime: time, userNo: userNo, tableNo: tableNo , billRole: role };
+                const a = { billDate: date, billTime: time, userNo: userNo, tableNo: tableNo, billRole: role };
                 console.log(a);
                 knex.insert(a).into('Bill').then(function (id) {
                         console.log(id)
                 });
         },
         updateBillStatus: (billNo) => {
-                const status = 'cancelled' ;
+                const status = 'cancelled';
                 console.log('billNo', billNo)
                 return knex('Bill')
                         .where('Bill.billNo', billNo)
@@ -92,9 +92,9 @@ exports.getBillByTableNo = async (no) => {
         }
 }
 
-exports.addBill = async (total, date, time, table,role) => {
+exports.addBill = async (total, date, time, table, role) => {
         try {
-                const response = await services.addBill(total, date, time, table,role);
+                const response = await services.addBill(total, date, time, table, role);
                 return response;
         } catch (err) {
                 console.log(err)
@@ -122,18 +122,18 @@ exports.addUserNoToBill = async (billNo, userNo) => {
 exports.updateTotalAmount = async (billNo, total) => {
         try {
                 const lastTotal = await services.getLastTotal(billNo);
-                const last = lastTotal[0].totalAmount;                
+                const last = lastTotal[0].totalAmount;
                 let response = [];
                 if (last === null) {
                         response = await services.updateTotalAmount(billNo, total);
                 } else {
-                        const intLast = parseInt(last)                  
+                        const intLast = parseInt(last)
                         const intTotal = parseInt(total)
                         const current = intTotal + intLast;
                         response = await services.updateTotalAmount(billNo, current);
                 }
                 return response;
-                
+
         } catch (err) {
                 console.log(err)
         }

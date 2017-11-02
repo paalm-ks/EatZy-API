@@ -7,14 +7,14 @@ const services = {
     addOrder: async (all, billNo) => {
         const billa = await bill.getBillByNo(billNo);
         const status = "waiting"
-        if(billa[0].tableNo == null){
+        if (billa[0].tableNo == null) {
             const statusNew = "reserve"
             statusNew.replace(status)
             return status
         }
         console.log(status)
         for (i in all[0].Menu) {
-            const a = { menuNo: all[0].Menu[i].menuNo, quantity: all[0].Menu[i].quantity, amount: all[0].Menu[i].menuPrice, billNo: billNo ,orderStatus : status };
+            const a = { menuNo: all[0].Menu[i].menuNo, quantity: all[0].Menu[i].quantity, amount: all[0].Menu[i].menuPrice, billNo: billNo, orderStatus: status };
             console.log("a")
             console.log(a);
             const id = await knex.insert(a).into('CustomerOrder').then(function (orderNo) {
@@ -41,15 +41,16 @@ const services = {
     },
 
     updateOrderStatus: (orderNo, value) => {
-        const status = value ;
-        console.log("status : "+status)
-        return  knex('CustomerOrder')
+        const status = value;
+        console.log("orderNo : " + orderNo)
+        console.log("status : " + status)
+        return knex('CustomerOrder')
             .where('CustomerOrder.orderNo', orderNo)
             .update('orderStatus', status);
     },
 
     getAllOrder: () => {
-        return knex.select('CustomerTable.branchNo', 'Bill.tableNo','Bill.billNo',
+        return knex.select('CustomerTable.branchNo', 'Bill.tableNo', 'Bill.billNo',
             'CustomerOrder.orderNo',
             'Menu.menuNo', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.orderStatus')
             .from('CustomerOrder')
@@ -59,7 +60,7 @@ const services = {
             .join('Menu', 'Menu.menuNo', 'CustomerOrder.menuNo')
             .where('Bill.billStatus', 'unpaid')
             .andWhereNot('CustomerOrder.orderStatus', 'cancelled')
-            .andWhereNot('CustomerOrder.orderStatus', 'reserved') 
+            .andWhereNot('CustomerOrder.orderStatus', 'reserved')
     },
     getAllOrderAddon: (orderNo) => {
         return knex.select('Material.matName', 'Addon.price').from('Addon')
@@ -70,7 +71,7 @@ const services = {
 
 }
 
-exports.addOrder = async (userNo, orders, total, tableNo,role) => {
+exports.addOrder = async (userNo, orders, total, tableNo, role) => {
     try {
         console.log("User : " + userNo);
         console.log("CustomerOrder : " + orders);
@@ -86,7 +87,8 @@ exports.addOrder = async (userNo, orders, total, tableNo,role) => {
             const date = new Date()
             const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
             const time = `${date.toTimeString().substring(0, 8)}`;
-            bill.addBill(current, time, userNo, tableNo,role);
+            const URole = JSON.parse(role)
+            bill.addBill(current, time, userNo, tableNo, URole);
             const newBill = await bill.showBill(userNo);
             console.log("newBill : " + newBill[0].billNo);
             //add userNo to new BillNo
@@ -117,9 +119,10 @@ exports.showOrder = async (no) => {
 
 exports.updateOrderStatus = async (orderNo, value) => {
     try {
+        console.log('orderNo', orderNo)
         console.log('value', value)
         const response = await services.updateOrderStatus(orderNo, value);
-        
+
     } catch (err) {
         console.log(err)
     }
