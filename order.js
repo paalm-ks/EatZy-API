@@ -52,7 +52,7 @@ const services = {
     getAllOrder: () => {
         return knex.select('CustomerTable.branchNo', 'Bill.tableNo', 'Bill.billNo',
             'CustomerOrder.orderNo',
-            'Menu.menuNo', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.orderStatus')
+            'Menu.menuNo', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.orderStatus', 'CustomerOrder.amount')
             .from('CustomerOrder')
             .join('Bill', { 'CustomerOrder.billNo': 'Bill.billNo' })
             .join('CustomerTable', { 'Bill.tableNo': 'CustomerTable.tableNo' })
@@ -117,11 +117,15 @@ exports.showOrder = async (no) => {
     }
 }
 
-exports.updateOrderStatus = async (orderNo, value) => {
+exports.updateOrderStatus = async (orderNo, value, billNo, amount) => {
     try {
         console.log('orderNo', orderNo)
         console.log('value', value)
+        console.log('decrease',  billNo+' '+amount)
         const response = await services.updateOrderStatus(orderNo, value);
+        if(value === 'cancelled'){
+           const decrease = await bill.decreaseTotalAmount(billNo, amount)
+        }
 
     } catch (err) {
         console.log(err)

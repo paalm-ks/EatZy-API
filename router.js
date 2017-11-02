@@ -297,10 +297,12 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/updateOrderStatus/:orderNo&:value', function (req, res) {
+    app.get('/updateOrderStatus/:orderNo&:value&:billNo&:amount', function (req, res) {
         const orderNo = req.params.orderNo;
         const value = req.params.value;
-        order.updateOrderStatus(orderNo, value).then(rest => {
+        const billNo = req.params.billNo;
+        const amount = req.params.amount;        
+        order.updateOrderStatus(orderNo, value,billNo,amount).then(rest => {
             res.json(rest);
         })
     });
