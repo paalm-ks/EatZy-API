@@ -31,15 +31,15 @@ const services = {
             });
             console.log("i : " + i)
             console.log("id : " + id[0])
-            if (all[0].AddOn[i].length != 0) {
-                for (x in all[0].AddOn[i]) {
-                    console.log(all[0].AddOn[i][x].AddOnNo)
-                    const b = { orderNo: id[0], addOnNo: all[0].AddOn[i][x].AddOnNo };
-                    console.log("b")
-                    console.log(b);
-                    const addonadd = await knex.insert(b).into('Order_Addon');
-                }
-            }
+            // if (all[0].AddOn[i].length != 0) {
+            //     for (x in all[0].AddOn[i]) {
+            //         console.log(all[0].AddOn[i][x].AddOnNo)
+            //         const b = { orderNo: id[0], addOnNo: all[0].AddOn[i][x].AddOnNo };
+            //         console.log("b")
+            //         console.log(b);
+            //         const addonadd = await knex.insert(b).into('Order_Addon');
+            //     }
+            // }
         }
     },
     getOrder: (no) => {
@@ -88,13 +88,13 @@ exports.addOrder = async (userNo, orders, total, tableNo, role) => {
         console.log('tableNo', tableNo)
         var table = JSON.parse(tableNo)
         var all = JSON.parse(orders);
-        const URole = JSON.parse(role)
         let getBill = []
         if (table !== null) {
             getBill = await bill.getBillByTableNo(table);
         } else {
             // Select userNo in bill 
-            getBill = await bill.showBill(userNo, URole);
+            console.log("show bill ")
+            getBill = await bill.showBill(userNo, role);
         }
         console.log(getBill[0]);
         // got null create
