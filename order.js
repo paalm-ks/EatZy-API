@@ -89,6 +89,7 @@ exports.addOrder = async (userNo, orders, total, table, role) => {
         console.log("CustomerOrder : " + orders);
         console.log("Total : " + total)
         console.log('tableNo : ' + table)
+
         let tableNo = 0;
         if (!table) {
             tableNo = 0;
@@ -98,6 +99,7 @@ exports.addOrder = async (userNo, orders, total, table, role) => {
         console.log(tableNo)
         console.log("role : " + role)
         var all = JSON.parse(orders);
+        var Urole = JSON.parse(role)
         let getBill = []
         if (tableNo !== 0) {
             console.log("get bill tableNo ")
@@ -105,7 +107,7 @@ exports.addOrder = async (userNo, orders, total, table, role) => {
         } else {
             // Select userNo in bill 
             console.log("show bill ")
-            getBill = await bill.showBill(userNo, role);
+            getBill = await bill.showBill(userNo, Urole);
         }
         console.log("getBill")
         console.log(getBill[0])
@@ -119,12 +121,12 @@ exports.addOrder = async (userNo, orders, total, table, role) => {
 
 
             if (tableNo !== 0) {
-                bill.addBill(current, time, userNo, tableNo, role);
+                bill.addBill(current, time, userNo, tableNo, Urole);
                 newBill = await bill.getBillByTableNo(tableNo);
             } else {
                 // Select userNo in bill
-                bill.addBill(current, time, userNo, { tableNo: null }, role);
-                newBill = await bill.showBill(userNo, role);
+                bill.addBill(current, time, userNo, { tableNo: null }, Urole);
+                newBill = await bill.showBill(userNo, Urole);
             }
             console.log("newBill : " + newBill[0].billNo);
             console.log("tableNo : " + newBill[0].tableNo)
