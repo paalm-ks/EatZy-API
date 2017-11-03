@@ -108,8 +108,9 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/promotion', function (req, res) {
-        promotion.showPromotion().then(rest => {
+    app.get('/promotion/:rest', function (req, res) {
+        const rest = req.params.rest
+        promotion.showPromotion(rest).then(rest => {
             res.json(rest);
         })
     });

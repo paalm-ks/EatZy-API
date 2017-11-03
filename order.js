@@ -7,14 +7,23 @@ const services = {
     addOrder: async (all, billNo) => {
         const billa = await bill.getBillByNo(billNo);
         const status = "waiting"
-        if (billa[0].tableNo == null) {
+        if (billa[0].tableNo === null) {
             const statusNew = "reserve"
             statusNew.replace(status)
             return status
         }
         console.log(status)
         for (i in all[0].Menu) {
-            const a = { menuNo: all[0].Menu[i].menuNo, quantity: all[0].Menu[i].quantity, amount: all[0].Menu[i].menuPrice, billNo: billNo, orderStatus: status };
+            let date = new Date();
+            let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+            let time = `${date.toTimeString().substring(0, 8)}`;
+            const a = {
+                menuNo: all[0].Menu[i].menuNo,
+                quantity: all[0].Menu[i].quantity,
+                amount: all[0].Menu[i].menuPrice,
+                billNo: billNo, orderStatus: status,
+                orderDate: current, orderTime: time
+            };
             console.log("a")
             console.log(a);
             const id = await knex.insert(a).into('CustomerOrder').then(function (orderNo) {
@@ -77,37 +86,43 @@ exports.addOrder = async (userNo, orders, total, tableNo, role) => {
         console.log("CustomerOrder : " + orders);
         console.log("Total : " + total)
         console.log('tableNo', tableNo)
+        var table = JSON.parse(tableNo)
         var all = JSON.parse(orders);
         const URole = JSON.parse(role)
         let getBill = []
-        if (tableNo !== null) {
-            getBill = await bill.getBillByTableNo(tableNo);
+        if (table !== null) {
+            getBill = await bill.getBillByTableNo(table);
         } else {
             // Select userNo in bill 
             getBill = await bill.showBill(userNo, URole);
         }
         console.log(getBill[0]);
         // got null create
-        if (getBill[0] == null) {
+        if (getBill[0] === null) {
             // Create Bill
             console.log("Create Bill")
             const date = new Date()
             const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
             const time = `${date.toTimeString().substring(0, 8)}`;
-            bill.addBill(current, time, userNo, tableNo, URole);
-            const newBill = await bill.showBill(userNo, URole);
+            const newBill= []
+            bill.addBill(current, time, userNo, table, URole);
+            if (table !== null) {
+                newBill = await bill.getBillByTableNo(table);
+            } else {
+                // Select userNo in bill 
+                newBill = await bill.showBill(userNo, URole);
+            }
             console.log("newBill : " + newBill[0].billNo);
             //add userNo to new BillNo
-            bill.addUserNoToBill(userNo, newBill[0].billNo);
-            bill.updateTotalAmount(newBill[0].billNo, total)
+            bill.updateTotalAmount(newBill[0].billNo, total);
             services.addOrder(all, newBill[0].billNo);
-        } else if (getBill[0] != null) {
+        } else if (getBill[0] !== null) {
             console.log("Bill Exist")
-            const oldBill = await bill.showBill(userNo, URole);
-            console.log("Bill No : " + oldBill[0].billNo);
-            bill.updateTotalAmount(oldBill[0].billNo, total);
-            console.log("update : " + total + " To Bill " + oldBill[0].billNo);
-            services.addOrder(all, oldBill[0].billNo);
+            const oldBill = getBill
+            console.log("Bill No : " + getBill[0].billNo);
+            bill.updateTotalAmount(getBill[0].billNo, total);
+            console.log("update : " + total + " To Bill " + getBill[0].billNo);
+            services.addOrder(all, getBill[0].billNo);
         }
     } catch (err) {
         console.log(err)
