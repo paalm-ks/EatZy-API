@@ -165,7 +165,7 @@ exports.decreaseTotalAmount = async (billNo, amount) => {
                         const intLast = parseInt(last)
                         const current = intLast - amount;
                         response = await services.decreaseTotalAmount(billNo, current);
-                        if (current >= 0) {
+                        if (current <= 0) {
                                 const cancelled = await services.updateBillStatus(billNo);
                                 console.log('cancelled')
                         }
