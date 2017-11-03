@@ -4,10 +4,13 @@ var reserve = require('./reserve');
 
 const services = {
 
-    addOrder: async (all, billNo) => {
-        const billa = await bill.getBillByNo(billNo);
+    addOrder: async (all, billNo, tableNo) => {
+        console.log("in addOrder")
+        console.log(all[0])
+        console.log("billNo : " + billNo)
+        console.log("tableNo : " + tableNo)
         const status = "waiting"
-        if (billa[0].tableNo === null) {
+        if (tableNo == null) {
             const statusNew = "reserve"
             statusNew.replace(status)
             return status
@@ -31,15 +34,15 @@ const services = {
             });
             console.log("i : " + i)
             console.log("id : " + id[0])
-            if (all[0].AddOn[i].length != 0) {
-                for (x in all[0].AddOn[i]) {
-                    console.log(all[0].AddOn[i][x].AddOnNo)
-                    const b = { orderNo: id[0], addOnNo: all[0].AddOn[i][x].AddOnNo };
-                    console.log("b")
-                    console.log(b);
-                    const addonadd = await knex.insert(b).into('Order_Addon');
-                }
-            }
+            // if (all[0].AddOn[i].length != 0) {
+            //     for (x in all[0].AddOn[i]) {
+            //         console.log(all[0].AddOn[i][x].AddOnNo)
+            //         const b = { orderNo: id[0], addOnNo: all[0].AddOn[i][x].AddOnNo };
+            //         console.log("b")
+            //         console.log(b);
+            //         const addonadd = await knex.insert(b).into('Order_Addon');
+            //     }
+            // }
         }
     },
     getOrder: (no) => {
@@ -80,20 +83,23 @@ const services = {
 
 }
 
-exports.addOrder = async (userNo, orders, total, tableNo, role) => {
+exports.addOrder = async (userNo, orders, total, table, role) => {
     try {
         console.log("User : " + userNo);
         console.log("CustomerOrder : " + orders);
         console.log("Total : " + total)
-        console.log('tableNo : '+ tableNo) 
-        if(tableNo = "undefined"){ 
-            tableNo = null; 
-        } 
+        console.log('tableNo : ' + table)
+        let tableNo = 0;
+        if (!table) {
+            tableNo = 0;
+        } else {
+            tableNo = JSON.parse(table);
+        }
         console.log(tableNo)
-        console.log("role : "+role) 
+        console.log("role : " + role)
         var all = JSON.parse(orders);
         let getBill = []
-        if (tableNo !== null) {
+        if (tableNo !== 0) {
             console.log("get bill tableNo ")
             getBill = await bill.getBillByTableNo(tableNo);
         } else {
@@ -103,37 +109,45 @@ exports.addOrder = async (userNo, orders, total, tableNo, role) => {
         }
         console.log("getBill")
         console.log(getBill[0])
+        let newBill = []
         if (!getBill[0]) {
             // Create Bill
             console.log("Create Bill")
             const date = new Date()
             const current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
             const time = `${date.toTimeString().substring(0, 8)}`;
-            let newBill= []
-            bill.addBill(current, time, userNo, tableNo, role);
-            if (tableNo !== null) {
+
+
+            if (tableNo !== 0) {
+                bill.addBill(current, time, userNo, tableNo, role);
                 newBill = await bill.getBillByTableNo(tableNo);
             } else {
-                // Select userNo in bill 
-                console.log("show newBill")
+                // Select userNo in bill
+                bill.addBill(current, time, userNo, { tableNo: null }, role);
                 newBill = await bill.showBill(userNo, role);
             }
             console.log("newBill : " + newBill[0].billNo);
+            console.log("tableNo : " + newBill[0].tableNo)
             //add userNo to new BillNo
             bill.updateTotalAmount(newBill[0].billNo, total);
             console.log("after updateTotal")
-            order.addOrder(all, newBill[0].billNo);
+            services.addOrder(all, newBill[0].billNo, newBill[0].tableNo);
             console.log("after addOrder")
-            
-            
-        } 
-        else {
-            console.log("Bill Exist")
-            const oldBill = getBill
+        }
+
+        if (newBill[0]) {
+            console.log("Bill No : " + newBill[0].billNo);
+            bill.updateTotalAmount(newBill[0].billNo, total);
+            console.log("update : " + total + " To Bill " + newBill[0].billNo);
+            services.addOrder(all, newBill[0].billNo, tableNo);
+            console.log("addOrder pass")
+        }
+
+        if (getBill[0]) {
             console.log("Bill No : " + getBill[0].billNo);
             bill.updateTotalAmount(getBill[0].billNo, total);
             console.log("update : " + total + " To Bill " + getBill[0].billNo);
-            services.addOrder(all, getBill[0].billNo);
+            services.addOrder(all, getBill[0].billNo, tableNo);
             console.log("addOrder pass")
         }
     } catch (err) {
