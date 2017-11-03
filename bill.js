@@ -83,7 +83,6 @@ exports.getLastTotal = async (no) => {
 exports.showBill = async (no, role) => {
         try {
                 const response = await services.getBill(no, role);
-                console.log(response)
                 return response;
         } catch (err) {
                 console.log(err)
