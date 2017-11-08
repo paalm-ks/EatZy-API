@@ -31,19 +31,20 @@ const services = {
             .where('Reservation.date', current)
             .andWhere('Reservation.reserveNo', '>', no)
     },
-    getCountReserve: () => {
+    getCountReserve: (branchNo) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex('Reservation').count('reserveStatus as status')
             .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
+            .andWhere('Reservation.branchNo',branchNo)
     },
-    getCountBefore: (no) => {
+    getCountBefore: (userNo,branchNo) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         const reserveNo = knex.select('Reservation.reserveNo')
             .from('Reservation')
-            .where('Reservation.userNo', no)
+            .where('Reservation.userNo', userNo)
             .andWhere('reserveRole', 'U')
             .andWhere('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
@@ -52,6 +53,7 @@ const services = {
             .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.reserveNo', '<', reserveNo)
             .andWhere('Reservation.date', current)
+            .andWhere('Reservation.branchNo',branchNo)
     },
     callReserve: () => {
         let date = new Date();
@@ -202,18 +204,18 @@ exports.callReserveMax = async () => {
     }
 }
 
-exports.countReserve = async () => {
+exports.countReserve = async (branchNo) => {
     try {
-        const response = await services.getCountReserve();
+        const response = await services.getCountReserve(branchNo);
         return response;
     } catch (err) {
         console.log(err)
     }
 }
 
-exports.countBefore = async (no) => {
+exports.countBefore = async (userNo,branchNo) => {
     try {
-        const response = await services.getCountBefore(no);
+        const response = await services.getCountBefore(userNo,branchNo);
         return response;
     } catch (err) {
         console.log(err)

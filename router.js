@@ -230,15 +230,17 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/reserveCount', function (req, res) {
-        reserve.countReserve().then(rest => {
+    app.get('/reserveCount/:branchNo', function (req, res) {
+        const branchNo = req.params.branchNo;
+        reserve.countReserve(branchNo).then(rest => {
             res.json(rest);
         })
     });
 
-    app.get('/reserveBefore/:no', function (req, res) {
-        const no = req.params.no;
-        reserve.countBefore(no).then(rest => {
+    app.get('/reserveBefore/:userNo&:branchNo', function (req, res) {
+        const userNo = req.params.userNo;
+        const branchNo = req.params.branchNo
+        reserve.countBefore(userNo,branchNo).then(rest => {
             res.json(rest);
         })
     });
