@@ -14,12 +14,14 @@ const services = {
                         .from('Promotion')
                         .where('proNo',no)
         },
-        getPromotionToday: (restNo) => {
+        getPromotionToday: (branchNo) => {
                 return knex.select()
                         .from('Promotion')
+                        .join('Branch_Promotion',{ 'Branch_Promotion.promotionNo': 'Promotion.proNo' }) 
                         .where('proFromDate' , '<=', current)
                         .andWhere('proToDate' , '>=' ,current)
-                        .andWhere('restNo',restNo)
+                        .andWhere('branchNo',branchNo)
+                        .andWhere('isAvaliable',1)
         }
 }
 
@@ -48,9 +50,9 @@ exports.showPromotionByNo = async (no) => {
         }
 }
 
-exports.showPromotionToday = async (restNo) => {
+exports.showPromotionToday = async (branchNo) => {
         try {
-                const response = await services.getPromotionToday(restNo);
+                const response = await services.getPromotionToday(branchNo);
                 for(i in response){
                         const picpath = 'http://13.229.77.223:8080/springoeb/images/';
                         const pic = response[i].proPicPath;

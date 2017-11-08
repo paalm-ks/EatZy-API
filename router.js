@@ -125,9 +125,9 @@ module.exports = function (app) {
             })
     })
 
-    app.get('/promotionToday/:restNo', function (req, res) {
-        const restNo = req.params.restNo;
-        promotion.showPromotionToday(restNo)
+    app.get('/promotionToday/:branchNo', function (req, res) {
+        const branchNo = req.params.branchNo;
+        promotion.showPromotionToday(branchNo)
             .then(rest => {
                 res.json(rest);
             })
