@@ -1,11 +1,13 @@
 var knex = require('./knex');
 
 const services = {
-        getMenuSet: () => {
+        getMenuSet: (branchNo) => {
                 return knex.distinct('set.menuSetNo', 'Menu.menuNameTH as menuSetName', 'Menu.menuPrice')                       
                         .from('Menu')
                         .join('Menu_MenuSet as set', { 'set.menuSetNo': 'Menu.menuNo' })
+                        .join('Branch_Menu' , { 'Branch_Menu.menuNo':'Menu.menuNo'})
                         .orderBy('set.menuSetNo', 'asc')
+                        .where('Branch_Menu.branchNo',branchNo)
                         .andWhere('Menu.menuFlag','S');
         },
         getMenuBySet: (set) => {
@@ -34,9 +36,9 @@ const services = {
 
 }
 
-exports.showMenuSet = async () => {
+exports.showMenuSet = async (branchNo) => {
         try {
-                const response = await services.getMenuSet();
+                const response = await services.getMenuSet(branchNo);
                 return response;
         } catch (err) {
                 console.log(err)

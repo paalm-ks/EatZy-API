@@ -18,11 +18,13 @@ const services = {
                 .whereBetween('menuPrice', [begin,end])
                 .orderBy('menuPrice', 'asc');      
         },
-        getMenuByGroup: (groupNo) => {
+        getMenuByGroup: (groupNo,branchNo) => {
                 return knex.select()
                         .from('Menu')
                         .join('MenuGroup', { 'MenuGroup.menuGroupNo': 'Menu.menuGroupNo' })
+                        .join('Branch_Menu', {'Branch_Menu.menuNo':'Menu.menuNo'})
                         .where('MenuGroup.MenuGroupNo', groupNo)
+                        .andWhere('Branch_Menu.branchNo',branchNo)
                         .orderBy('menuNameTH', 'asc')     
         },
         getMenuByType: (typeNo) => {
@@ -58,9 +60,9 @@ exports.showMenu = async () => {
         }
 }
 
-exports.showMenuByGroup = async (groupNo) => {
+exports.showMenuByGroup = async (groupNo,branchNo) => {
         try {
-                const response = await services.getMenuByGroup(groupNo);
+                const response = await services.getMenuByGroup(groupNo,branchNo);
                 return response;
         } catch (err) {
                 console.log(err)

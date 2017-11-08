@@ -63,9 +63,10 @@ module.exports = function (app) {
             })
     })
 
-    app.get('/menuByGroup/:groupNo', function (req, res) {
+    app.get('/menuByGroup/:groupNo&:branchNo', function (req, res) {
         const groupNo = req.params.groupNo;
-        menu.showMenuByGroup(groupNo)
+        const branchNo = req.params.branchNo;
+        menu.showMenuByGroup(groupNo,branchNo)
             .then(rest => {
                 res.json(rest);
             })
@@ -131,8 +132,9 @@ module.exports = function (app) {
             })
     })
 
-    app.get('/MenuSet', function (req, res) {
-        menuSet.showMenuSet().then(rest => {
+    app.get('/MenuSet/:branchNo', function (req, res) {
+        const branchNo = req.params.branchNo;
+        menuSet.showMenuSet(branchNo).then(rest => {
             res.json(rest);
         })
     });
