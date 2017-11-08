@@ -240,7 +240,7 @@ module.exports = function (app) {
 
     app.get('/reserveBefore/:userNo&:branchNo', function (req, res) {
         const userNo = req.params.userNo;
-        const branchNo = req.params.branchNo
+        const branchNo = req.params.branchNo;
         reserve.countBefore(userNo,branchNo).then(rest => {
             res.json(rest);
         })
@@ -252,8 +252,9 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/reserveCallMax', function (req, res) {
-        reserve.callReserveMax().then(rest => {
+    app.get('/reserveCallMax/:branchNo', function (req, res) {
+        const branchNo = req.params.branchNo;
+        reserve.callReserveMax(branchNo).then(rest => {
             res.json(rest);
         })
     });

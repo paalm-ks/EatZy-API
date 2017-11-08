@@ -63,12 +63,15 @@ const services = {
             .andWhere('Reservation.date', current)
         return knex('Reservation').select().where('Reservation.time', 'in', sub)
     },
-    callReserveMax: () => {
+    callReserveMax: (branchNo) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         const sub = knex.max('time as t').from('Reservation')
             .where('Reservation.date', current)
-        return knex('Reservation').select('*').where('Reservation.time', 'in', sub)
+        return knex('Reservation')
+                .select('*')
+                .where('Reservation.time', 'in', sub)
+                .andWhere('Reservation.branchNo',branchNo);
     },
     acceptQueue: (code, role) => {
         let date = new Date();
@@ -195,9 +198,9 @@ exports.callReserve = async () => {
     }
 }
 
-exports.callReserveMax = async () => {
+exports.callReserveMax = async (branchNo) => {
     try {
-        const response = await services.callReserveMax();
+        const response = await services.callReserveMax(branchNo);
         return response;
     } catch (err) {
         console.log(err)
