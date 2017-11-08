@@ -23,13 +23,14 @@ const services = {
             .andWhere('Reservation.reserveStatus', 'reserved')
             .andWhere('reserveRole', 'U')
     },
-    getReserve: (no) => {
+    getReserve: (reserveNo,branchNo) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex.select('*')
             .from('Reservation')
             .where('Reservation.date', current)
-            .andWhere('Reservation.reserveNo', '>', no)
+            .andWhere('Reservation.branchNo',branchNo)
+            .andWhere('Reservation.reserveNo', '>', reserveNo)
     },
     getCountReserve: (branchNo) => {
         let date = new Date();
@@ -55,12 +56,13 @@ const services = {
             .andWhere('Reservation.date', current)
             .andWhere('Reservation.branchNo',branchNo)
     },
-    callReserve: () => {
+    callReserve: (branchNo) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         const sub = knex.min('time as t').from('Reservation')
             .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
+            .andWhere('Reservation.branchNo',branchNo)
         return knex('Reservation').select().where('Reservation.time', 'in', sub)
     },
     callReserveMax: (branchNo) => {
@@ -170,22 +172,23 @@ exports.cancelQueue = async (code, role) => {
     }
 }
 
-exports.showReserve = async (no) => {
+exports.showReserve = async (reserveNo,branchNo) => {
     try {
-        const response = await services.getReserve(no);
+        const response = await services.getReserve(reserveNo,branchNo);
         return response;
     } catch (err) {
         console.log(err)
     }
 }
 
-exports.callReserve = async () => {
+exports.callReserve = async (branchNo) => {
     try {
-        const response = await services.callReserve();
+        const response = await services.callReserve(branchNo);
         if (response.length !== 0) {
             const reserve = response[0].reserveNo
             if (reserve !== null) {
-                const Next = await this.showReserve(reserve);
+                const Next = await this.showReserve(reserve,branchNo);
+                console.log(Next)
                 response[0].Next = Next;
                 return response
             } else {

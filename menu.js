@@ -3,8 +3,11 @@ var addon = require('./addon');
 var menuGroup = require('./menuType')
 
 const services = {
-        getMenu: () => {
+        getMenu: (branchNo) => {
                 return knex.select().from('Menu')
+                .join('Branch_Menu', {'Branch_Menu.menuNo' : 'Menu.menuNo'})
+                .where('Branch_Menu.branchNo',branchNo)
+                .andWhere('Branch_Menu.isAvailable',1)
                 .whereNotNull('menuGroupNo')     
                 .orderBy('menuNameTH', 'asc');              
         },
@@ -53,9 +56,9 @@ const services = {
 }
 
 //return data when function call
-exports.showMenu = async () => {
+exports.showMenu = async (branchNo) => {
         try {
-                const response = await services.getMenu();
+                const response = await services.getMenu(branchNo);
                 return response;
         } catch (err) {
                 console.log(err)

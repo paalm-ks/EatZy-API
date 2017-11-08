@@ -42,8 +42,9 @@ module.exports = function (app) {
         res.sendFile(__dirname + '/index.html')
     });
 
-    app.get('/menu', function (req, res) {
-        menu.showMenu().then(rest => {
+    app.get('/menu/:branchNo', function (req, res) {
+        const branchNo = req.params.branchNo;
+        menu.showMenu(branchNo).then(rest => {
             res.json(rest);
         })
     });
@@ -225,8 +226,10 @@ module.exports = function (app) {
             })
     });
 
-    app.get('/reserve', function (req, res) {
-        reserve.showReserve().then(rest => {
+    app.get('/reserve/:reserveNo&:branchNo', function (req, res) {
+        const reserveNo = req.params.reserveNo;
+        const branchNo = req.params.branchNo;
+        reserve.showReserve(reserveNo,branchNo).then(rest => {
             res.json(rest);
         })
     });
@@ -246,8 +249,9 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/reserveCall', function (req, res) {
-        reserve.callReserve().then(rest => {
+    app.get('/reserveCall/:branchNo', function (req, res) {
+        const branchNo = req.params.branchNo;
+        reserve.callReserve(branchNo).then(rest => {
             res.json(rest);
         })
     });
@@ -328,10 +332,10 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/userOrder/:no&:role', function (req, res) {
-        const no = req.params.no;
+    app.get('/userOrder/:userNo&:role', function (req, res) {
+        const userNo = req.params.userNo;
         const role = req.params.role;
-        myOrder.showUserOrder(no, role).then(rest => {
+        myOrder.showUserOrder(userNo, role).then(rest => {
             res.json(rest);
         })
     });
@@ -342,8 +346,9 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/allOrder', function (req, res) {
-        order.showAllOrder().then(rest => {
+    app.get('/allOrder/:branchNo', function (req, res) {
+        const branchNo = req.params.branchNo;
+        order.showAllOrder(branchNo).then(rest => {
             res.json(rest);
         })
     });

@@ -61,7 +61,7 @@ const services = {
             .update('orderStatus', status);
     },
 
-    getAllOrder: () => {
+    getAllOrder: (branchNo) => {
         return knex.select('CustomerTable.branchNo', 'Bill.tableNo', 'Bill.billNo',
             'CustomerOrder.orderNo',
             'Menu.menuNo', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.orderStatus', 'CustomerOrder.amount')
@@ -72,6 +72,7 @@ const services = {
             .join('Menu', 'Menu.menuNo', 'CustomerOrder.menuNo')
             .where('Bill.billStatus', 'unpaid')
             .andWhereNot('CustomerOrder.orderStatus', 'cancelled')
+            .andWhere('CustomerTable.branchNo',branchNo)
         // .andWhereNot('CustomerOrder.orderStatus', 'reserved')
     },
     getAllOrderAddon: (orderNo) => {
@@ -181,9 +182,9 @@ exports.updateOrderStatus = async (orderNo, value, billNo, amount) => {
     }
 }
 
-exports.showAllOrder = async () => {
+exports.showAllOrder = async (branchNo) => {
     try {
-        const response = await services.getAllOrder();
+        const response = await services.getAllOrder(branchNo);
         for (i in response) {
             console.log(response[i].orderNo);
             const addon = await services.getAllOrderAddon(response[i].orderNo);
