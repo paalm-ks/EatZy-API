@@ -72,9 +72,10 @@ module.exports = function (app) {
             })
     })
 
-    app.get('/menuByType/:typeNo', function (req, res) {
+    app.get('/menuByType/:typeNo&:branchNo', function (req, res) {
         const typeNo = req.params.typeNo;
-        menu.showMenuByType(typeNo)
+        const branchNo = req.params.branchNo;
+        menu.showMenuByType(typeNo,branchNo)
             .then(rest => {
                 res.json(rest);
             })

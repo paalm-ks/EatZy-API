@@ -27,12 +27,14 @@ const services = {
                         .andWhere('Branch_Menu.branchNo',branchNo)
                         .orderBy('menuNameTH', 'asc')     
         },
-        getMenuByType: (typeNo) => {
+        getMenuByType: (typeNo,branchNo) => {
                 return knex.select()
                         .from('Menu')
                         .join('MenuGroup', { 'MenuGroup.menuGroupNo': 'Menu.menuGroupNo' })
                         .join('MenuType', { 'MenuType.menuTypeNo': 'MenuGroup.menuTypeNo' })
+                        .join('Branch_Menu', {'Branch_Menu.menuNo':'Menu.menuNo'})
                         .where('MenuType.MenuTypeNo', typeNo)
+                        .andWhere('Branch_Menu.branchNo',branchNo)
                         .orderBy('menuNameTH', 'asc')     
         },
         getMenuByNo: (input) => {
@@ -69,11 +71,11 @@ exports.showMenuByGroup = async (groupNo,branchNo) => {
         }
 }
 
-exports.showMenuByType = async (typeNo) => {
+exports.showMenuByType = async (typeNo,branchNo) => {
         try {
                 const group = await menuGroup.showMenuGroup(typeNo);
                 for (i in group) {
-                        const menuG = await services.getMenuByGroup(group[i].menuGroupNo);
+                        const menuG = await services.getMenuByGroup(group[i].menuGroupNo, branchNo);
                         group[i].menuG = menuG
                 }
                 return group;
