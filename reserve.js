@@ -12,7 +12,7 @@ const services = {
             console.log(id)
         });
     },
-    getReserveByUser: (no) => {
+    getReserveByUser: (no, branch) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex.select()
@@ -21,15 +21,16 @@ const services = {
             .where('Reservation.userNo', no)
             .andWhere('Reservation.date', current)
             .andWhere('Reservation.reserveStatus', 'reserved')
-            .andWhere('reserveRole', 'U')
+            .andWhere('Reservation.reserveRole', 'U')
+            .andWhere('Reservation.branchNo', branch)
     },
-    getReserve: (reserveNo,branchNo) => {
+    getReserve: (reserveNo, branchNo) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex.select('*')
             .from('Reservation')
             .where('Reservation.date', current)
-            .andWhere('Reservation.branchNo',branchNo)
+            .andWhere('Reservation.branchNo', branchNo)
             .andWhere('Reservation.reserveNo', '>', reserveNo)
     },
     getCountReserve: (branchNo) => {
@@ -38,9 +39,10 @@ const services = {
         return knex('Reservation').count('reserveStatus as status')
             .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
-            .andWhere('Reservation.branchNo',branchNo)
+            .andWhere('Reservation.branchNo', branchNo)
     },
-    getCountBefore: (userNo,branchNo) => {
+
+    getCountBefore: (userNo, branchNo) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         const reserveNo = knex.select('Reservation.reserveNo')
@@ -49,12 +51,14 @@ const services = {
             .andWhere('reserveRole', 'U')
             .andWhere('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
+            .andWhere('Reservation.branchNo', branchNo)
 
         return knex('Reservation').count('reserveStatus as status')
             .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.reserveNo', '<', reserveNo)
             .andWhere('Reservation.date', current)
-            .andWhere('Reservation.branchNo',branchNo)
+            .andWhere('Reservation.branchNo', branchNo)
+
     },
     callReserve: (branchNo) => {
         let date = new Date();
@@ -62,18 +66,21 @@ const services = {
         const sub = knex.min('time as t').from('Reservation')
             .where('Reservation.reserveStatus', 'reserved')
             .andWhere('Reservation.date', current)
-            .andWhere('Reservation.branchNo',branchNo)
+            .andWhere('Reservation.branchNo', branchNo)
         return knex('Reservation').select().where('Reservation.time', 'in', sub)
     },
     callReserveMax: (branchNo) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         const sub = knex.max('time as t').from('Reservation')
+            .whereNotNull('Reservation.queCode')
             .where('Reservation.date', current)
+            .andWhere('Reservation.branchNo', branchNo);
         return knex('Reservation')
-                .select('*')
-                .where('Reservation.time', 'in', sub)
-                .andWhere('Reservation.branchNo',branchNo);
+            .select('*')
+            .where('Reservation.time', 'in', sub)
+            .andWhere('Reservation.branchNo', branchNo);
+
     },
     acceptQueue: (code, role) => {
         let date = new Date();
@@ -85,7 +92,7 @@ const services = {
             .andWhere('reserveRole', role)
             .update('reserveStatus', 'arrived')
     },
-    cancelQueue: (code, role) => {
+    cancelQueue: (code, role, branchNo) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex('Reservation')
@@ -93,9 +100,10 @@ const services = {
             .andWhere('reserveStatus', 'reserved')
             .andWhere('date', current)
             .andWhere('reserveRole', role)
+            .andWhere('branchNo', branchNo)
             .update('reserveStatus', 'cancelled')
     },
-    getUserNobyQueCode: (code, role) => {
+    getUserNobyQueCode: (code, role, branchNo) => {
         let date = new Date();
         let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
         return knex.select('userNo')
@@ -103,6 +111,7 @@ const services = {
             .where('Reservation.date', current)
             .andWhere('queCode', code)
             .andWhere('reserveRole', role)
+            .andWhere('branchNo', branchNo)
     }
 }
 
@@ -148,12 +157,12 @@ exports.acceptQueue = async (code, role) => {
     }
 }
 
-exports.cancelQueue = async (code, role) => {
+exports.cancelQueue = async (code, role, branchNo) => {
     try {
-        const response = await services.cancelQueue(code, role);
-        const user = await services.getUserNobyQueCode(code, role);
+        const response = await services.cancelQueue(code, role, branchNo);
+        const user = await services.getUserNobyQueCode(code, role, branchNo);
         const userNo = user[0].userNo;
-        const billed = await bill.showBill(userNo);
+        const billed = await bill.showBill(userNo, role);
         if (billed.length !== 0) {
             const billNo = billed[0].billNo
             const billCancel = await bill.updateBillStatus(billNo)
@@ -172,9 +181,9 @@ exports.cancelQueue = async (code, role) => {
     }
 }
 
-exports.showReserve = async (reserveNo,branchNo) => {
+exports.showReserve = async (reserveNo, branchNo) => {
     try {
-        const response = await services.getReserve(reserveNo,branchNo);
+        const response = await services.getReserve(reserveNo, branchNo);
         return response;
     } catch (err) {
         console.log(err)
@@ -187,7 +196,7 @@ exports.callReserve = async (branchNo) => {
         if (response.length !== 0) {
             const reserve = response[0].reserveNo
             if (reserve !== null) {
-                const Next = await this.showReserve(reserve,branchNo);
+                const Next = await this.showReserve(reserve, branchNo);
                 console.log(Next)
                 response[0].Next = Next;
                 return response
@@ -219,9 +228,9 @@ exports.countReserve = async (branchNo) => {
     }
 }
 
-exports.countBefore = async (userNo,branchNo) => {
+exports.countBefore = async (userNo, branchNo) => {
     try {
-        const response = await services.getCountBefore(userNo,branchNo);
+        const response = await services.getCountBefore(userNo, branchNo);
         return response;
     } catch (err) {
         console.log(err)
@@ -236,9 +245,9 @@ exports.addReserve = (num, user, branch, code, role) => {
     }
 }
 
-exports.showReserveByUser = async (no) => {
+exports.showReserveByUser = async (no, branch) => {
     try {
-        const response = await services.getReserveByUser(no);
+        const response = await services.getReserveByUser(no, branch);
         return response;
     } catch (err) {
         console.log(err)

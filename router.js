@@ -67,7 +67,7 @@ module.exports = function (app) {
     app.get('/menuByGroup/:groupNo&:branchNo', function (req, res) {
         const groupNo = req.params.groupNo;
         const branchNo = req.params.branchNo;
-        menu.showMenuByGroup(groupNo,branchNo)
+        menu.showMenuByGroup(groupNo, branchNo)
             .then(rest => {
                 res.json(rest);
             })
@@ -76,7 +76,8 @@ module.exports = function (app) {
     app.get('/menuByType/:typeNo&:branchNo', function (req, res) {
         const typeNo = req.params.typeNo;
         const branchNo = req.params.branchNo;
-        menu.showMenuByType(typeNo,branchNo)
+        console.log('menuByType', typeNo + ' ' + branchNo )
+        menu.showMenuByType(typeNo, branchNo)
             .then(rest => {
                 res.json(rest);
             })
@@ -218,9 +219,10 @@ module.exports = function (app) {
         reserve.addReserve(num, user, branch, code, role);
     });
 
-    app.get('/reserveByUser/:no', function (req, res) {
+    app.get('/reserveByUser/:no&:branch', function (req, res) {
         const no = req.params.no;
-        reserve.showReserveByUser(no)
+        const branch = req.params.branch;
+        reserve.showReserveByUser(no, branch)
             .then(rest => {
                 res.json(rest);
             })
@@ -229,7 +231,7 @@ module.exports = function (app) {
     app.get('/reserve/:reserveNo&:branchNo', function (req, res) {
         const reserveNo = req.params.reserveNo;
         const branchNo = req.params.branchNo;
-        reserve.showReserve(reserveNo,branchNo).then(rest => {
+        reserve.showReserve(reserveNo, branchNo).then(rest => {
             res.json(rest);
         })
     });
@@ -244,7 +246,7 @@ module.exports = function (app) {
     app.get('/reserveBefore/:userNo&:branchNo', function (req, res) {
         const userNo = req.params.userNo;
         const branchNo = req.params.branchNo;
-        reserve.countBefore(userNo,branchNo).then(rest => {
+        reserve.countBefore(userNo, branchNo).then(rest => {
             res.json(rest);
         })
     });
@@ -277,10 +279,11 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/cancelQueue/:code&:role', function (req, res) {
+    app.get('/cancelQueue/:code&:role&:branchNo', function (req, res) {
         const code = req.params.code;
         const role = req.params.role;
-        reserve.cancelQueue(code, role).then(rest => {
+        const branchNo = req.params.branchNo;
+        reserve.cancelQueue(code, role, branchNo).then(rest => {
             res.json(rest);
         })
     });
@@ -312,8 +315,8 @@ module.exports = function (app) {
         const orderNo = req.params.orderNo;
         const value = req.params.value;
         const billNo = req.params.billNo;
-        const amount = req.params.amount;        
-        order.updateOrderStatus(orderNo, value,billNo,amount).then(rest => {
+        const amount = req.params.amount;
+        order.updateOrderStatus(orderNo, value, billNo, amount).then(rest => {
             res.json(rest);
         })
     });

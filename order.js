@@ -91,8 +91,8 @@ exports.addOrder = async (userNo, orders, total, table, role) => {
         console.log("Total : " + total)
         console.log('tableNo : ' + table)
 
-        let tableNo = 0;
-        if (!table) {
+        let tableNo = Number;
+        if (table === null) {
             tableNo = 0;
         } else {
             tableNo = JSON.parse(table);
