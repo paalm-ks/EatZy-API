@@ -39,6 +39,7 @@ const services = {
                         .join('Branch_Menu', { 'Branch_Menu.menuNo': 'Menu.menuNo' })
                         .where('MenuType.MenuTypeNo', typeNo)
                         .andWhere('Branch_Menu.branchNo', branchNo)
+                        .andWhere('Branch_Menu.isAvailable', 1)
                         .orderBy('menuNameTH', 'asc')
         },
         getMenuByNo: (input) => {
@@ -60,6 +61,12 @@ const services = {
 exports.showMenu = async (branchNo) => {
         try {
                 const response = await services.getMenu(branchNo);
+                for(i in response){
+                        const picpath = 'http://13.229.77.223:8080/springoeb/images/';
+                        const pic = response[i].menuPicPath;
+                        const newPicPath = picpath+pic                  
+                        response[i].menuPicPath = newPicPath
+                }
                 return response;
         } catch (err) {
                 console.log(err)

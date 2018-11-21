@@ -7,14 +7,16 @@ const services = {
     addOrder: async (all, billNo, tableNo) => {
         console.log("in addOrder")
         console.log(all[0])
+        console.log(all[0].Menu)
         console.log("billNo : " + billNo)
         console.log("tableNo : " + tableNo)
-        const status = "waiting"
-        if (tableNo == null) {
-            const statusNew = "reserve"
-            statusNew.replace(status)
-            return status
-        }
+        let status = "waiting"
+        // if (tableNo === null) {
+        //     let statusNew = "reserve"
+        //     statusNew.replace(status)
+        //     console.log(status)
+        //     return status
+        // }
         console.log(status)
         for (i in all[0].Menu) {
             let date = new Date();
@@ -34,15 +36,16 @@ const services = {
             });
             console.log("i : " + i)
             console.log("id : " + id[0])
-            // if (all[0].AddOn[i].length != 0) {
-            //     for (x in all[0].AddOn[i]) {
-            //         console.log(all[0].AddOn[i][x].AddOnNo)
-            //         const b = { orderNo: id[0], addOnNo: all[0].AddOn[i][x].AddOnNo };
-            //         console.log("b")
-            //         console.log(b);
-            //         const addonadd = await knex.insert(b).into('Order_Addon');
-            //     }
-            // }
+            if (all[0].AddOn[i].length != 0) {
+                for (x in all[0].AddOn[i]) {
+                    console.log(all[0].AddOn[i][x].AddOnNo)
+                    const b = { orderNo: id[0], addOnNo: all[0].AddOn[i][x].AddOnNo };
+                    console.log("b")
+                    console.log(b);
+                    const addonadd = await knex.insert(b).into('Order_Addon');
+                }
+            }
+            console.log("end addOrder")
         }
     },
     getOrder: (no) => {
@@ -62,7 +65,9 @@ const services = {
     },
 
     getAllOrder: (branchNo) => {
-        return knex.select('CustomerTable.branchNo', 'Bill.tableNo', 'Bill.billNo',
+        let date = new Date();
+        let current = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+        return knex.select('CustomerTable.branchNo', 'CustomerTable.tableName', 'Bill.billNo',
             'CustomerOrder.orderNo',
             'Menu.menuNo', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.orderStatus', 'CustomerOrder.amount')
             .from('CustomerOrder')
@@ -71,9 +76,12 @@ const services = {
             .join('Branch', { 'CustomerTable.branchNo': 'Branch.branchNo' })
             .join('Menu', 'Menu.menuNo', 'CustomerOrder.menuNo')
             .where('Bill.billStatus', 'unpaid')
-            .andWhereNot('CustomerOrder.orderStatus', 'cancelled')
-            .andWhere('CustomerTable.branchNo',branchNo)
-        // .andWhereNot('CustomerOrder.orderStatus', 'reserved')
+            .andWhere('Bill.billDate', current)
+            .andWhere('CustomerOrder.orderStatus', 'ready')
+            .orWhere('CustomerOrder.orderStatus', 'served')
+            .andWhere('CustomerTable.branchNo', branchNo)
+            .orderBy('CustomerOrder.orderStatus')
+
     },
     getAllOrderAddon: (orderNo) => {
         return knex.select('Material.matName', 'Addon.price').from('Addon')
@@ -124,26 +132,30 @@ exports.addOrder = async (userNo, orders, total, table, role) => {
             if (tableNo !== 0) {
                 bill.addBill(current, time, userNo, tableNo, Urole);
                 newBill = await bill.getBillByTableNo(tableNo);
+                bill.updateTotalAmount(newBill[0].billNo, total);
+                console.log("after updateTotal")
             } else {
                 // Select userNo in bill
                 bill.addBill(current, time, userNo, { tableNo: null }, Urole);
                 newBill = await bill.showBill(userNo, Urole);
+                bill.updateTotalAmount(newBill[0].billNo, total);
+                console.log("after updateTotal")
             }
-            console.log("newBill : " + newBill[0].billNo);
-            console.log("tableNo : " + newBill[0].tableNo)
-            //add userNo to new BillNo
-            bill.updateTotalAmount(newBill[0].billNo, total);
-            console.log("after updateTotal")
-            services.addOrder(all, newBill[0].billNo, newBill[0].tableNo);
-            console.log("after addOrder")
         }
 
         if (newBill[0]) {
-            console.log("Bill No : " + newBill[0].billNo);
+            console.log("New Bill No : " + newBill[0].billNo);
             bill.updateTotalAmount(newBill[0].billNo, total);
             console.log("update : " + total + " To Bill " + newBill[0].billNo);
             services.addOrder(all, newBill[0].billNo, tableNo);
-            console.log("addOrder pass")
+            if (!tableNo) {
+                console.log("no table : " + tableNo)
+                const ab = await services.getOrder(newBill[0].billNo);
+                for (i in ab) {
+                    await services.updateOrderStatus(ab[i].orderNo, "reserve");
+                }
+            }
+            console.log("addOrder in newBill pass")
         }
 
         if (getBill[0]) {
@@ -151,6 +163,13 @@ exports.addOrder = async (userNo, orders, total, table, role) => {
             bill.updateTotalAmount(getBill[0].billNo, total);
             console.log("update : " + total + " To Bill " + getBill[0].billNo);
             services.addOrder(all, getBill[0].billNo, tableNo);
+            if (!tableNo) {
+                console.log("no table : " + tableNo)
+                const ab = await services.getOrder(getBill[0].billNo);
+                for (i in ab) {
+                    await services.updateOrderStatus(ab[i].orderNo, "reserve");
+                }
+            }
             console.log("addOrder pass")
         }
     } catch (err) {

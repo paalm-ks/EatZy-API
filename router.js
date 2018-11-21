@@ -10,6 +10,7 @@ var bill = require('./bill');
 var addon = require('./addon');
 var myOrder = require('./myOrder');
 var restaurant = require('./restaurant');
+var table = require('./customerTable');
 
 
 module.exports = function (app) {
@@ -271,10 +272,12 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/acceptQueue/:code&:role', function (req, res) {
+    app.get('/acceptQueue/:code&:role&:branchNo&:tableNo', function (req, res) {
         const code = req.params.code;
         const role = req.params.role;
-        reserve.acceptQueue(code, role).then(rest => {
+        const branchNo = req.params.branchNo;
+        const tableNo = req.params.tableNo
+        reserve.acceptQueue(code, role, branchNo, tableNo).then(rest => {
             res.json(rest);
         })
     });
@@ -365,6 +368,13 @@ module.exports = function (app) {
 
     app.get('/group', function (req, res) {
         menuType.menuGroup().then(rest => {
+            res.json(rest);
+        })
+    });
+
+    app.get('/branchTable/:branchNo', function (req, res) {
+        const branchNo = req.params.branchNo;
+        table.getTable(branchNo).then(rest => {
             res.json(rest);
         })
     });

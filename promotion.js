@@ -21,7 +21,7 @@ const services = {
                         .where('proFromDate' , '<=', current)
                         .andWhere('proToDate' , '>=' ,current)
                         .andWhere('branchNo',branchNo)
-                        .andWhere('isAvaliable',1)
+                        .andWhere('isAvailable',1)
         }
 }
 
@@ -44,6 +44,12 @@ exports.showPromotion = async (rest) => {
 exports.showPromotionByNo = async (no) => {
         try {
                 const response = await services.getPromotionByNo(no);
+                for(i in response){
+                        const picpath = 'http://13.229.77.223:8080/springoeb/images/';
+                        const pic = response[i].proPicPath;
+                        const newPicPath = picpath+pic                  
+                        response[i].proPicPath = newPicPath
+                }
                 return response;
         } catch (err) {
                 console.log(err)

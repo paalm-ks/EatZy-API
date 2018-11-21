@@ -4,16 +4,22 @@ var bill = require('./bill');
 const services = {
         getMyOrder: (billNo) => {
                 return knex.select('CustomerOrder.orderNo',
-                 'Menu.menuNo', 'Menu.menuPrice', 'Menu.menuPicPath', 'Menu.menuNameTH',
-                  'CustomerOrder.quantity', 'CustomerOrder.amount', 'CustomerOrder.orderStatus').from('Bill')
+                        'Menu.menuNo', 'Menu.menuPrice', 'Menu.menuPicPath', 'Menu.menuNameTH',
+                        'CustomerOrder.quantity', 'CustomerOrder.amount', 'CustomerOrder.orderStatus')
+                        .from('Bill')
                         .join('CustomerOrder', 'Bill.billNo', 'CustomerOrder.billNo')
                         .join('Menu', 'Menu.menuNo', 'CustomerOrder.menuNo')
                         .where('Bill.billNo', billNo)
         },
         getMyOrderTable: (tableNo) => {
-                return knex.select('CustomerOrder.orderNo', 'Menu.menuNo', 'Menu.menuPrice', 'Menu.menuPicPath', 'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.amount', 'CustomerOrder.orderStatus').from('Bill')
+                return knex.select('CustomerOrder.orderNo', 'CustomerTable.tableName',
+                        'Menu.menuNo', 'Menu.menuPrice', 'Menu.menuPicPath',
+                        'Menu.menuNameTH', 'CustomerOrder.quantity', 'CustomerOrder.amount',
+                        'CustomerOrder.orderStatus')
+                        .from('Bill')
                         .join('CustomerOrder', 'Bill.billNo', 'CustomerOrder.billNo')
                         .join('Menu', 'Menu.menuNo', 'CustomerOrder.menuNo')
+                        .join('CustomerTable', 'CustomerTable.tableNo', 'Bill.tableNo')
                         .where('Bill.tableNo', tableNo)
         },
         getMyAddon: (orderNo) => {
@@ -49,7 +55,6 @@ exports.showMyOrder = async (billNo) => {
 exports.showUserOrder = async (userNo, role) => {
         try {
                 const billNoArr = await bill.showBill(userNo, role);
-                console.log("billNoArr : "+billNoArr)
                 if (billNoArr.length === 0) {
                         return []
                 } else {

@@ -44,10 +44,10 @@ const services = {
                         .where('Bill.billNo', billNo)
                         .update('billStatus', status);
         },
-        updateTableToBill: (No, tableNo) => {
-                knex('Bill')
+        updateTableToBill: (billNo, tableNo) => {
+                return knex('Bill')
                         .update('tableNo', tableNo)
-                        .where('Bill.billNo', no)
+                        .where('Bill.billNo', billNo)
         },
         addUserNoToBill: (billNo, userNo) => {
                 return knex('Bill')
@@ -134,6 +134,15 @@ exports.addUserNoToBill = async (billNo, userNo) => {
         }
 }
 
+exports.updateTableToBill = async (billNo, tableNo) => {
+        try {
+                const response = await services.updateTableToBill(billNo, tableNo);
+                return response;
+        } catch (err) {
+                console.log(err)
+        }
+}
+
 exports.updateTotalAmount = async (billNo, total) => {
         try {
                 const lastTotal = await services.getLastTotal(billNo);
@@ -165,10 +174,6 @@ exports.decreaseTotalAmount = async (billNo, amount) => {
                         const intLast = parseInt(last)
                         const current = intLast - amount;
                         response = await services.decreaseTotalAmount(billNo, current);
-                        if (current <= 0) {
-                                const cancelled = await services.updateBillStatus(billNo);
-                                console.log('cancelled')
-                        }
                 }
                 return response;
 
